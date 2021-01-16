@@ -9,10 +9,15 @@ function handleLang(e) {
 
 function Navbar() {
     return (
-        <div id="nav-container">
-            <button onClick={(e) => handleLogin(e)}>Login</button>
-            <button onClick={e => console.info('Join Us clicked', e)}>Join Us</button>
-            <button onClick={handleLang}>en</button>
+        <div className="nav">
+            <div className="brand">
+                Tipestry
+            </div>
+            <div className="buttons">
+                <button onClick={(e) => handleLogin(e)}>Login</button>
+                <button onClick={e => console.info('Join Us clicked', e)}>Join Us</button>
+                <button onClick={handleLang}>en</button>
+            </div>
         </div>
     );
 }

@@ -37,3 +37,16 @@
   width: 600px;
   height: 400px;
 }
+
+.nav {
+  display: flex;
+  flex-direction: row;
+  column-gap: 1em;
+  background-color: hsl(217, 71%, 53%);
+  color: hsl(0, 0%, 100%);
+  padding: 1em 2em;
+}
+
+.nav .brand {
+  flex-grow: 2;
+}

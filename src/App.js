@@ -1,5 +1,5 @@
 import './css/App.css';
-import './css/normalize.css';
+import './css/minireset.min.css';
 import Navbar from './components/Navbar';
 import Search from './components/Search';
 import Filter from './components/Filter';

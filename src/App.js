@@ -7,11 +7,17 @@ import CardList from './components/CardList';
 
 function App() {
     return (
-        <div className="App">
+        <div className="main">
             <Navbar />
-            <Search />
-            <Filter />
-            <CardList />
+            <div className="container pt-2">
+                <div className="block">Suggestions for you</div>
+                <div className="block">
+                    <Search />
+                    <Filter />
+                    <CardList />
+                </div>
+                <div className="block">Popular Hashtags</div>
+            </div>
         </div>
     );
 }

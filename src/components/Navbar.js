@@ -9,7 +9,7 @@ function handleLang(e) {
 
 function Navbar() {
     return (
-        <div className="nav">
+        <div className="nav px-3 py-3">
             <div className="brand">
                 Tipestry
             </div>

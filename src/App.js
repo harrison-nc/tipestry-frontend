@@ -9,14 +9,14 @@ function App() {
     return (
         <div className="main">
             <Navbar />
-            <div className="container pt-2">
-                <div className="block">Suggestions for you</div>
+            <div className="container mt-2">
+                <div className="block box">Suggestions for you</div>
                 <div className="block">
                     <Search />
                     <Filter />
                     <CardList />
                 </div>
-                <div className="block">Popular Hashtags</div>
+                <div className="block box">Popular Hashtags</div>
             </div>
         </div>
     );

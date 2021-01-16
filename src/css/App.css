@@ -1,7 +1,28 @@
+:root {
+  --gap-small: 0.2em;
+  --gap-medium: 0.4em;
+  --gap-large: 0.6em;
+
+  --size-extra-small: 4px;
+  --size-small: 8px;
+  --size-medium: 16px;
+  --size-large: 32px;
+  --size-extra-large: 64px;
+
+  --padding-extra-small: var(--size-extra-small);
+  --padding-small: var(--size-small);
+  --padding-medium: var(--size-medium);
+  --padding-large: var(--size-large);
+  --padding-extra-large: var(--size-large);
+
+  --color-link: hsl(217, 71%, 53%);
+  --color-white: hsl(0, 0%, 100%);
+}
+
 .tags {
   display: flex;
   flex-direction: row;
-  column-gap: 0.5em;
+  column-gap: var(--gap-medium);
 }
 
 .social {
@@ -11,13 +32,13 @@
 
 .social .control {
   display: flex;
-  column-gap: 0.5em;
+  column-gap: var(--gap-medium);
 }
 
 .avatar {
   display: flex;
   align-items: center;
-  column-gap: 0.5em;
+  column-gap: var(--gap-medium);
 }
 
 .avatar > img {
@@ -41,10 +62,9 @@
 .nav {
   display: flex;
   flex-direction: row;
-  column-gap: 1em;
-  background-color: hsl(217, 71%, 53%);
-  color: hsl(0, 0%, 100%);
-  padding: 1em 2em;
+  background-color: var(--color-link);
+  color: var(--color-white);
+  padding: var(--padding-extra-small) var(--padding-small);
 }
 
 .nav .brand {

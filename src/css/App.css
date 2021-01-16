@@ -1,11 +1,13 @@
 :root {
-  --gap-small: 0.2em;
-  --gap-medium: 0.4em;
-  --gap-large: 0.6em;
-  --gap-extra-large: 0.8em;
+  --gap-extra-small: 0.2;
+  --gap-small: 0.4em;
+  --gap-medium: 0.6em;
+  --gap-large: 0.8em;
+  --gap-extra-large: 1em;
 
-  --size-extra-small: 4px;
-  --size-small: 8px;
+  --size-extra-small: 2px;
+  --size-small: 4px;
+  --size-normal: 8px;
   --size-medium: 16px;
   --size-large: 32px;
   --size-extra-large: 64px;
@@ -33,10 +35,14 @@
 }
 
 .pt-4 {
-  padding-top: var(--size-small);
+  padding-top: var(--size-normal);
 }
 
 .pt-5 {
+  padding-top: var(--size-small);
+}
+
+.pt-6 {
   padding-top: var(--size-extra-small);
 }
 
@@ -56,11 +62,16 @@
 }
 
 .py-4 {
+  padding-top: var(--size-normal);
+  padding-bottom: var(--size-normal);
+}
+
+.py-5 {
   padding-top: var(--size-small);
   padding-bottom: var(--size-small);
 }
 
-.py-5 {
+.py-6 {
   padding-top: var(--size-extra-small);
   padding-bottom: var(--size-extra-small);
 }
@@ -81,35 +92,48 @@
 }
 
 .px-4 {
+  padding-left: var(--size-normal);
+  padding-right: var(--size-normal);
+}
+
+.px-5 {
   padding-left: var(--size-small);
   padding-right: var(--size-small);
 }
 
-.px-5 {
+.px-6 {
   padding-left: var(--size-extra-small);
   padding-right: var(--size-extra-small);
 }
 
+.is-flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+  row-gap: var(--size-large);
+}
+
+.has-background-white {
+  background-color: var(--color-white);
+}
+
 .main {
-  height: 100vh;
-  background-color: var(--main-bg-color);
   box-sizing: border-box;
+  background-color: var(--main-bg-color);
+  height: 100vh;
 }
 
 .block {
-  padding: var(--size-small);
   box-sizing: border-box;
 }
 
 .box {
-  min-width: 200px;
-  min-height: 100px;
   background-color: var(--color-white);
-  align-self: start;
 }
 
 .container {
-  display: flex;
   column-gap: var(--gap-extra-large);
 }
 

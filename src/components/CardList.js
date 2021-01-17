@@ -2,7 +2,7 @@ import Card from './Card';
 
 function CardList() {
     return (
-        <div>
+        <div className="box">
             <Card />
         </div>
     );

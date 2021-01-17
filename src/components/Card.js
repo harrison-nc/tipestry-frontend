@@ -15,7 +15,7 @@ function Header() {
         <div className="block">
             <Avatar />
 
-            <div className="title">title</div>
+            <div className="subtitle pt-3">title</div>
 
             <div className="block tags">
                 <span>#tag1</span>

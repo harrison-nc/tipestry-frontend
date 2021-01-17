@@ -1,6 +1,6 @@
 function Search() {
     return (
-        <div>
+        <div className="box">
             <form>
                 <label>Search
                     <input name="query" type="text" placeholder="Enter a URL or a Search" />

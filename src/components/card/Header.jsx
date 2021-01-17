@@ -6,12 +6,12 @@ function Header({ post, user }) {
     const { title, tags } = post;
 
     return (
-        <div className="block">
+        <div className="header">
             <Avatar user={user} post={post} />
 
-            <h2 className="subtitle pt-3">{title}</h2>
+            <h2 className="subtitle">{title}</h2>
 
-            <div className="block tags">
+            <div className="tags">
                 {renderTags(tags)}
             </div>
         </div>

@@ -6,7 +6,7 @@ function Cards(props) {
     const { user, post } = props;
 
     return (
-        <div className="box">
+        <div className="cards">
             <Card user={user} post={post} />
         </div>
     );

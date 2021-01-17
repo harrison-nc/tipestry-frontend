@@ -4,7 +4,7 @@ function Footer(props) {
     const { likes, disLikes, comments, shares, views } = props;
 
     return (
-        <div className="social">
+        <div className="footer">
             <div className="control">
                 <label>
                     <button>Like</button> {likes}

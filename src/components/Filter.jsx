@@ -1,6 +1,6 @@
 function Filter() {
     return (
-        <div className="box">
+        <div className="filter">
             <label> View
              <button>List</button>
             </label>

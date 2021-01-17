@@ -1,24 +1,26 @@
 import React from 'react';
 
 function Footer(props) {
+    const { likes, disLikes, comments, shares, views } = props;
+
     return (
         <div className="social">
             <div className="control">
                 <label>
-                    <button>Like</button> {props.likes}
+                    <button>Like</button> {likes}
                 </label>
                 <label>
-                    <button>Dislike</button> {props.disLikes}
+                    <button>Dislike</button> {disLikes}
                 </label>
                 <label>
-                    <button>Comment</button> {props.comments.count}
+                    <button>Comment</button> {comments.count}
                 </label>
                 <label>
-                    <button>Share</button> {props.shares.count}
+                    <button>Share</button> {shares.count}
                 </label>
             </div>
             <div>
-                View: {props.views.count}
+                View: {views.count}
             </div>
         </div>
     );

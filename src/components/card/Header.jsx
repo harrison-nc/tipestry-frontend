@@ -2,24 +2,24 @@ import React from 'react';
 
 import Avatar from './Avatar.jsx';
 
-function Header(props) {
-    const hashtags = props.post.tags.map((tag, key) => {
-        return <span key={key}>{tag}</span>
-    });
+function Header({ post, user }) {
+    const { title, tags } = post;
 
     return (
         <div className="block">
-            <Avatar user={props.user} post={props.post} />
+            <Avatar user={user} post={post} />
 
-            <div className="subtitle pt-3">
-                {props.post.title}
-            </div>
+            <h2 className="subtitle pt-3">{title}</h2>
 
             <div className="block tags">
-                {hashtags}
+                {renderTags(tags)}
             </div>
         </div>
     );
+}
+
+function renderTags(tags) {
+    return tags.map((tag, key) => <span key={key}>{tag}</span>);
 }
 
 export default Header;

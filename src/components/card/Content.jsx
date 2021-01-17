@@ -1,11 +1,11 @@
 import  { Fragment } from 'react';
 
-function Content(props) {
+function Content({ resourceUrl, description }) {
     return (
         <Fragment>
             <figure>
-                <img alt="Resource" src={props.resourceUrl} />
-                <figcaption>{props.description}</figcaption>
+                <img alt="Resource" src={resourceUrl} />
+                <figcaption>{description}</figcaption>
             </figure>
         </Fragment>
     );

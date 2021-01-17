@@ -1,12 +1,15 @@
 import React from 'react';
 
 function Avatar(props) {
+    const { date } = props.post;
+    const { name, avatarUrl } = props.user;
+
     return (
         <div className="avatar">
-            <img alt="avatar" src={props.user.avatarUrl} />
+            <img alt="user avatar" src={avatarUrl} />
             <p>
-                <span>{props.user.name}</span>
-                <span className="date">{props.post.date}</span>
+                <span>{name}</span>
+                <span className="date">{date}</span>
             </p>
         </div>
     );

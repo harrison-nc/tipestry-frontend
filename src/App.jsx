@@ -42,7 +42,7 @@ class App extends Component {
                 <Navbar />
                 <main className="main pt-3">
                     <Suggestions />
-                    <section>
+                    <section className="section container">
                         <Search />
                         <Filter />
                         <Cards user={user} post={post} />

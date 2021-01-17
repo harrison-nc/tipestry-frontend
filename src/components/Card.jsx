@@ -19,7 +19,7 @@ function Card(props) {
     } = post;
 
     return (
-        <div className="card">
+        <div className="card has-background-white py-3 px-3">
             <Header post={post} user={user} />
 
             <Content description={description} resourceUrl={resourceUrl} />

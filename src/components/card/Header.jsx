@@ -8,11 +8,11 @@ const Header = ({ post, user }) => {
     return (
         <div className="header">
             <Avatar user={user} post={post} />
-
-            <h2 className="subtitle">{title}</h2>
-
-            <div className="tags">
-                {renderTags(tags)}
+            <div className="container">
+                <h2 className="subtitle">{title}</h2>
+                <div className="tags">
+                    {renderTags(tags)}
+                </div>
             </div>
         </div>
     );

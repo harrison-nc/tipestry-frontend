@@ -290,6 +290,18 @@
   width: 50px;
 }
 
+.card {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--size-medium);
+}
+
+.tags {
+  display: flex;
+  column-gap: var(--size-normal);
+  margin-top: calc(var(--size-normal) * -1);
+}
+
 @media (min-width: 768px) {
   .navbar > .container {
     width: 900px;

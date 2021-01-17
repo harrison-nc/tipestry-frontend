@@ -205,6 +205,10 @@
   background-color: var(--color-white);
 }
 
+.grow {
+  flex-grow: 1;
+}
+
 .navbar .container {
   display: flex;
   align-items: center;
@@ -259,9 +263,19 @@
 .search .control > .input {
   border-width: 0 0 1px 0;
   border-color: var(--color-black);
-  flex-grow: 1;
   outline: 0;
   padding: var(--size-normal) 0;
+}
+
+.filter {
+  display: flex;
+  column-gap: var(--size-medium);
+  justify-content: space-between;
+}
+
+.filter > .control {
+  display: flex;
+  column-gap: var(--size-medium);
 }
 
 @media (min-width: 768px) {

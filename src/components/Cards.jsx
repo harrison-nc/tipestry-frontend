@@ -1,13 +1,13 @@
-import Card from './Card';
+import Card from "./Card";
 
-import React, { Component } from 'react';
+import React from "react";
 
 function Cards(props) {
+    const { user, post } = props;
+
     return (
         <div className="box">
-            <Card
-                user={this.state.user}
-                post={this.state.post} />
+            <Card user={user} post={post} />
         </div>
     );
 }

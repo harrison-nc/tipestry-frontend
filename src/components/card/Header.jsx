@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Avatar from './Avatar.jsx';
+import Avatar from './Avatar';
 
 function Header({ post, user }) {
     const { title, tags } = post;

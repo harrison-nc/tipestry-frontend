@@ -1,6 +1,6 @@
-import Content from "./card/Content.jsx";
-import Footer from "./card/Footer.jsx";
-import Header from "./card/Header.jsx";
+import Content from "./card/Content";
+import Footer from "./card/Footer";
+import Header from "./card/Header";
 
 function Card(props) {
     const { post } = props;
@@ -14,7 +14,7 @@ function Card(props) {
         comments,
         shares,
         views,
-    } = props;
+    } = post;
 
     return (
         <div className="card">

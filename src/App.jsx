@@ -1,7 +1,7 @@
 import './css/App.css';
 import './css/minireset.min.css';
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import Navbar from './components/Navbar';
 import Search from './components/Search';
@@ -35,33 +35,31 @@ class App extends Component {
     };
 
     render() {
+        const { user, post } = this.state;
+
         return (
-            <div className="main is-flex flex-column">
+            <Fragment>
                 <Navbar />
-                <div className="container is-flex">
-                    <div className="block">
-                        <div className="panel has-background-white py-3 px-3">
-                            Suggestions for you
-                    </div>
-                    </div>
-                    <div className="is-flex flex-column">
+                <main>
+                    <Suggestions />
+                    <section>
                         <Search />
                         <Filter />
-                        <Cards />
-                    </div>
-                    <div className="container">
-                        <div className="panel has-background-white py-3 px-3">
-                            Popular Hashtags
-                    </div>
-                    </div>
-                </div>
-            </div>
+                        <Cards user={user} post={post} />
+                    </section>
+                    <Hashtags />
+                </main>
+            </Fragment>
         );
     }
+}
 
-    renderSuggestions() {
-        return <div>Suggestions</div>
-    }
+function Suggestions() {
+    return <div>Suggestions</div>
+}
+
+function Hashtags() {
+    return <div>Top Hashtags</div>
 }
 
 export default App;

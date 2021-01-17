@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Avatar(props) {
+const Avatar = (props) => {
     const { date } = props.post;
     const { name, avatarUrl } = props.user;
 

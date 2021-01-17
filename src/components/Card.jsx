@@ -1,3 +1,5 @@
+import React from 'react';
+
 import Content from "./card/Content";
 import Footer from "./card/Footer";
 import Header from "./card/Header";

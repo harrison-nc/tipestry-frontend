@@ -2,7 +2,7 @@ import React from 'react';
 
 import Avatar from './Avatar';
 
-function Header({ post, user }) {
+const Header = ({ post, user }) => {
     const { title, tags } = post;
 
     return (
@@ -18,7 +18,7 @@ function Header({ post, user }) {
     );
 }
 
-function renderTags(tags) {
+const renderTags = (tags) => {
     return tags.map((tag, key) => <span key={key}>{tag}</span>);
 }
 

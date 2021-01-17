@@ -1,8 +1,8 @@
-import Card from "./Card";
-
 import React from "react";
 
-function Cards(props) {
+import Card from "./Card";
+
+const Cards = (props) => {
     const { user, post } = props;
 
     return (

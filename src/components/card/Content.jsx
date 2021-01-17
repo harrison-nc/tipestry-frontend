@@ -1,6 +1,6 @@
-import  { Fragment } from 'react';
+import { Fragment } from 'react';
 
-function Content({ resourceUrl, description }) {
+const Content = ({ resourceUrl, description }) => {
     return (
         <Fragment>
             <figure>

@@ -1,13 +1,6 @@
+import React from 'react';
 
-function handleLogin(e) {
-    console.log('login clicked!', e);
-}
-
-function handleLang(e) {
-    console.info('changin language');
-}
-
-function Navbar() {
+const Navbar = () => {
     return (
         <div className="navbar">
             <div container>
@@ -15,9 +8,9 @@ function Navbar() {
                     Tipestry
                 </div>
                 <nav className="navItem">
-                    <button onClick={(e) => handleLogin(e)}>Login</button>
-                    <button onClick={e => console.info('Join Us clicked', e)}>Join Us</button>
-                    <button onClick={handleLang}>en</button>
+                    <button>Login</button>
+                    <button>Join Us</button>
+                    <button>en</button>
                 </nav>
             </div>
         </div>

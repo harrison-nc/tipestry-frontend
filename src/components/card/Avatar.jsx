@@ -7,10 +7,10 @@ const Avatar = (props) => {
     return (
         <div className="avatar">
             <img alt="user avatar" src={avatarUrl} />
-            <p>
-                <span>{name}</span>
-                <span className="date">{date}</span>
-            </p>
+            <div>
+                <p><span>{name}</span></p>
+                <p><span className="date">{date}</span></p>
+            </div>
         </div>
     );
 }

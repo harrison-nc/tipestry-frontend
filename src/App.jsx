@@ -40,7 +40,7 @@ class App extends Component {
         return (
             <Fragment>
                 <Navbar />
-                <main id="main">
+                <main className="main pt-3">
                     <Suggestions />
                     <section>
                         <Search />
@@ -55,11 +55,19 @@ class App extends Component {
 }
 
 function Suggestions() {
-    return <div>Suggestions</div>
+    return (
+        <div className="container left">
+            <p className="has-background-white pt-4 px-3">Suggestions</p>
+        </div>
+    );
 }
 
 function Hashtags() {
-    return <div>Top Hashtags</div>
+    return (
+        <div className="container right">
+            <p className="has-background-white pt-4 px-3">Top Hashtags</p>
+        </div>
+    );
 }
 
 export default App;

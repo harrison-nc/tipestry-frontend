@@ -204,8 +204,27 @@
   background-color: var(--color-white);
 }
 
-#main {
+.main {
   background-color: var(--main-bg-color);
+  display: flex;
+  column-gap: var(--size-large);
+}
+
+.main > .container.left {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+}
+
+.main > .container.right {
+  align-self: start;
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-start;
+}
+
+.main > .container > p {
+  align-self: flex-start;
 }
 
 .navbar .container {
@@ -221,5 +240,10 @@
   .navbar > .container {
     width: 900px;
     margin: 0 auto;
+  }
+
+  .main > .container > p {
+    min-width: 300px;
+    min-height: 64px;
   }
 }

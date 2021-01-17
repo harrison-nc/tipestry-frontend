@@ -2,10 +2,13 @@ import React from 'react';
 
 const Navbar = () => {
     return (
-        <div className="navbar">
-            <div container>
+        <div className="navbar has-background-link py-6 px-6">
+            <div className="container">
                 <div className="brand">
-                    Tipestry
+                    <span className="subtitle">
+                        Tipestry
+                    </span>
+
                 </div>
                 <nav className="navItem">
                     <button>Login</button>

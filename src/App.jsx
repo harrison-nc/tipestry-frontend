@@ -40,7 +40,7 @@ class App extends Component {
         return (
             <Fragment>
                 <Navbar />
-                <main>
+                <main id="main">
                     <Suggestions />
                     <section>
                         <Search />

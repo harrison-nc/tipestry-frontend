@@ -19,7 +19,8 @@ const Footer = (props) => {
                     <button>Share</button> {shares.count}
                 </label>
             </div>
-            <div>
+            <div className="views">
+                <hr />
                 View: {views.count}
             </div>
         </div>

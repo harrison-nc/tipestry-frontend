@@ -15,6 +15,7 @@
   --color-link: hsl(217, 71%, 53%);
   --color-white: hsl(0, 0%, 100%);
   --color-black: hsl(0, 0%, 4%);
+  --color-grey-lighter: hsl(0, 0%, 86%);
 
   --main-bg-color: #e6ecf0;
 }
@@ -218,6 +219,10 @@
   flex-grow: 2;
 }
 
+body {
+  background-color: var(--main-bg-color);
+}
+
 .main {
   background-color: var(--main-bg-color);
   display: flex;
@@ -300,6 +305,24 @@
   display: flex;
   column-gap: var(--size-normal);
   margin-top: calc(var(--size-normal) * -1);
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--size-medium);
+}
+
+.footer > .control {
+  display: flex;
+  column-gap: var(--size-medium);
+}
+
+.footer > .views > hr {
+  background-color: var(--color-grey-lighter);
+  color: var(--color-grey-lighter);
+  border-width: 1px;
+  size: 1px;
 }
 
 @media (min-width: 768px) {

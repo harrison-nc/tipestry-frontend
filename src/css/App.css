@@ -157,6 +157,11 @@ body {
   padding-top: var(--size-extra-small);
 }
 
+.py-0 {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 .py-1 {
   padding-top: var(--size-extra-large);
   padding-bottom: var(--size-extra-large);
@@ -225,6 +230,10 @@ body {
   background-color: var(--color-white);
 }
 
+.is-flex {
+  display: flex;
+}
+
 .flex-grow {
   flex-grow: 1;
 }
@@ -237,8 +246,18 @@ body {
   flex-direction: column;
 }
 
+.flex-wrap {
+  flex-flow: row wrap;
+  column-gap: var(--size-normal);
+  row-gap: var(--size-normal);
+}
+
+.no-gap {
+  column-gap: 0;
+  row-gap: 0;
+}
+
 .container.flex-column {
-  display: flex;
   row-gap: var(--size-small);
 }
 
@@ -277,6 +296,11 @@ body {
 
 .main > .container.right {
   justify-content: flex-start;
+}
+
+.main > .container.container.left > .box a,
+.main > .container.container.right > .box a {
+  text-decoration: none;
 }
 
 .section {
@@ -363,6 +387,17 @@ body {
   box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.2);
 }
 
+.box.banner-container {
+  border-radius: 5px 5px 0 0;
+}
+
+.banner-container figure.banner {
+  max-width: 300px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
 @media (min-width: 768px) {
   .navbar > .container {
     width: 900px;
@@ -371,7 +406,10 @@ body {
 
   .main > .container.left > .box,
   .main > .container.right > .box {
-    min-width: 300px;
-    min-height: 64px;
+    --width: 300px;
+    --heigth: 64px;
+    max-width: var(--width);
+    min-width: var(--width);
+    min-height: var(--heigth);
   }
 }

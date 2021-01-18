@@ -1,5 +1,6 @@
 import './css/App.css';
 import './css/minireset.min.css';
+import banner from './images/potw-banner.png';
 
 import React, { Component, Fragment } from 'react';
 
@@ -33,15 +34,15 @@ class App extends Component {
             }
         },
         toptags: [
-            "#tag0", "#tag1", "#tag2",
-            "#tag3", "#tag4", "#tag5",
-            "#tag6", "#tag7", "#tag8",
-            "#tag9",
+            "#programing", "#java", "#html",
+            "#coding", "#marketing", "#cat",
+            "#dog", "#mouse", "#football",
+            "#css", "#javascript",
         ]
     };
 
     render() {
-        const { user, post } = this.state;
+        const { user, post, toptags } = this.state;
 
         return (
             <Fragment>
@@ -53,7 +54,7 @@ class App extends Component {
                         <Filter />
                         <Cards user={user} post={post} />
                     </section>
-                    <Hashtags />
+                    <Hashtags toptags={toptags} />
                 </main>
             </Fragment>
         );
@@ -68,11 +69,21 @@ function Suggestions() {
     );
 }
 
-function Hashtags(toptags) {
+function Hashtags(props) {
+    const { toptags } = props;
+
     return (
-        <div className="container right flex-column flex-start flex-grow">
+        <div className="container right flex-column no-gap flex-start flex-grow">
             Top Hashtags
-            <p className="has-background-white pt-4 px-3 box">Top Hashtags</p>
+            <div className="has-background-white box banner-container is-flex flex-column">
+                <p className="py-4 px-3 is-flex flex-wrap">
+                    {toptags.map((tag, id) => <a href="#" key={id}>{tag}</a>)}
+                </p>
+                <figure className="flex-grow banner">
+                    <img width="300" alt="Tipestry post of the week event"
+                        src={banner} />
+                </figure>
+            </div>
         </div>
     );
 }

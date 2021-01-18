@@ -31,7 +31,13 @@ class App extends Component {
             views: {
                 count: '11.1K'
             }
-        }
+        },
+        toptags: [
+            "#tag0", "#tag1", "#tag2",
+            "#tag3", "#tag4", "#tag5",
+            "#tag6", "#tag7", "#tag8",
+            "#tag9",
+        ]
     };
 
     render() {
@@ -42,7 +48,7 @@ class App extends Component {
                 <Navbar />
                 <main className="main pt-3 mt-1">
                     <Suggestions />
-                    <section className="section container">
+                    <section className="section">
                         <Search />
                         <Filter />
                         <Cards user={user} post={post} />
@@ -56,15 +62,16 @@ class App extends Component {
 
 function Suggestions() {
     return (
-        <div className="container left">
+        <div className="container left flex-grow">
             <p className="has-background-white pt-4 px-3 box">Suggestions</p>
         </div>
     );
 }
 
-function Hashtags() {
+function Hashtags(toptags) {
     return (
-        <div className="container right">
+        <div className="container right flex-column flex-start flex-grow">
+            Top Hashtags
             <p className="has-background-white pt-4 px-3 box">Top Hashtags</p>
         </div>
     );

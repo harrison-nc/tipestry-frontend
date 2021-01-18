@@ -225,8 +225,21 @@ body {
   background-color: var(--color-white);
 }
 
-.grow {
+.flex-grow {
   flex-grow: 1;
+}
+
+.flex-start {
+  align-self: flex-start;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.container.flex-column {
+  display: flex;
+  row-gap: var(--size-small);
 }
 
 .navbar {
@@ -253,21 +266,17 @@ body {
   font-family: "Quicksand", sans-serif;
 }
 
-.main > .container.left {
+.main > .container {
   display: flex;
-  flex-grow: 1;
+  align-items: flex-start;
+}
+
+.main > .container.left {
   justify-content: flex-end;
 }
 
 .main > .container.right {
-  align-self: start;
-  display: flex;
-  flex-grow: 1;
   justify-content: flex-start;
-}
-
-.main > .container > p {
-  align-self: flex-start;
 }
 
 .section {
@@ -360,7 +369,8 @@ body {
     margin: 0 auto;
   }
 
-  .main > .container > p {
+  .main > .container.left > .box,
+  .main > .container.right > .box {
     min-width: 300px;
     min-height: 64px;
   }

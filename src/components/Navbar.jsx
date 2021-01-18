@@ -11,6 +11,7 @@ const Navbar = () => {
 
                 </div>
                 <nav className="navItem">
+                    <button>Post</button>
                     <button>Login</button>
                     <button>Join Us</button>
                     <button>en</button>

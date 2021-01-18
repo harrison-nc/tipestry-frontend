@@ -181,5 +181,21 @@ body {
   text-decoration: none;
 }
 
+.btn {
+  background-color: #fff;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.nav-items {
+  column-gap: var(--size-normal);
+}
+
+.nav-items .nav-item {
+  display: inline-block;
+  min-width: 64px;
+  text-align: center;
+}
+
 @media (width: 768px) {
 }

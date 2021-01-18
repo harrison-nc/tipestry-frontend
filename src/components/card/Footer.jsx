@@ -6,25 +6,30 @@ const Footer = (props) => {
     return (
         <div className="footer">
             <div className="control">
-                <label>
-                    <button>Like</button> {likes}
-                </label>
-                <label>
-                    <button>Dislike</button> {disLikes}
-                </label>
-                <label>
-                    <button>Comment</button> {comments.count}
-                </label>
-                <label>
-                    <button>Share</button> {shares.count}
-                </label>
+                <Link name="Like" value={likes} />
+                <Link name="Dislike" value={disLikes} />
+                <Link name="Comment" value={comments.count} />
+                <Link name="Share" value={shares.count} />
             </div>
-            <div className="views">
-                <hr />
-                View: {views.count}
-            </div>
+            <Views value={views.count} />
         </div>
     );
-}
+};
+
+const Link = ({ name, value }) => {
+    return (
+        <label>
+            <button className="btn py-5 px-5">{name}</button> {value}
+        </label>
+    );
+};
+
+const Views = ({ value }) => {
+    return (
+        <div className="views"><hr />
+                View: {value}
+        </div>
+    );
+};
 
 export default Footer;

@@ -12,7 +12,7 @@ const Search = () => {
                         type="text"
                         placeholder="Enter a URL or a Search" />
                 </div>
-                <input type="submit" value="load" />
+                <input className="btn py-5 px-5" type="submit" value="load" />
             </div>
         </form>
     );

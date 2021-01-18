@@ -5,8 +5,8 @@ const Filter = () => {
         <div className="filter has-background-white py-3 px-3 box">
             <div className="control">
                 <label>View</label>
-                <button>List</button>
-                <button>Preview</button>
+                <button className="btn py-5 px-5">List</button>
+                <button className="btn py-5 px-5">Preview</button>
             </div>
 
             <div className="control">

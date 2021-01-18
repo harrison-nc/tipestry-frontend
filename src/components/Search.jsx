@@ -3,7 +3,7 @@ import React from 'react';
 const Search = () => {
     return (
         <form>
-            <div className="search has-background-white py-3 px-3">
+            <div className="search has-background-white py-3 px-3 box">
                 <div className="control">
                     <label for="query">Search</label>
                     <input className="input grow"

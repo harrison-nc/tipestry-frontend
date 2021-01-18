@@ -57,7 +57,7 @@ class App extends Component {
 function Suggestions() {
     return (
         <div className="container left">
-            <p className="has-background-white pt-4 px-3">Suggestions</p>
+            <p className="has-background-white pt-4 px-3 box">Suggestions</p>
         </div>
     );
 }
@@ -65,7 +65,7 @@ function Suggestions() {
 function Hashtags() {
     return (
         <div className="container right">
-            <p className="has-background-white pt-4 px-3">Top Hashtags</p>
+            <p className="has-background-white pt-4 px-3 box">Top Hashtags</p>
         </div>
     );
 }

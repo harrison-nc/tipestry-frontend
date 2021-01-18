@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "Quicksand";
+  src: URL("../fonts/static/Quicksand-Regular.ttf"), local("Quicksand Regular");
+}
+
 :root {
   --gap-extra-small: 0.2;
   --gap-small: 0.4em;
@@ -227,6 +232,7 @@ body {
   background-color: var(--main-bg-color);
   display: flex;
   column-gap: var(--size-large);
+  font-family: "Quicksand", sans-serif;
 }
 
 .main > .container.left {
@@ -323,6 +329,11 @@ body {
   color: var(--color-grey-lighter);
   border-width: 1px;
   size: 1px;
+}
+
+.box {
+  border-radius: 5px;
+  box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.2);
 }
 
 @media (min-width: 768px) {

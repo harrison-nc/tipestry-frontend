@@ -2,7 +2,7 @@ import React from 'react';
 
 const Filter = () => {
     return (
-        <div className="filter has-background-white py-3 px-3">
+        <div className="filter has-background-white py-3 px-3 box">
             <div className="control">
                 <label>View</label>
                 <button>List</button>

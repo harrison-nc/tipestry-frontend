@@ -40,7 +40,7 @@ class App extends Component {
         return (
             <Fragment>
                 <Navbar />
-                <main className="main pt-3">
+                <main className="main pt-3 mt-1">
                     <Suggestions />
                     <section className="section container">
                         <Search />

@@ -62,7 +62,7 @@ class App extends Component {
     }
 }
 
-function Suggestions() {
+const Suggestions = () => {
     return (
         <div className="aside container left">
             <p className="aside-content has-background-white pt-4 px-3 box">Suggestions</p>
@@ -70,7 +70,7 @@ function Suggestions() {
     );
 }
 
-function Hashtags(props) {
+const Hashtags = (props) => {
     const { toptags } = props;
 
     return (

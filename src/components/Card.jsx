@@ -4,7 +4,7 @@ import Content from "./card/Content";
 import Footer from "./card/Footer";
 import Header from "./card/Header";
 
-function Card(props) {
+const Card = (props) => {
     const { post } = props;
     const { user } = props;
 

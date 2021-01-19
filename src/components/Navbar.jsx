@@ -8,13 +8,11 @@ const Navbar = () => {
     return (
         <Fragment>
             <div className="navbar has-background-link py-4 px-5">
-                <div className="container">
+                <div className="container is-flex">
                     <div className="brand">
-                        <span className="subtitle">
-                            Tipestry
-                    </span>
-
+                        <span className="subtitle">Tipestry</span>
                     </div>
+
                     <nav className="nav-items is-flex">
                         <a className="nav-item btn py-5 px-5" href="#post-dialog">Post</a>
                         <a className="nav-item btn py-5 px-5" href="#login-dialog">Login</a>

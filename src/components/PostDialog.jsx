@@ -22,7 +22,7 @@ const PostDialog = ({ id }) => {
                         placeholder="Enter post title" />
 
                     <div className="control is-flex">
-                        <label for="description" className="label">Details</label>
+                        <label htmlFor="description" className="label">Details</label>
                         <textarea id="description" className="input" rows="5" name="description" placeholder="Enter post details"></textarea>
                     </div>
 

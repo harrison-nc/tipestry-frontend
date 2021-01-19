@@ -10,7 +10,7 @@ const Filter = () => {
             </div>
 
             <div className="control">
-                <label className="" for="filter-1">Sort</label>
+                <label className="" htmlFor="filter-1">Sort</label>
                 <select id="filter-1">
                     <option>Popular</option>
                     <option>Recent</option>

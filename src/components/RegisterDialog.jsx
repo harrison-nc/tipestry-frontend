@@ -3,7 +3,7 @@ import '../css/modal.css';
 export const Input = ({ label, type, name, placeholder }) => {
     return (
         <div className="control is-flex">
-            <label for={name} className="label">{label}:</label>
+            <label htmlFor={name} className="label">{label}:</label>
             <input className="input" id={name} type={type} name={name} placeholder={placeholder} />
         </div>
     );

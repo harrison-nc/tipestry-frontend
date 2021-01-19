@@ -5,7 +5,7 @@ const Search = () => {
         <form>
             <div className="search has-background-white py-3 px-3 box">
                 <div className="control">
-                    <label for="query">Search</label>
+                    <label htmlFor="query">Search</label>
                     <input className="input flex-grow"
                         id="query"
                         name="query"

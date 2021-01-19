@@ -4,7 +4,7 @@ import { Input } from './RegisterDialog';
 
 const LoginDialog = ({ id }) => {
     return (
-        <div id={id} class="modal-window">
+        <div id={id} className="modal-window">
             <form>
                 <div className="form is-flex flex-column box has-background-white py-4 px-2">
 

@@ -226,6 +226,10 @@ body {
   justify-content: flex-end;
 }
 
+.form .control.header {
+  align-items: center;
+}
+
 .btn.is-cancel {
   border: 0;
   background-color: transparent;

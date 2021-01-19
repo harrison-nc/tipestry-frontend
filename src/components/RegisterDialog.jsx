@@ -1,6 +1,6 @@
 import '../css/modal.css';
 
-const Input = ({ label, type, name, placeholder }) => {
+export const Input = ({ label, type, name, placeholder }) => {
     return (
         <div className="control is-flex">
             <label for={name} className="label">{label}:</label>

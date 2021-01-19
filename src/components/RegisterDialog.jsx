@@ -42,7 +42,7 @@ const RegisterDialog = ({ id }) => {
 
                     <div className="control buttons is-flex mt-3">
                         <a href="/" title="Close" className="close modal-close has-color-black">Cancel</a>
-                        <input className="btn py-4 px-3 is-primary" type="submit" value="Create" />
+                        <input className="btn py-4 px-3 is-primary" type="submit" value="Register" />
                     </div>
                 </div>
             </form>

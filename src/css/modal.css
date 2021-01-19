@@ -1,0 +1,58 @@
+.modal-window {
+  color: black;
+  font: 600 18px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.modal-window {
+  align-items: center;
+  background-color: rgba(40, 40, 40, 0.9);
+  bottom: 0;
+  display: none;
+  justify-content: center;
+  left: 0;
+  overflow: auto;
+  opacity: 0.5;
+  top: 0;
+  transition: all 0.3s;
+  pointer-events: none;
+  visibility: hidden;
+  right: 0;
+  z-index: 999;
+}
+
+.modal-window:target {
+  display: flex;
+  opacity: 1;
+  position: fixed;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.modal-window .header {
+  font-weight: bold;
+}
+
+.modal-window h1 {
+  font-size: 150%;
+  margin: 0 0 15px;
+}
+
+.modal-close {
+  color: #aaa;
+  line-height: 50px;
+  font-size: 80%;
+  text-align: center;
+  text-decoration: none;
+  top: 0;
+  right: 0;
+  width: 70px;
+}
+
+.modal-close:hover {
+  color: black;
+}
+
+.modal-window div:not(:last-of-type) {
+  margin-bottom: 15px;
+}

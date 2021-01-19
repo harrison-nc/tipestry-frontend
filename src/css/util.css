@@ -16,8 +16,34 @@
   --color-white: hsl(0, 0%, 100%);
   --color-black: hsl(0, 0%, 4%);
   --color-grey-lighter: hsl(0, 0%, 86%);
+  --color-primary: hsl(171, 100%, 41%);
+  --color-warning: hsl(48, 100%, 67%);
 
   --main-bg-color: #e6ecf0;
+}
+
+.mb-1 {
+  margin-bottom: var(--size-extra-large);
+}
+
+.mb-2 {
+  margin-bottom: var(--size-large);
+}
+
+.mb-3 {
+  margin-bottom: var(--size-medium);
+}
+
+.mb-4 {
+  margin-bottom: var(--size-normal);
+}
+
+.mb-5 {
+  margin-bottom: var(--size-small);
+}
+
+.mb-6 {
+  margin-bottom: var(--size-extra-small);
 }
 
 .mt-1 {
@@ -102,6 +128,30 @@
 .mx-6 {
   margin-left: var(--size-extra-small);
   margin-right: var(--size-extra-small);
+}
+
+.pb-1 {
+  padding-bottom: var(--size-extra-large);
+}
+
+.pb-2 {
+  padding-bottom: var(--size-large);
+}
+
+.pb-3 {
+  padding-bottom: var(--size-medium);
+}
+
+.pb-4 {
+  padding-bottom: var(--size-normal);
+}
+
+.pb-5 {
+  padding-bottom: var(--size-small);
+}
+
+.pb-6 {
+  padding-bottom: var(--size-extra-small);
 }
 
 .pt-1 {
@@ -191,6 +241,30 @@
 .px-6 {
   padding-left: var(--size-extra-small);
   padding-right: var(--size-extra-small);
+}
+
+.is-primary {
+  background-color: var(--color-primary);
+}
+
+.is-warning {
+  background-color: var(--color-warning);
+}
+
+.is-white {
+  background-color: var(--color-white);
+}
+
+.has-color-primary {
+  color: var(--color-primary);
+}
+
+.has-color-black {
+  color: var(--color-black);
+}
+
+.has-color-link {
+  color: var(--color-link);
 }
 
 .has-background-link {

@@ -216,7 +216,7 @@ body {
 }
 
 .form .control .input {
-  min-width: 200px;
+  min-width: 300px;
   align-self: center;
   padding: var(--size-small);
   border-width: 0 0 1px 0;
@@ -238,6 +238,10 @@ body {
 
 .btn.is-cancel:hover {
   color: var(--color-black);
+}
+
+.form .control.right-control {
+  justify-content: flex-end;
 }
 
 @media (width: 768px) {

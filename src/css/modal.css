@@ -38,9 +38,10 @@
   margin: 0 0 15px;
 }
 
-.modal-close {
+.modal-close,
+.modal-accept {
   color: #aaa;
-  line-height: 50px;
+  line-height: var(--size-large);
   font-size: 80%;
   text-align: center;
   text-decoration: none;
@@ -49,7 +50,8 @@
   width: 70px;
 }
 
-.modal-close:hover {
+.modal-close:hover,
+.modal-accept {
   color: black;
 }
 

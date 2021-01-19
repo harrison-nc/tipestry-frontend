@@ -1,5 +1,6 @@
 import RegisterDialog from './RegisterDialog';
 import LoginDialog from './LoginDialog';
+import PostDialog from './PostDialog';
 
 import React, { Fragment } from 'react';
 
@@ -15,7 +16,7 @@ const Navbar = () => {
 
                     </div>
                     <nav className="nav-items is-flex">
-                        <a className="nav-item btn py-5 px-5" href="/">Post</a>
+                        <a className="nav-item btn py-5 px-5" href="#post-dialog">Post</a>
                         <a className="nav-item btn py-5 px-5" href="#login-dialog">Login</a>
                         <a className="nav-item btn py-5 px-5" href="#register-dialog">Join Us</a>
                         <button className="nav-item btn py-5 px-5">en</button>
@@ -24,6 +25,7 @@ const Navbar = () => {
             </div>
             <RegisterDialog id="register-dialog" />
             <LoginDialog id="login-dialog" />
+            <PostDialog id="post-dialog" />
         </Fragment>
     );
 }

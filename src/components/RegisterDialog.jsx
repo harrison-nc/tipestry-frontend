@@ -36,30 +36,37 @@ const RegisterDialog = (props) => {
             && cpasswordError === noError;
     }
 
-    const checkValidity = (name, value) => {
+    const checkValidity = (name, value, errorMessage = '') => {
         const noError = '';
 
         switch (name) {
             case 'name': {
-                if (!value) setNameError('name is required');
+                if (errorMessage) setNameError(errorMessage);
+                else if (!value) setNameError('name is required');
                 else if (value.length < 4) setNameError('name should have at least 4 characters');
                 else if (value.length > 15) setNameError('name should have at most 15 characters');
                 else setNameError(noError);
                 break;
             }
             case 'email': {
-                if (!value) setEmailError('email is required');
+                const re = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
+
+                if (errorMessage) setEmailError(errorMessage);
+                else if (!value) setEmailError('email is required');
+                else if (!re.test(value)) setEmailError('please enter a valid email');
                 else setEmailError(noError);
                 break;
             }
             case 'password': {
-                if (!value) setPasswordError('password is required');
+                if (errorMessage) setPasswordError(errorMessage);
+                else if (!value) setPasswordError('password is required');
                 else if (value.length < 5) setPasswordError('password should have at least 5 characters');
                 else setPasswordError('');
                 break;
             }
             case 'cpassword': {
-                if (!value) setConfirmPasswordError('please enter password again');
+                if (errorMessage) setConfirmPasswordError(errorMessage);
+                else if (!value) setConfirmPasswordError('please enter password again');
                 else if (!(value === password)) setConfirmPasswordError('Passwords do not match.');
                 else setConfirmPasswordError(noError);
                 break;
@@ -69,37 +76,6 @@ const RegisterDialog = (props) => {
             }
         }
     };
-
-    const handleChange = (e) => {
-        const { target } = e;
-        const { name, value } = target;
-
-        switch (name) {
-            case 'name': {
-                setName(value);
-                break;
-            }
-            case 'email': {
-                target.checkValidity();
-                setEmail(value);
-                break;
-            }
-            case 'password': {
-                setPassword(value);
-                break;
-            }
-            case 'cpassword': {
-                setConfirmPassword(value);
-                break;
-            }
-            default: {
-                console.error(`Invalid input ${name}`);
-            }
-        }
-
-        resetInputError(name);
-        checkValidity(name, value);
-    }
 
     const resetInputError = (name) => {
         const noError = '';
@@ -135,16 +111,58 @@ const RegisterDialog = (props) => {
     const handleClose = (e) => {
         resetInputValue();
         resetInputError();
-        // window.location.href = '#app';
+        window.location.href = '#app';
     };
+
+    const handleChange = (e) => {
+        const { target } = e;
+        const { name, value } = target;
+
+        switch (name) {
+            case 'name': {
+                setName(value);
+                break;
+            }
+            case 'email': {
+                target.checkValidity();
+                setEmail(value);
+                break;
+            }
+            case 'password': {
+                setPassword(value);
+                break;
+            }
+            case 'cpassword': {
+                setConfirmPassword(value);
+                break;
+            }
+            default: {
+                console.error(`Invalid input ${name}`);
+            }
+        }
+
+        resetInputError(name);
+        checkValidity(name, value);
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (reportValidity()) {
-            console.log('input is valid')
-        } else {
-            console.log('invalid form input value');
+
+            try {
+                const result = await onRegister({ name, email, password });
+
+                if (result.error) {
+                    const { key, message } = result.error;
+                    checkValidity(key, result[key], message);
+                }
+
+                console.log(result);
+            }
+            catch (ex) {
+                console.error(ex);
+            }
         }
 
         return null;
@@ -156,7 +174,15 @@ const RegisterDialog = (props) => {
                 <div className="form is-flex flex-column box has-background-white pt-2 pb-4 px-2">
                     <p className="subtitle has-color-link flex-grow mb-2">Register user</p>
 
-
+                    <Input
+                        label="Username"
+                        type="text"
+                        name="name"
+                        placeholder="Enter username"
+                        value={name}
+                        hasError={nameError}
+                        validate={true}
+                        onInput={handleChange} />
 
                     <Input
                         label="Email"
@@ -165,7 +191,6 @@ const RegisterDialog = (props) => {
                         placeholder="Enter email address"
                         value={email}
                         hasError={emailError}
-                        validate={true}
                         onInput={handleChange} />
 
                     <Input
@@ -205,7 +230,6 @@ export const Input = (props) => {
         placeholder,
         onInput,
         readOnly,
-        onError,
         validate,
         hasError } = props;
 
@@ -225,7 +249,6 @@ export const Input = (props) => {
                     readOnly={readOnly ? true : false}
                     placeholder={placeholder}
                     onChange={onInput}
-                    onInvalid={onError}
                     formNoValidate={validate ? validate : false}
                     required={true} />
             </fieldset>

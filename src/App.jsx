@@ -44,8 +44,25 @@ class App extends Component {
 
     registerAction = 'http://localhost:3000/api/users'
 
-    handleRegister = async (event, user) => {
-        return 1;
+    handleRegister = async (user) => {
+        try {
+            // const response = await axios.post(this.registerAction, user);
+            const response = await fetch(this.registerAction, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(user)
+            })
+
+            const data = await response.json();
+            return data;
+        }
+        catch (ex) {
+            console.error(ex);
+            // todo: process error and close the form
+        }
     };
 
     render() {

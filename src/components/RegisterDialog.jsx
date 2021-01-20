@@ -72,7 +72,7 @@ const RegisterDialog = (props) => {
                 break;
             }
             default: {
-
+                console.error(`Invalid property "${name}"`);
             }
         }
     };
@@ -124,7 +124,6 @@ const RegisterDialog = (props) => {
                 break;
             }
             case 'email': {
-                target.checkValidity();
                 setEmail(value);
                 break;
             }
@@ -154,9 +153,24 @@ const RegisterDialog = (props) => {
                 const result = await onRegister({ name, email, password });
 
                 if (result.error) {
-                    const { key, message } = result.error;
-                    checkValidity(key, result[key], message);
+
+                    const showError = (error) => {
+                        const { key, value, message } = error;
+                        checkValidity(key, value, message);
+                    };
+
+                    const { error } = result;
+
+                    if (error instanceof Array) error.forEach(err => showError(err));
+
+                    else if (error instanceof Object) showError(error);
+
+                    else console.error(error);
+
+                    return null;
                 }
+
+
 
                 console.log(result);
             }

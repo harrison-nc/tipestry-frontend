@@ -1,6 +1,6 @@
 import '../css/modal.css';
 
-import { Input } from './RegisterDialog';
+import Input from './Input';
 
 const PostDialog = ({ id }) => {
     return (

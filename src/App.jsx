@@ -46,7 +46,6 @@ class App extends Component {
 
     handleRegister = async (user) => {
         try {
-            // const response = await axios.post(this.registerAction, user);
             const response = await fetch(this.registerAction, {
                 method: 'POST',
                 mode: 'cors',
@@ -56,8 +55,7 @@ class App extends Component {
                 body: JSON.stringify(user)
             })
 
-            const data = await response.json();
-            return data;
+            return await response.json();
         }
         catch (ex) {
             console.error(ex);

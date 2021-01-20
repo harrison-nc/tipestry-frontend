@@ -1,4 +1,4 @@
-import RegisterDialog from './RegisterDialog';
+import Register from './Register';
 import LoginDialog from './LoginDialog';
 import PostDialog from './PostDialog';
 
@@ -26,7 +26,7 @@ const Navbar = (props) => {
                 </div>
             </div>
 
-            <RegisterDialog
+            <Register
                 id="register-dialog"
                 onRegister={onRegister} />
 

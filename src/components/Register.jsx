@@ -2,7 +2,15 @@ import '../css/modal.css';
 
 import React, { useState } from 'react';
 
-const RegisterDialog = (props) => {
+import { FormModal } from './Modal';
+import { createInput } from './Input';
+
+const Email = createInput('email', 'email', 'Email', 'Enter email address');
+const Name = createInput('name', 'name', 'Username', 'Enter username');
+const Password = createInput('password', 'password', 'Password', 'Enter password');
+const ConfirmPassword = createInput('cpassword', 'password', 'Confirm password', 'Confirm password');
+
+const Register = (props) => {
     const { id, onRegister } = props;
 
     const [name, setName] = useState('');
@@ -16,9 +24,6 @@ const RegisterDialog = (props) => {
 
     const [cpassword, setConfirmPassword] = useState('');
     const [cpasswordError, setConfirmPasswordError] = useState('');
-
-    const validInput = name && email && password && cpassword;
-    const btnClasses = "btn py-4 px-3" + (validInput ? " is-primary has-color-white" : " is-disable has-color-black");
 
     const reportValidity = () => {
         const noError = '';
@@ -183,91 +188,22 @@ const RegisterDialog = (props) => {
     };
 
     return (
-        <div id={id} className="modal-window">
-            <form method="post" onReset={handleClose} onSubmit={handleSubmit} noValidate={true}>
-                <div className="form is-flex flex-column box has-background-white pt-2 pb-4 px-2">
-                    <p className="subtitle has-color-link flex-grow mb-2">Register user</p>
+        <FormModal id={id} method="post"
+            title="Register user"
+            onReset={handleClose}
+            onSubmit={handleSubmit}>
 
-                    <Input
-                        label="Username"
-                        type="text"
-                        name="name"
-                        placeholder="Enter username"
-                        value={name}
-                        hasError={nameError}
-                        validate={true}
-                        onInput={handleChange} />
+            <Name value={name} hasError={nameError} onChange={handleChange} />
+            <Email value={name} hasError={nameError} onChange={handleChange} />
+            <Password value={password} hasError={passwordError} onChange={handleChange} />
+            <ConfirmPassword value={cpassword} hasError={cpasswordError} onChange={handleChange} />
 
-                    <Input
-                        label="Email"
-                        type="email"
-                        name="email"
-                        placeholder="Enter email address"
-                        value={email}
-                        hasError={emailError}
-                        onInput={handleChange} />
-
-                    <Input
-                        label="Password"
-                        type="password"
-                        name="password"
-                        placeholder="Enter password"
-                        value={password}
-                        hasError={passwordError}
-                        onInput={handleChange} />
-
-                    <Input
-                        label="Confirm Password"
-                        type="password"
-                        name="cpassword"
-                        placeholder="Confirm password"
-                        value={cpassword}
-                        hasError={cpasswordError}
-                        onInput={handleChange} />
-
-                    <div className="control buttons is-flex mt-3">
-                        <input className="close modal-close has-color-black" type="reset" value="Close" />
-                        <input className={btnClasses} type="submit" value="Register" />
-                    </div>
-                </div>
-            </form>
-        </div>
+            <div className="control buttons is-flex mt-3">
+                <input className="close modal-close btn" type="reset" value="Close" />
+                <input className="is-primary has-color-white btn py-4 px-3" type="submit" value="Register" />
+            </div>
+        </FormModal>
     );
 };
 
-export const Input = (props) => {
-    const {
-        label,
-        type,
-        name,
-        value,
-        placeholder,
-        onInput,
-        readOnly,
-        validate,
-        hasError } = props;
-
-    const errorClasses = "error" + (hasError ? "" : " is-not-visible");
-
-    return (
-        <div className="control is-flex flex-column">
-            <span className={errorClasses}>{hasError}</span>
-
-            <fieldset>
-                <legend>{label}</legend>
-                <input className="input"
-                    id={name}
-                    type={type}
-                    name={name}
-                    value={value}
-                    readOnly={readOnly ? true : false}
-                    placeholder={placeholder}
-                    onChange={onInput}
-                    formNoValidate={validate ? validate : false}
-                    required={true} />
-            </fieldset>
-        </div>
-    );
-};
-
-export default RegisterDialog;
+export default Register;

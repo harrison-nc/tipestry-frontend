@@ -252,6 +252,17 @@ body {
   color: var(--color-white);
 }
 
+.btn.modal-close.close {
+  background-color: transparent;
+  border: unset;
+  box-shadow: unset;
+}
+
+.btn.modal-close.close:hover {
+  border: 1px var(--color-black);
+  border-radius: 2px;
+}
+
 .error {
   color: var(--color-danger);
 }

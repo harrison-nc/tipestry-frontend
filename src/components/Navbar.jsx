@@ -4,13 +4,17 @@ import PostDialog from './PostDialog';
 
 import React, { Fragment } from 'react';
 
-const Navbar = () => {
+const Navbar = (props) => {
+    const { onRegister } = props;
+
     return (
         <Fragment>
             <div className="navbar has-background-link py-4 px-5">
                 <div className="container is-flex">
                     <div className="brand">
-                        <span className="subtitle">Tipestry</span>
+                        <span className="subtitle">
+                            <a alt="navigate to home" href="/">Tipestry</a>
+                        </span>
                     </div>
 
                     <nav className="nav-items is-flex">
@@ -21,7 +25,11 @@ const Navbar = () => {
                     </nav>
                 </div>
             </div>
-            <RegisterDialog id="register-dialog" />
+
+            <RegisterDialog
+                id="register-dialog"
+                onRegister={onRegister} />
+
             <LoginDialog id="login-dialog" />
             <PostDialog id="post-dialog" />
         </Fragment>

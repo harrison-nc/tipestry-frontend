@@ -42,13 +42,22 @@ class App extends Component {
         ]
     };
 
+    registerAction = 'http://localhost:3000/api/users'
+
+    handleRegister = async (event, user) => {
+        return 1;
+    };
+
     render() {
         const { user, post, toptags } = this.state;
 
         return (
             <Fragment>
-                <Navbar />
-                <main className="main is-flex pt-3 mt-1">
+                <Navbar
+                    registerAction={this.registerAction}
+                    onRegister={this.handleRegister} />
+
+                <main id="app" className="main is-flex pt-3 mt-1">
                     <Suggestions />
                     <section className="section">
                         <Search />

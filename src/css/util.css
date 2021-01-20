@@ -15,11 +15,16 @@
   --color-link: hsl(217, 71%, 53%);
   --color-white: hsl(0, 0%, 100%);
   --color-black: hsl(0, 0%, 4%);
-  --color-grey-lighter: hsl(0, 0%, 86%);
   --color-primary: hsl(171, 100%, 41%);
   --color-warning: hsl(48, 100%, 67%);
+  --color-danger: hsl(348, 100%, 61%);
+  --color-success: hsl(141, 71%, 48%);
+  --color-info: hsl(204, 86%, 53%);
+  --color-light: hsl(0, 0%, 96%);
 
+  --color-grey-lighter: hsl(0, 0%, 86%);
   --main-bg-color: #e6ecf0;
+  --error-color: rgba(255, 128, 128, 1);
 }
 
 .mb-1 {
@@ -255,6 +260,14 @@
   background-color: var(--color-white);
 }
 
+.is-hidden {
+  display: none;
+}
+
+.is-not-visible {
+  visibility: hidden;
+}
+
 .has-color-primary {
   color: var(--color-primary);
 }
@@ -265,6 +278,10 @@
 
 .has-color-link {
   color: var(--color-link);
+}
+
+.has-color-white {
+  color: var(--color-white);
 }
 
 .has-background-link {

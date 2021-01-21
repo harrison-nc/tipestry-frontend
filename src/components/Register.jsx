@@ -5,9 +5,9 @@ import React, { useState } from 'react';
 import { FormModal } from './Modal';
 import { createInput } from './Input';
 
-const Email = createInput('email', 'email', 'Email', 'Enter email address');
+const Email = createInput('email', 'email', 'Email', 'Enter email address', 'register-email');
 const Name = createInput('name', 'name', 'Username', 'Enter username');
-const Password = createInput('password', 'password', 'Password', 'Enter password');
+const Password = createInput('password', 'password', 'Password', 'Enter password', 'register-password');
 const ConfirmPassword = createInput('cpassword', 'password', 'Confirm password', 'Confirm password');
 
 const Register = (props) => {

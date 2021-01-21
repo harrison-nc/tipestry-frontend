@@ -194,7 +194,7 @@ const Register = (props) => {
             onSubmit={handleSubmit}>
 
             <Name value={name} hasError={nameError} onChange={handleChange} />
-            <Email value={name} hasError={nameError} onChange={handleChange} />
+            <Email value={email} hasError={emailError} onChange={handleChange} />
             <Password value={password} hasError={passwordError} onChange={handleChange} />
             <ConfirmPassword value={cpassword} hasError={cpasswordError} onChange={handleChange} />
 

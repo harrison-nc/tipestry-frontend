@@ -16,14 +16,17 @@ export const FormModal = (props) => {
 
     return (
         <div id={id} className="modal-window">
-            <form method={method} onReset={onReset} onSubmit={onSubmit} noValidate={true}>
+            <form method={method}
+                onReset={onReset}
+                onSubmit={onSubmit}
+                noValidate={true}>
+
                 <div className="form is-flex flex-column box has-background-white pt-2 pb-4 px-2">
-                    <div>
+                    <div className="header">
                         <p className="subtitle has-color-link flex-grow mb-2">
                             {title}
                         </p>
-                        {noClose ? <input className="close modal-close has-color-black" type="reset" value="Close" />
-                            : ""}
+                        {noClose ? <input className="close modal-close has-color-black" type="reset" value="Close" /> : ""}
                     </div>
                     {children}
                 </div>

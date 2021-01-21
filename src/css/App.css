@@ -15,6 +15,7 @@ html {
 
 body {
   background-color: var(--main-bg-color);
+  font-size: var(--size-medium);
 }
 
 .title {
@@ -23,7 +24,7 @@ body {
 }
 
 .subtitle {
-  font-size: var(--size-large);
+  font-size: var(--size-larger);
   line-height: 1.5;
 }
 
@@ -149,7 +150,7 @@ body {
 
 .main {
   justify-content: center;
-  column-gap: var(--size-large);
+  column-gap: var(--size-larger);
 }
 
 .main > .aside .aside-content,
@@ -173,10 +174,6 @@ body {
   text-decoration: none;
 }
 
-.btn {
-  text-decoration: none;
-}
-
 .nav-items {
   column-gap: var(--size-normal);
 }
@@ -191,8 +188,7 @@ body {
 .form .control {
   align-items: flex-start;
   justify-content: start;
-  column-gap: var(--size-large);
-  font-size: var(--size-medium);
+  column-gap: var(--size-larger);
 }
 
 .form .control .close {
@@ -209,8 +205,6 @@ body {
 .form .control .input {
   min-width: 300px;
   align-self: center;
-  padding: var(--size-small);
-  border-width: 0 0 1px 0;
 }
 
 .form .control.buttons {
@@ -221,20 +215,8 @@ body {
   align-items: center;
 }
 
-.btn {
-  border: 0;
-  border-radius: 2px;
-  box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.2);
-}
-
-.btn.is-cancel {
-  border: 0;
-  background-color: transparent;
-  color: #aaa;
-}
-
-.btn.is-cancel:hover {
-  color: var(--color-black);
+.search .form .control .input {
+  border-width: 0 0 1px 0;
 }
 
 .form .control.right-control {
@@ -252,6 +234,29 @@ body {
   color: var(--color-white);
 }
 
+.btn {
+  text-decoration: none;
+}
+.btn {
+  border: 0;
+  border-radius: 2px;
+  box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.2);
+}
+
+.btn.is-primary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.btn.is-cancel {
+  border: 0;
+  background-color: transparent;
+  color: #aaa;
+}
+
+.btn.is-cancel:hover {
+  color: var(--color-black);
+}
+
 .btn.modal-close.close {
   background-color: transparent;
   border: unset;
@@ -265,6 +270,29 @@ body {
 
 .error {
   color: var(--color-danger);
+  line-height: 1.5em;
+}
+
+.field .input {
+  border: unset;
+}
+
+.input-container {
+  width: 400px;
+}
+
+.input-container.control .field {
+  border-radius: 5px;
+}
+
+.input-container.control .field .legend + .input {
+  align-self: stretch;
+}
+
+.input-container.control .field > .error {
+  min-height: 24px;
+  text-transform: capitalize;
+  text-overflow: ellipsis;
 }
 
 @media (width: 768px) {

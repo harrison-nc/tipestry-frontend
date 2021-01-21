@@ -41,7 +41,7 @@
 .modal-close,
 .modal-accept {
   color: #aaa;
-  line-height: var(--size-large);
+  line-height: var(--size-larger);
   font-size: 80%;
   text-align: center;
   text-decoration: none;

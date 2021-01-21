@@ -176,7 +176,6 @@ const Register = (props) => {
                 }
 
 
-
                 console.log(result);
             }
             catch (ex) {
@@ -188,21 +187,23 @@ const Register = (props) => {
     };
 
     return (
-        <FormModal id={id} method="post"
-            title="Register user"
-            onReset={handleClose}
-            onSubmit={handleSubmit}>
+        <div className="register">
+            <FormModal id={id} method="post"
+                title="Register user"
+                onReset={handleClose}
+                onSubmit={handleSubmit}>
 
-            <Name value={name} hasError={nameError} onChange={handleChange} />
-            <Email value={email} hasError={emailError} onChange={handleChange} />
-            <Password value={password} hasError={passwordError} onChange={handleChange} />
-            <ConfirmPassword value={cpassword} hasError={cpasswordError} onChange={handleChange} />
+                <Name value={name} hasError={nameError} onChange={handleChange} />
+                <Email value={email} hasError={emailError} onChange={handleChange} />
+                <Password value={password} hasError={passwordError} onChange={handleChange} />
+                <ConfirmPassword value={cpassword} hasError={cpasswordError} onChange={handleChange} />
 
-            <div className="control buttons is-flex mt-3">
-                <input className="close modal-close btn" type="reset" value="Close" />
-                <input className="is-primary has-color-white btn py-4 px-3" type="submit" value="Register" />
-            </div>
-        </FormModal>
+                <div className="control buttons is-flex mt-3">
+                    <input className="close modal-close btn" type="reset" value="Close" />
+                    <input className="is-primary has-color-white btn py-4 px-3" type="submit" value="Register" />
+                </div>
+            </FormModal>
+        </div>
     );
 };
 

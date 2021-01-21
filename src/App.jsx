@@ -5,6 +5,9 @@ import banner from './images/potw-banner.png';
 
 import React, { Component, Fragment } from 'react';
 
+import Register from './components/Register';
+import LoginDialog from './components/LoginDialog';
+import PostDialog from './components/PostDialog';
 import Navbar from './components/Navbar';
 import Search from './components/Search';
 import Filter from './components/Filter';
@@ -81,6 +84,13 @@ class App extends Component {
                     </section>
                     <Hashtags toptags={toptags} />
                 </main>
+
+                <Register
+                    id="register-dialog"
+                    onRegister={this.handleRegister} />
+
+                <LoginDialog id="login-dialog" />
+                <PostDialog id="post-dialog" />
             </Fragment>
         );
     }

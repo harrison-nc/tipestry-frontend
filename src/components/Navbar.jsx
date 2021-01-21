@@ -1,12 +1,6 @@
-import Register from './Register';
-import LoginDialog from './LoginDialog';
-import PostDialog from './PostDialog';
-
 import React, { Fragment } from 'react';
 
-const Navbar = (props) => {
-    const { onRegister } = props;
-
+const Navbar = () => {
     return (
         <Fragment>
             <div className="navbar has-background-link py-4 px-5">
@@ -25,13 +19,6 @@ const Navbar = (props) => {
                     </nav>
                 </div>
             </div>
-
-            <Register
-                id="register-dialog"
-                onRegister={onRegister} />
-
-            <LoginDialog id="login-dialog" />
-            <PostDialog id="post-dialog" />
         </Fragment>
     );
 }

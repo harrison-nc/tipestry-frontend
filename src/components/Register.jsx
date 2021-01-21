@@ -2,7 +2,7 @@ import '../css/modal.css';
 
 import React, { useState } from 'react';
 
-import { FormModal } from './Modal';
+import Modal, { FormModal } from './Modal';
 import { createInput } from './Input';
 
 const Email = createInput('email', 'email', 'Email', 'Enter email address', 'register-email');
@@ -171,14 +171,13 @@ const Register = (props) => {
                     else if (error instanceof Object) showError(error);
 
                     else console.error(error);
-
-                    return null;
                 }
-
-
-                console.log(result);
+                else {
+                    window.location.href = "#success";
+                }
             }
             catch (ex) {
+                window.location.href = "#failure";
                 console.error(ex);
             }
         }
@@ -203,7 +202,29 @@ const Register = (props) => {
                     <input className="is-primary has-color-white btn py-4 px-3" type="submit" value="Register" />
                 </div>
             </FormModal>
-        </div>
+
+            <Modal id="success" classes="box hax-background-white">
+                <div className="success is-flex flex-column box has-background-white py-3 px-3">
+                    <p className="flex-grow is-flex subtitle">Account created successfully</p>
+                    <p className="close-container flex-grow is-flex">
+                        <a className="modal-close close is-success mb-1" alt="close modal" href="#app">
+                            close
+                        </a>
+                    </p>
+                </div>
+            </Modal>
+
+            <Modal id="failure" classes="box hax-background-white">
+                <div className="failure is-flex flex-column box has-background-white py-3 px-3">
+                    <p className="flex-grow is-flex subtitle">Account creation failed</p>
+                    <p className="close-container flex-grow is-flex">
+                        <a className="modal-close close is-info mb-1" alt="close modal" href="#app">
+                            Close
+                        </a>
+                    </p>
+                </div>
+            </Modal>
+        </div >
     );
 };
 

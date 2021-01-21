@@ -14,7 +14,7 @@ const Navbar = () => {
                     <nav className="nav-items is-flex">
                         <a className="nav-item btn py-5 px-5" href="#post-dialog">Post</a>
                         <a className="nav-item btn py-5 px-5" href="#login-dialog">Login</a>
-                        <a className="nav-item btn py-5 px-5" href="#register-dialog">Join Us</a>
+                        <a className="nav-item btn py-5 px-5" href="#register">Join Us</a>
                         <button className="nav-item btn py-5 px-5">en</button>
                     </nav>
                 </div>

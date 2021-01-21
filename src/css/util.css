@@ -288,6 +288,19 @@
   background-color: var(--color-warning);
 }
 
+.is-success {
+  background-color: var(--color-success);
+}
+
+.is-link {
+  background-color: var(--color-link);
+}
+
+.is-info {
+  color: var(--color-white);
+  background-color: var(--color-info);
+}
+
 .is-white {
   background-color: var(--color-white);
 }

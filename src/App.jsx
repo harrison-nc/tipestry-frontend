@@ -86,7 +86,7 @@ class App extends Component {
                 </main>
 
                 <Register
-                    id="register-dialog"
+                    id="register"
                     onRegister={this.handleRegister} />
 
                 <LoginDialog id="login-dialog" />

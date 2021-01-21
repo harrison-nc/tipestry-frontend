@@ -12,7 +12,7 @@ const Modal = (props) => {
 }
 
 export const FormModal = (props) => {
-    const { id, children, method, onReset, onSubmit, title, noClose } = props;
+    const { id, children, method, onReset, onSubmit, title, close } = props;
 
     return (
         <div id={id} className="modal-window">
@@ -26,7 +26,7 @@ export const FormModal = (props) => {
                         <p className="subtitle has-color-link flex-grow mb-2">
                             {title}
                         </p>
-                        {noClose ? <input className="close modal-close has-color-black" type="reset" value="Close" /> : ""}
+                        {close}
                     </div>
                     {children}
                 </div>

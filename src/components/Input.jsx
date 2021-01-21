@@ -9,7 +9,7 @@ const Input = (props) => {
         <div className="input-container control">
             <fieldset className="is-flex flex-column field py-5 px-5">
                 <span className={errorClasses}>{hasError}</span>
-                <legend className="legend size-medium has-color-grey">{label}</legend>
+                <legend className="legend size-medium">{label}</legend>
                 <input className="input py-4 px-4 size-medium"
                     id={id ? id : name}
                     type={type}

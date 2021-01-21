@@ -7,7 +7,7 @@ import React, { Component, Fragment } from 'react';
 import Hashtags from './components/Hashtags';
 import Suggestions from './components/Suggestions';
 import Register from './components/Register';
-import LoginDialog from './components/LoginDialog';
+import Login from './components/Login';
 import PostDialog from './components/PostDialog';
 import Navbar from './components/Navbar';
 import Search from './components/Search';
@@ -86,11 +86,8 @@ class App extends Component {
                     <Hashtags toptags={toptags} />
                 </main>
 
-                <Register
-                    id="register"
-                    onRegister={this.handleRegister} />
-
-                <LoginDialog id="login-dialog" />
+                <Register id="register" onRegister={this.handleRegister} />
+                <Login id="login" />
                 <PostDialog id="post-dialog" />
             </Fragment>
         );

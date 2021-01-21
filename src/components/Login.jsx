@@ -2,7 +2,7 @@ import '../css/modal.css';
 
 import Input from './Input';
 
-const LoginDialog = ({ id }) => {
+const Login = ({ id }) => {
     return (
         <div id={id} className="modal-window">
             <form>
@@ -34,4 +34,4 @@ const LoginDialog = ({ id }) => {
     );
 }
 
-export default LoginDialog;
+export default Login;

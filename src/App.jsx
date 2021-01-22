@@ -14,6 +14,9 @@ import Search from './components/Search';
 import Filter from './components/Filter';
 import Cards from './components/Cards';
 
+const registerAction = 'http://localhost:3000/api/users'
+const loginAction = 'http://localhost:3000/api/logins'
+
 class App extends Component {
     state = {
         user: '',
@@ -26,9 +29,6 @@ class App extends Component {
         ]
     };
 
-    registerAction = 'http://localhost:3000/api/users'
-    loginAction = 'http://localhost:3000/api/logins'
-
     updateLoginUser = (newUser) => {
         const user = { ...newUser.login };
 
@@ -39,7 +39,7 @@ class App extends Component {
 
     handleRegister = async (user) => {
         try {
-            const response = await fetch(this.registerAction, {
+            const response = await fetch(registerAction, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
@@ -57,7 +57,7 @@ class App extends Component {
 
     handleLogin = async (user) => {
         try {
-            const response = await fetch(this.loginAction, {
+            const response = await fetch(loginAction, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {

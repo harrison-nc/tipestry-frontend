@@ -17,20 +17,29 @@ const Login = (props) => {
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
+    const [serverError, setServerError] = useState('');
+
     const noError = '';
 
-    const checkValidity = (name, value) => {
+    const checkValidity = (name, value, error) => {
         switch (name) {
             case 'email':
-                if (!value) setEmailError('Please enter an email.');
+                if (error) setEmailError(error);
+                else if (!value) setEmailError('Please enter an email.');
                 else if (!validateEmail(value)) setEmailError('Please enter a valid email.');
                 else setEmailError(noError);
                 break;
 
             case 'password':
-                if (!value) setPasswordError('Please enter a password.');
+                if (error) setPasswordError(error);
+                else if (!value) setPasswordError('Please enter a password.');
                 else setPasswordError(noError);
                 break;
+
+            case 'server':
+                if (error) setServerError(error);
+                else setServerError(noError);
+                break
 
             default:
                 break;
@@ -50,6 +59,10 @@ const Login = (props) => {
 
             case 'password':
                 setPasswordError(noError);
+                break;
+
+            case 'server':
+                setServerError(noError);
                 break;
 
             default:
@@ -87,7 +100,11 @@ const Login = (props) => {
                         checkValidity(key, value, message);
                     };
 
-                    if (error instanceof Array) error.forEach(err => showError(err));
+                    const { login } = error;
+
+                    if (login) checkValidity('server', '', login.message);
+
+                    else if (error instanceof Array) error.forEach(err => showError(err));
 
                     else if (error instanceof Object) showError(error);
 
@@ -149,6 +166,8 @@ const Login = (props) => {
                     hasError={passwordError}
                     onInput={handleChange}
                     placeholder="Enter password" />
+
+                {serverError && <span className="error">{serverError}</span>}
 
                 <div className="control buttons is-flex mt-3">
                     <input className="btn py-4 px-3 is-primary" type="submit" value="Login" />

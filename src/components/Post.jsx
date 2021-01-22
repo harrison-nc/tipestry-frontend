@@ -7,6 +7,25 @@ import Input, { InputContainer } from './Input';
 
 const noError = '';
 
+const createValidator = (fun) => {
+    return {
+        notValid(value) {
+            return fun(value);
+        },
+        isValid(value) {
+            return !this.notValid(value);
+        }
+    }
+};
+
+const Validators = {
+    resourceUrl: createValidator(value => !value ? 'Resource url is required' : ''),
+
+    title: createValidator(value => !value ? 'Title is required' : ''),
+
+    description: createValidator(value => ''),
+}
+
 const Post = (props) => {
     const { id, onPost } = props;
 
@@ -27,39 +46,51 @@ const Post = (props) => {
         checkValidity('resourceUrl', url);
         checkValidity('title', title);
         checkValidity('description', description);
-
-        return urlError === noError
-            && titleError === noError
-            && descriptionError === noError;
     };
 
-    const checkValidity = (name, value, error = '') => {
+    const checkValidity = (name, value, errorMessage = '') => {
+        const validator = Validators[name];
+        const error = validator.notValid(value);
+
         switch (name) {
             case 'resourceUrl':
-                if (error) setURLError(error);
-                else if (!value) setURLError('Resource url is required');
-                else setURLError(noError);
+                if (errorMessage) setURLError(errorMessage);
+                else setURLError(error);
                 break;
 
             case 'title':
-                if (error) setTitleError(error);
-                else if (!value) setTitleError('Title is required');
-                else setTitleError(noError);
+                if (errorMessage) setTitleError(errorMessage);
+                else setTitleError(error);
                 break;
 
             case 'description':
-                if (error) setDescriptionError(error);
-                else setDescriptionError(noError);
+                if (errorMessage) setDescriptionError(errorMessage);
+                else setDescriptionError(error);
                 break;
 
             default:
-                setServerError(error);
+                setServerError(errorMessage);
                 break;
         }
     };
 
+    const isValid = (name, value) => {
+        const validator = Validators[name];
+
+        if (!validator) return false;
+
+        return validator.isValid(value);
+    };
+
+    const validateInputs = () => {
+        return isValid('resourceUrl', url)
+            && isValid('title', title)
+            && isValid('description', description);
+    };
+
     const resetInputError = (name) => {
         setServerError(noError);
+
         switch (name) {
             case 'resourceUrl':
                 setURLError(noError);
@@ -100,10 +131,11 @@ const Post = (props) => {
             default:
                 break;
         }
-
-        resetInputError(name);
-        checkValidity(name, value);
     }
+
+    const handleFocus = (e) => resetInputError(e.target.name);
+
+    const handleBlur = (e) => checkValidity(e.target.name, e.target.value);
 
     const handleReset = (e) => {
         e.preventDefault();
@@ -119,7 +151,7 @@ const Post = (props) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const isValid = reportValidity();
+        const isValid = validateInputs();
 
         if (isValid) {
             try {
@@ -138,6 +170,10 @@ const Post = (props) => {
                 console.error(ex);
             }
             handleReset(e);
+            return;
+        }
+        else {
+            reportValidity();
         }
     }
 
@@ -155,6 +191,8 @@ const Post = (props) => {
                     placeholder='Enter resource url'
                     value={url}
                     hasError={urlError}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                     onChange={handleChange} />
 
                 <Input
@@ -164,6 +202,8 @@ const Post = (props) => {
                     placeholder="Enter post title"
                     value={title}
                     hasError={titleError}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                     onChange={handleChange} />
 
                 <InputContainer label="Description">
@@ -175,6 +215,8 @@ const Post = (props) => {
                         name="description"
                         placeholder="Enter post details"
                         value={description}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
                         onChange={handleChange}></textarea>
                 </InputContainer>
 

@@ -91,7 +91,7 @@ const Login = (props) => {
 
                     else if (error instanceof Object) showError(error);
 
-                    else window.location.href = '#lfialure';
+                    else window.location.href = '#lfailure';
 
                     console.error(error);
                 }
@@ -155,7 +155,7 @@ const Login = (props) => {
                 </div>
             </FormModal>
 
-            <Modal id="rfailure" classes="box hax-background-white">
+            <Modal id="lfailure" classes="box hax-background-white">
                 <div className="failure is-flex flex-column box has-background-white py-3 px-3">
                     <p className="flex-grow is-flex subtitle">
                         Login failed

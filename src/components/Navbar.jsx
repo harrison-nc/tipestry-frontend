@@ -9,14 +9,14 @@ const Navbar = (props) => {
         accountMgtButtons = (
             <Fragment>
                 <span>@{loggedInUser.name}</span>
-                <a className="nav-item btn py-5 px-5" href="#post-dialog">Post</a>
+                <a className="nav-item btn py-5 px-5" href="#post">Post</a>
             </Fragment>
         );
     }
     else {
         accountMgtButtons = (
             <Fragment>
-                <a className="nav-item btn py-5 px-5" href="#post-dialog">Post</a>
+                <a className="nav-item btn py-5 px-5" href="#post">Post</a>
                 <a className="nav-item btn py-5 px-5" href="#login">Login</a>
                 <a className="nav-item btn py-5 px-5" href="#register">Join Us</a>
             </Fragment>

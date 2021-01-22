@@ -1,37 +1,52 @@
 import '../css/modal.css';
 
-import Input from './Input';
+import { FormModal } from './Modal';
+import Input, { InputContainer } from './Input';
 
-const Post = ({ id }) => {
+const Post = (props) => {
+    const { id } = props;
+
+    const handleReset = () => {
+
+    }
+
+    const handleSubmit = () => {
+
+    }
+
     return (
-        <div id={id} className="modal-window">
-            <form>
-                <div className="form is-flex flex-column box has-background-white py-4 px-2">
-                    <p className="subtitle has-color-link flex-grow mb-2">Add post</p>
+        <div className="post">
+            <FormModal id={id}
+                method="post"
+                onReset={handleReset}
+                onSubmit={handleSubmit}
+                title="Add post">
 
-                    <Input
-                        label="URL"
-                        name="resourceUrl"
-                        type="url"
-                        placeholder="Enter resource URL" />
+                <Input
+                    label="URL"
+                    name="resourceUrl"
+                    type="url"
+                    placeholder="Enter resource URL" />
 
-                    <Input
-                        label="Title"
-                        name="title"
-                        type="text"
-                        placeholder="Enter post title" />
+                <Input
+                    label="Title"
+                    name="title"
+                    type="text"
+                    placeholder="Enter post title" />
 
-                    <div className="control is-flex">
-                        <label htmlFor="description" className="label">Details</label>
-                        <textarea id="description" className="input" rows="5" name="description" placeholder="Enter post details"></textarea>
-                    </div>
+                <InputContainer label="Description">
+                    <textarea id="description"
+                        className="input py-4 px-4 size-medium"
+                        rows="5"
+                        name="description"
+                        placeholder="Enter post details"></textarea>
+                </InputContainer>
 
-                    <div className="control is-flex right-control mt-2">
-                        <a className="btn modal-close close" href="/">Cancel</a>
-                        <button className="btn modal-accept has-color-white is-primary">Save</button>
-                    </div>
+                <div className="control is-flex right-control mt-2">
+                    <a className="btn modal-close close" href="/">Cancel</a>
+                    <button className="btn modal-accept has-color-white is-primary">Save</button>
                 </div>
-            </form>
+            </FormModal>
         </div>
     );
 };

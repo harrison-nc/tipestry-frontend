@@ -155,7 +155,7 @@ const Login = (props) => {
                     name="email"
                     value={email}
                     hasError={emailError}
-                    onInput={handleChange}
+                    onChange={handleChange}
                     placeholder="Enter email address" />
 
                 <Input
@@ -164,7 +164,7 @@ const Login = (props) => {
                     name="password"
                     value={password}
                     hasError={passwordError}
-                    onInput={handleChange}
+                    onChange={handleChange}
                     placeholder="Enter password" />
 
                 {serverError && <span className="error">{serverError}</span>}

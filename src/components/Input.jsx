@@ -28,13 +28,13 @@ export const createInput = (name, type, label, placeholder, id = "") => {
                 placeholder={placeholder}
                 value={value}
                 hasError={hasError}
-                onInput={onChange} />
+                onChange={onChange} />
         );
     }
 }
 
 const Input = (props) => {
-    const { id, label, type, name, value, placeholder, onInput, hasError } = props;
+    const { id, label, type, name, value, placeholder, onChange, hasError } = props;
 
     return (
         <InputContainer label={label} hasError={hasError}>
@@ -44,7 +44,7 @@ const Input = (props) => {
                 name={name}
                 value={value}
                 placeholder={placeholder}
-                onChange={onInput}
+                onChange={onChange}
                 required={true} />
         </InputContainer>
     );

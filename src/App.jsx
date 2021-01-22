@@ -16,6 +16,7 @@ import Cards from './components/Cards';
 
 const registerAction = 'http://localhost:3000/api/users'
 const loginAction = 'http://localhost:3000/api/logins'
+const postAction = 'http://localhost:3000/api/posts'
 
 class App extends Component {
     state = {
@@ -27,6 +28,13 @@ class App extends Component {
             "#dog", "#mouse", "#football",
             "#css", "#javascript",
         ]
+    };
+
+    addPost = (post) => {
+        const posts = [...this.state.posts];
+        posts.push(post);
+
+        this.setState({ posts });
     };
 
     updateLoginUser = (newUser) => {
@@ -83,6 +91,41 @@ class App extends Component {
         }
     };
 
+    handlePost = async (post) => {
+        try {
+            console.log('user', this.state.user);
+            console.log('payload', post);
+
+            if (this.state.user) console.log('token', this.state.user['access-token']);
+
+            const headers = { 'Content-Type': 'application/json' }
+
+            if (this.state.user) headers['x-auth-token'] = this.state.user['access-token'];
+
+            console.log('headers', headers);
+
+            const response = await fetch(postAction, {
+                method: 'POST',
+                mode: 'cors',
+                headers,
+                body: JSON.stringify(post)
+            });
+
+            const result = await response.json();
+
+            if (result.error) return result.error;
+
+            else window.location.href = '#app';
+
+            this.addPost(result);
+
+            return true;
+
+        } catch (ex) {
+            throw ex;
+        }
+    };
+
     render() {
         const { user, posts, toptags } = this.state;
 
@@ -114,7 +157,7 @@ class App extends Component {
 
                 <Register id="register" onRegister={this.handleRegister} />
                 <Login id="login" onLogin={this.handleLogin} />
-                <Post id="post" />
+                <Post id="post" onPost={this.handlePost} />
             </Fragment>
         );
     }

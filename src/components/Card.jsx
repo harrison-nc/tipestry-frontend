@@ -6,7 +6,6 @@ import Header from "./card/Header";
 
 const Card = (props) => {
     const { post } = props;
-    const { user } = props;
 
     const {
         description,
@@ -20,17 +19,15 @@ const Card = (props) => {
 
     return (
         <div className="card has-background-white py-3 px-3 box">
-            <Header post={post} user={user} />
+            <Header post={post} />
 
             <Content description={description} resourceUrl={resourceUrl} />
 
-            <Footer
-                likes={likes}
+            <Footer likes={likes}
                 disLikes={disLikes}
                 comments={comments}
                 shares={shares}
-                views={views}
-            />
+                views={views} />
         </div>
     );
 }

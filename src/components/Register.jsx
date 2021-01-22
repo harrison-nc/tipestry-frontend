@@ -170,14 +170,14 @@ const Register = (props) => {
 
                     else if (error instanceof Object) showError(error);
 
-                    else console.error(error);
+                    else window.location.href = '#rfailure';
+
+                    console.error(error);
                 }
-                else {
-                    window.location.href = "#success";
-                }
+                else window.location.href = "#rsuccess";
             }
             catch (ex) {
-                window.location.href = "#failure";
+                window.location.href = "#rfailure";
                 console.error(ex);
             }
         }
@@ -203,7 +203,7 @@ const Register = (props) => {
                 </div>
             </FormModal>
 
-            <Modal id="success" classes="box hax-background-white">
+            <Modal id="rsuccess" classes="box hax-background-white">
                 <div className="success is-flex flex-column box has-background-white py-3 px-3">
                     <p className="flex-grow is-flex subtitle">Account created successfully</p>
                     <p className="close-container flex-grow is-flex">
@@ -214,7 +214,7 @@ const Register = (props) => {
                 </div>
             </Modal>
 
-            <Modal id="failure" classes="box hax-background-white">
+            <Modal id="rfailure" classes="box hax-background-white">
                 <div className="failure is-flex flex-column box has-background-white py-3 px-3">
                     <p className="flex-grow is-flex subtitle">Account creation failed</p>
                     <p className="close-container flex-grow is-flex">

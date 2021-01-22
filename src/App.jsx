@@ -16,11 +16,12 @@ import Cards from './components/Cards';
 
 class App extends Component {
     state = {
-        user: {
-            name: 'user@123',
-            avatarUrl: "https://picsum.photos/50",
-        },
+        user: '',
         post: {
+            author: {
+                name: 'user@123',
+                avatarUrl: "https://picsum.photos/50",
+            },
             title: "title",
             description: "A web resource image or video",
             resourceUrl: "https://via.placeholder.com/600x400",
@@ -68,7 +69,7 @@ class App extends Component {
                 body: JSON.stringify(user)
             })
 
-            return await response.json();
+            return response.json();
         }
         catch (ex) {
             throw ex;
@@ -108,9 +109,7 @@ class App extends Component {
 
         return (
             <Fragment>
-                <Navbar
-                    registerAction={this.registerAction}
-                    onRegister={this.handleRegister} />
+                <Navbar loggedInUser={user} />
 
                 <main id="app" className="main is-flex pt-3 mt-1">
                     <Suggestions />

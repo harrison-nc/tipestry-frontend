@@ -1,6 +1,28 @@
 import React, { Fragment } from 'react';
 
-const Navbar = () => {
+const Navbar = (props) => {
+    const { loggedInUser } = props;
+
+    let accountMgtButtons;
+
+    if (loggedInUser) {
+        accountMgtButtons = (
+            <Fragment>
+                <span>@{loggedInUser.name}</span>
+                <a className="nav-item btn py-5 px-5" href="#post-dialog">Post</a>
+            </Fragment>
+        );
+    }
+    else {
+        accountMgtButtons = (
+            <Fragment>
+                <a className="nav-item btn py-5 px-5" href="#post-dialog">Post</a>
+                <a className="nav-item btn py-5 px-5" href="#login">Login</a>
+                <a className="nav-item btn py-5 px-5" href="#register">Join Us</a>
+            </Fragment>
+        );
+    }
+
     return (
         <Fragment>
             <div className="navbar has-background-link py-4 px-5">
@@ -12,9 +34,8 @@ const Navbar = () => {
                     </div>
 
                     <nav className="nav-items is-flex">
-                        <a className="nav-item btn py-5 px-5" href="#post-dialog">Post</a>
-                        <a className="nav-item btn py-5 px-5" href="#login">Login</a>
-                        <a className="nav-item btn py-5 px-5" href="#register">Join Us</a>
+                        {accountMgtButtons}
+
                         <button className="nav-item btn py-5 px-5">en</button>
                     </nav>
                 </div>

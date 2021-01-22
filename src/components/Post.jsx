@@ -5,8 +5,6 @@ import { useState } from 'react';
 import { FormModal } from './Modal';
 import Input, { InputContainer } from './Input';
 
-const noError = '';
-
 const createValidator = (fun) => {
     return {
         notValid(value) {
@@ -14,17 +12,13 @@ const createValidator = (fun) => {
         },
         isValid(value) {
             return !this.notValid(value);
+        },
+        resetValues() {
+            if (this.setValue) this.setValue('');
+            if (this.setError) this.setError('');
         }
     }
 };
-
-const Validators = {
-    resourceUrl: createValidator(value => !value ? 'Resource url is required' : ''),
-
-    title: createValidator(value => !value ? 'Title is required' : ''),
-
-    description: createValidator(value => ''),
-}
 
 const Post = (props) => {
     const { id, onPost } = props;
@@ -40,6 +34,26 @@ const Post = (props) => {
 
     const [serverError, setServerError] = useState('');
 
+    const Validators = {
+        resourceUrl: {
+            ...createValidator(value => !value ? 'Resource url is required' : ''),
+            setValue: setURL,
+            setError: setURLError
+        },
+
+        title: {
+            ...createValidator(value => !value ? 'Title is required' : ''),
+            setValue: setTitle,
+            setError: setTitleError,
+        },
+
+        description: {
+            ...createValidator(value => ''),
+            setValue: setDescription,
+            setError: setDescriptionError
+        },
+    };
+
     const reportValidity = () => {
         resetInputError();
 
@@ -48,30 +62,14 @@ const Post = (props) => {
         checkValidity('description', description);
     };
 
-    const checkValidity = (name, value, errorMessage = '') => {
-        const validator = Validators[name];
-        const error = validator.notValid(value);
+    const checkValidity = (name, value) => {
+        const input = Validators[name];
 
-        switch (name) {
-            case 'resourceUrl':
-                if (errorMessage) setURLError(errorMessage);
-                else setURLError(error);
-                break;
+        if (!input) return console.error(`'${name}' is not a valid input`);
 
-            case 'title':
-                if (errorMessage) setTitleError(errorMessage);
-                else setTitleError(error);
-                break;
+        const error = input.notValid(value);
 
-            case 'description':
-                if (errorMessage) setDescriptionError(errorMessage);
-                else setDescriptionError(error);
-                break;
-
-            default:
-                setServerError(errorMessage);
-                break;
-        }
+        input.setError(error);
     };
 
     const isValid = (name, value) => {
@@ -89,48 +87,24 @@ const Post = (props) => {
     };
 
     const resetInputError = (name) => {
-        setServerError(noError);
+        const input = Validators[name];
 
-        switch (name) {
-            case 'resourceUrl':
-                setURLError(noError);
-                break;
+        if (input) return input.setError('');
 
-            case 'title':
-                setTitleError(noError);
-                break;
-
-            case 'description':
-                setDescriptionError(noError);
-                break;
-
-            default:
-                setURLError(noError);
-                setTitleError(noError);
-                setDescriptionError(noError);
-                break;
-        }
+        setServerError('');
+        setURLError('');
+        setTitleError('');
+        setDescriptionError('');
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        switch (name) {
-            case 'resourceUrl':
-                setURL(value);
-                break;
+        const input = Validators[name];
 
-            case 'title':
-                setTitle(value);
-                break;
+        if (!input) return;
 
-            case 'description':
-                setDescription(value);
-                break;
-
-            default:
-                break;
-        }
+        input.setValue(value);
     }
 
     const handleFocus = (e) => resetInputError(e.target.name);
@@ -153,28 +127,21 @@ const Post = (props) => {
 
         const isValid = validateInputs();
 
-        if (isValid) {
-            try {
+        if (isValid) try {
 
-                const error = await onPost({ url, title, description });
+            const error = await onPost({ url, title, description });
 
-                if (error) {
-                    if (error.auth) checkValidity('', '', error.auth.message);
-                }
+            if (error && error.auth) setServerError(error.auth.message);
 
-                console.log(error);
+            else if (!error) handleReset(e);
 
-                return;
-            }
-            catch (ex) {
-                console.error(ex);
-            }
-            handleReset(e);
-            return;
+            console.log(error);
+
+        } catch (ex) {
+            console.error(ex);
         }
-        else {
-            reportValidity();
-        }
+
+        else reportValidity();
     }
 
     return (

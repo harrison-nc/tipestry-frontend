@@ -18,7 +18,8 @@ export const InputContainer = (props) => {
 
 export const createInput = (name, type, label, placeholder, id = "") => {
     return (props) => {
-        const { value, hasError, onChange } = props;
+        const { value, hasError } = props;
+        const { onChange, onBlur, onFocus } = props;
 
         return (
             <Input id={id ? id : name}
@@ -28,13 +29,16 @@ export const createInput = (name, type, label, placeholder, id = "") => {
                 placeholder={placeholder}
                 value={value}
                 hasError={hasError}
+                onBlur={onBlur}
+                onFocus={onFocus}
                 onChange={onChange} />
         );
     }
 }
 
 const Input = (props) => {
-    const { id, label, type, name, value, placeholder, onChange, hasError } = props;
+    const { id, label, type, name, value, placeholder, hasError } = props;
+    const { onChange, onBlur, onFocus } = props;
 
     return (
         <InputContainer label={label} hasError={hasError}>
@@ -45,6 +49,8 @@ const Input = (props) => {
                 value={value}
                 placeholder={placeholder}
                 onChange={onChange}
+                onBlur={onBlur}
+                onFocus={onFocus}
                 required={true} />
         </InputContainer>
     );

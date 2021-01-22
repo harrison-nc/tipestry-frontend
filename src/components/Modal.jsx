@@ -22,7 +22,7 @@ export const FormModal = (props) => {
                 noValidate={true}>
 
                 <div className="form is-flex flex-column box has-background-white pt-2 pb-4 px-2">
-                    <div className="header">
+                    <div className="header is-flex">
                         <p className="subtitle has-color-link flex-grow mb-2">
                             {title}
                         </p>

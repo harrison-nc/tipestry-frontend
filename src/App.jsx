@@ -17,28 +17,7 @@ import Cards from './components/Cards';
 class App extends Component {
     state = {
         user: '',
-        post: {
-            author: {
-                name: 'user@123',
-                avatarUrl: "https://picsum.photos/50",
-            },
-            title: "title",
-            description: "A web resource image or video",
-            resourceUrl: "https://via.placeholder.com/600x400",
-            date: "1 week age",
-            tags: ["#tag1", "#tag2", "#tag3"],
-            likes: 11,
-            disLikes: 3,
-            comments: {
-                count: 1,
-            },
-            shares: {
-                count: 9,
-            },
-            views: {
-                count: '11.1K'
-            }
-        },
+        posts: [],
         toptags: [
             "#programing", "#java", "#html",
             "#coding", "#marketing", "#cat",
@@ -105,7 +84,19 @@ class App extends Component {
     };
 
     render() {
-        const { user, post, toptags } = this.state;
+        const { user, posts, toptags } = this.state;
+
+        let content;
+
+        if (!posts || posts.length === 0) content = <span>So much empty</span>;
+
+        else content = (
+            <Fragment>
+                <Search />
+                <Filter />
+                <Cards posts={posts} />
+            </Fragment>
+        );
 
         return (
             <Fragment>
@@ -113,11 +104,11 @@ class App extends Component {
 
                 <main id="app" className="main is-flex pt-3 mt-1">
                     <Suggestions />
-                    <section className="section">
-                        <Search />
-                        <Filter />
-                        <Cards user={post.author} post={post} />
+
+                    <section className="section flex-grow">
+                        {content}
                     </section>
+
                     <Hashtags toptags={toptags} />
                 </main>
 

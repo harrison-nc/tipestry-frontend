@@ -2,6 +2,8 @@ import '../css/modal.css';
 
 import React, { useState } from 'react';
 
+import validateEmail from '../util/validateEmail';
+
 import Modal, { FormModal } from './Modal';
 import { createInput } from './Input';
 
@@ -54,11 +56,9 @@ const Register = (props) => {
                 break;
             }
             case 'email': {
-                const re = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
-
                 if (errorMessage) setEmailError(errorMessage);
                 else if (!value) setEmailError('email is required');
-                else if (!re.test(value)) setEmailError('please enter a valid email');
+                else if (!validateEmail(value)) setEmailError('please enter a valid email');
                 else setEmailError(noError);
                 break;
             }

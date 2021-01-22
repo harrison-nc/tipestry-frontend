@@ -47,6 +47,15 @@ class App extends Component {
     };
 
     registerAction = 'http://localhost:3000/api/users'
+    loginAction = 'http://localhost:3000/api/logins'
+
+    updateLoginUser = (newUser) => {
+        const user = { ...newUser.login };
+
+        this.setState({ user });
+
+        console.log(this.state);
+    };
 
     handleRegister = async (user) => {
         try {
@@ -62,8 +71,35 @@ class App extends Component {
             return await response.json();
         }
         catch (ex) {
-            console.error(ex);
-            // todo: process error and close the form
+            throw ex;
+        }
+    };
+
+    handleLogin = async (user) => {
+        try {
+            const response = await fetch(this.loginAction, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(user)
+            });
+
+            const result = await response.json();
+
+            if (result.error) return result;
+
+            else window.location.href = '#app';
+
+            result.loggedIn = true;
+
+            this.updateLoginUser(result);
+
+            return true;
+
+        } catch (ex) {
+            throw ex;
         }
     };
 
@@ -81,13 +117,13 @@ class App extends Component {
                     <section className="section">
                         <Search />
                         <Filter />
-                        <Cards user={user} post={post} />
+                        <Cards user={post.author} post={post} />
                     </section>
                     <Hashtags toptags={toptags} />
                 </main>
 
                 <Register id="register" onRegister={this.handleRegister} />
-                <Login id="login" />
+                <Login id="login" onLogin={this.handleLogin} />
                 <PostDialog id="post-dialog" />
             </Fragment>
         );

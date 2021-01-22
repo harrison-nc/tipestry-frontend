@@ -2,7 +2,7 @@ import '../css/modal.css';
 
 import Input from './Input';
 
-const PostDialog = ({ id }) => {
+const Post = ({ id }) => {
     return (
         <div id={id} className="modal-window">
             <form>
@@ -36,4 +36,4 @@ const PostDialog = ({ id }) => {
     );
 };
 
-export default PostDialog;
+export default Post;

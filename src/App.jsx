@@ -8,7 +8,7 @@ import Hashtags from './components/Hashtags';
 import Suggestions from './components/Suggestions';
 import Register from './components/Register';
 import Login from './components/Login';
-import PostDialog from './components/PostDialog';
+import Post from './components/Post';
 import Navbar from './components/Navbar';
 import Search from './components/Search';
 import Filter from './components/Filter';
@@ -123,7 +123,7 @@ class App extends Component {
 
                 <Register id="register" onRegister={this.handleRegister} />
                 <Login id="login" onLogin={this.handleLogin} />
-                <PostDialog id="post-dialog" />
+                <Post id="post" />
             </Fragment>
         );
     }

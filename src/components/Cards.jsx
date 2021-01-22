@@ -3,11 +3,13 @@ import React from "react";
 import Card from "./Card";
 
 const Cards = (props) => {
-    const { user, post } = props;
+    const { posts } = props;
+
+    const content = posts.map(post => <Card post={post} />);
 
     return (
         <div className="cards">
-            <Card user={user} post={post} />
+            {content}
         </div>
     );
 }

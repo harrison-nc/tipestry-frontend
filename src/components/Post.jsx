@@ -7,6 +7,8 @@ import Input, { InputContainer } from './Input';
 
 import { createValidator } from '../util/validators';
 
+const none = (e) => { };
+
 const Post = (props) => {
     const { id, onPost } = props;
 
@@ -17,7 +19,9 @@ const Post = (props) => {
     const [titleError, setTitleError] = useState('');
 
     const [description, setDescription] = useState('');
-    const [descriptionError, setDescriptionError] = useState('');
+
+    const [tagItems, setTagItems] = useState([]);
+    const [tagName, setTagName] = useState('');
 
     const [serverError, setServerError] = useState('');
 
@@ -35,10 +39,16 @@ const Post = (props) => {
         },
 
         description: {
-            ...createValidator(value => ''),
+            ...createValidator(none),
             setValue: setDescription,
-            setError: setDescriptionError
+            setError: none
         },
+
+        tagName: {
+            ...createValidator(none),
+            setValue: setTagName,
+            setError: none
+        }
     };
 
     const reportValidity = () => {
@@ -79,7 +89,6 @@ const Post = (props) => {
         setServerError('');
         setURLError('');
         setTitleError('');
-        setDescriptionError('');
     };
 
     const showError = (error) => {
@@ -92,12 +101,32 @@ const Post = (props) => {
         else console.error(`${message}: '${key}', '${value}`, error);
     };
 
+    const handleRemoveTag = (item) => {
+        const items = [...tagItems];
+        const index = items.indexOf(item);
+
+        items.splice(index, 1);
+
+        setTagItems(items);
+    };
+
+    const handleAddTag = (e) => {
+        if (tagName === '') return;
+
+        const items = [...tagItems];
+
+        items.push(tagName);
+
+        setTagItems(items);
+        setTagName('');
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
 
         const input = Validators[name];
 
-        if (input) return input.setValue(value);
+        if (input) return input.setValue(value && value.trim());
 
         console.error(`'${name}' is not a valid input`);
     }
@@ -171,11 +200,8 @@ const Post = (props) => {
                     onChange={handleChange} />
 
                 <InputContainer label="Description">
-                    {descriptionError && <span>{descriptionError}</span>}
-
                     <textarea id="description"
                         className="input py-4 px-4 size-medium"
-                        rows="5"
                         name="description"
                         placeholder="Enter post details"
                         value={description}
@@ -183,6 +209,20 @@ const Post = (props) => {
                         onBlur={handleBlur}
                         onChange={handleChange}></textarea>
                 </InputContainer>
+
+                <ul className="tags is-flex"> {tagItems.map((item, i) =>
+                    <li key={i} className="tag__item">
+                        <span className="tag__item__hash">#</span><span className="tag__item__text">{item}</span><span className="tag__item__btn" onClick={() => handleRemoveTag(item)}>x</span>
+                    </li>)}
+                </ul>
+
+                <fieldset className="tag__control py-6 px-6">
+                    <legend>Tags</legend>
+                    <div className="is-flex mt-3">
+                        <input className="tag__input flex-grow py-4 px-4" type="text" name="tagName" value={tagName} onChange={handleChange} />
+                        <button type="button" onClick={handleAddTag}>Add</button>
+                    </div>
+                </fieldset>
 
                 {serverError && <span className="error">{serverError}</span>}
 

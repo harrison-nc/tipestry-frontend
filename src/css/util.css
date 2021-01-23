@@ -13,7 +13,9 @@
   --size-larger: 32px;
   --size-extra-large: 64px;
 
+  --color-link-dark: hsl(217, 71%, 33%);
   --color-link: hsl(217, 71%, 53%);
+  --color-link-light: hsl(217, 71%, 63%);
   --color-white: hsl(0, 0%, 100%);
   --color-black: hsl(0, 0%, 4%);
   --color-primary: hsl(171, 100%, 41%);
@@ -22,6 +24,7 @@
   --color-danger: hsl(348, 100%, 61%);
   --color-success: hsl(141, 71%, 48%);
   --color-info: hsl(204, 86%, 53%);
+  --color-info-light: hsl(204, 86%, 70%);
   --color-light: hsl(0, 0%, 96%);
   --color-grey: hsl(0, 0%, 48%);
   --color-grey-light: hsl(0, 0%, 71%);

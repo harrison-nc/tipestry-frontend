@@ -5,20 +5,7 @@ import { useState } from 'react';
 import { FormModal } from './Modal';
 import Input, { InputContainer } from './Input';
 
-const createValidator = (fun) => {
-    return {
-        notValid(value) {
-            return fun(value);
-        },
-        isValid(value) {
-            return !this.notValid(value);
-        },
-        resetValues() {
-            if (this.setValue) this.setValue('');
-            if (this.setError) this.setError('');
-        }
-    }
-};
+import { createValidator } from '../util/validators';
 
 const Post = (props) => {
     const { id, onPost } = props;

@@ -2,7 +2,7 @@ import '../css/modal.css';
 
 import React, { useState } from 'react';
 
-import validateEmail from '../util/validateEmail';
+import { createValidator, validateEmail } from '../util/validators';
 
 import Modal, { FormModal } from './Modal';
 import { createInput } from './Input';

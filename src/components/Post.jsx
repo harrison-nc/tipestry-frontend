@@ -54,9 +54,7 @@ const Post = (props) => {
 
         if (!input) return console.error(`'${name}' is not a valid input`);
 
-        const error = input.notValid(value);
-
-        input.setError(error);
+        else input.validate(value);
     };
 
     const isValid = (name, value) => {
@@ -89,9 +87,9 @@ const Post = (props) => {
 
         const input = Validators[name];
 
-        if (!input) return;
+        if (input) return input.setValue(value);
 
-        input.setValue(value);
+        console.error(`'${name}' is not a valid input`);
     }
 
     const handleFocus = (e) => resetInputError(e.target.name);

@@ -19,67 +19,85 @@ const Login = (props) => {
 
     const [serverError, setServerError] = useState('');
 
-    const noError = '';
+    const Validators = {
+        email: {
+            ...createValidator(value => {
+                if (!value) return 'Please enter an email.';
+                else if (!validateEmail(value)) return 'Please enter a valid email.';
+                else return '';
+            }),
+            setValue: setEmail,
+            setError: setEmailError,
+        },
 
-    const checkValidity = (name, value, error) => {
-        switch (name) {
-            case 'email':
-                if (error) setEmailError(error);
-                else if (!value) setEmailError('Please enter an email.');
-                else if (!validateEmail(value)) setEmailError('Please enter a valid email.');
-                else setEmailError(noError);
-                break;
+        password: {
+            ...createValidator(value => {
+                if (!value) return 'Please enter a password.';
+                else return '';
+            }),
+            setValue: setPassword,
+            setError: setPasswordError,
+        },
 
-            case 'password':
-                if (error) setPasswordError(error);
-                else if (!value) setPasswordError('Please enter a password.');
-                else setPasswordError(noError);
-                break;
+        resetValues() {
+            setEmail('');
+            setPassword('');
+        },
 
-            case 'server':
-                if (error) setServerError(error);
-                else setServerError(noError);
-                break
-
-            default:
-                break;
+        resetErrors() {
+            setEmailError('');
+            setPasswordError('');
         }
     };
 
-    const resetInput = () => {
-        setEmail('');
-        setPassword('');
-    }
+    const isValid = (name, value) => {
+        const input = Validators[name];
+
+        if (input) return input.isValid(value);
+
+        else return false;
+    };
+
+    const validateValues = () => {
+        return isValid('email', email)
+            && isValid('password', password);
+    };
+
+    const checkValidity = (name, value) => {
+        const input = Validators[name];
+
+        if (!input) return console.log(`'${input}' is not valid`);
+
+        input.validate(value);
+    };
+
+    const resetInput = () => Validators.resetValues();
 
     const resetError = (name) => {
-        switch (name) {
-            case 'email':
-                setEmailError(noError)
-                break;
+        const input = Validators[name];
 
-            case 'password':
-                setPasswordError(noError);
-                break;
+        if (input) input.setError('');
 
-            case 'server':
-                setServerError(noError);
-                break;
+        else if (serverError) setServerError('');
 
-            default:
-                setEmailError(noError);
-                setPasswordError(noError);
-                break;
-        }
+        else Validators.resetErrors();
     }
+
+    const showError = (error) => {
+        const { key, value, message } = error;
+        checkValidity(key, value, message);
+    };
 
     const reportValidity = () => {
         resetError();
 
         checkValidity('email', email);
         checkValidity('password', password);
-
-        return emailError === noError && passwordError === noError;
     };
+
+    const handleBlur = ({ target }) => checkValidity(target.name, target.value);
+
+    const handleFocus = ({ target }) => resetError(target.name);
 
     const handleReset = (e) => {
         resetInput();
@@ -89,55 +107,46 @@ const Login = (props) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (reportValidity()) {
-            try {
-                const { error } = await onLogin({ email, password });
+        const isValid = validateValues();
 
-                if (error) {
+        if (isValid) try {
+            const { error } = await onLogin({ email, password });
 
-                    const showError = (error) => {
-                        const { key, value, message } = error;
-                        checkValidity(key, value, message);
-                    };
+            if (error) {
 
-                    const { login } = error;
+                const { login } = error;
 
-                    if (login) checkValidity('server', '', login.message);
+                if (login) setServerError(login.message);
 
-                    else if (error instanceof Array) error.forEach(err => showError(err));
+                else if (error instanceof Array) error.forEach(err => showError(err));
 
-                    else if (error instanceof Object) showError(error);
+                else if (error instanceof Object) showError(error);
 
-                    else window.location.href = '#lfailure';
+                else window.location.href = '#lfailure';
 
-                    console.error(error);
-                }
+                console.error(error);
             }
-            catch (ex) {
-                console.error(ex);
-                window.location.href = '#lfailure';
-            }
+
+            else resetError() && resetInput();
+
+        } catch (ex) {
+            window.location.href = '#lfailure';
+            console.error(ex);
         }
+
+        else reportValidity();
 
         return null;
     }
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    const handleChange = ({ target }) => {
+        const { name, value } = target;
 
-        switch (name) {
-            case 'email':
-                setEmail(value);
-                break;
-            case 'password':
-                setPassword(value);
-                break;
-            default:
-                break;
-        }
+        const input = Validators[name];
 
-        resetError(name);
-        checkValidity(name, value);
+        if (input) input.setValue(value);
+
+        else console.error(`'${name}' invalid input`);
     }
 
     return (
@@ -156,6 +165,8 @@ const Login = (props) => {
                     value={email}
                     hasError={emailError}
                     onChange={handleChange}
+                    onBlur={handleBlur}
+                    onFocus={handleFocus}
                     placeholder="Enter email address" />
 
                 <Input
@@ -165,6 +176,8 @@ const Login = (props) => {
                     value={password}
                     hasError={passwordError}
                     onChange={handleChange}
+                    onBlur={handleBlur}
+                    onFocus={handleFocus}
                     placeholder="Enter password" />
 
                 {serverError && <span className="error">{serverError}</span>}
@@ -192,9 +205,7 @@ const Login = (props) => {
 
 const Close = () => {
     return (
-        <a href="#app"
-            title="Close"
-            className="close modal-close has-color-black">Close</a>
+        <a className="close modal-close has-color-black" href="#app" title="Close">Close</a>
     );
 }
 

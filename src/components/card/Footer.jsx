@@ -8,10 +8,10 @@ const Footer = (props) => {
             <div className="control">
                 <Link name="Like" value={likes} />
                 <Link name="Dislike" value={disLikes} />
-                <Link name="Comment" value={comments.count} />
-                <Link name="Share" value={shares.count} />
+                <Link name="Comment" value={comments && comments.count} />
+                <Link name="Share" value={shares && shares.count} />
             </div>
-            <Views value={views.count} />
+            <Views value={views && views.count} />
         </div>
     );
 };

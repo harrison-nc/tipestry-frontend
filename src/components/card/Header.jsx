@@ -3,19 +3,17 @@ import React from 'react';
 import Avatar from './Avatar';
 
 const Header = ({ post }) => {
-    const { title, tags, user } = post;
+    const { title, tags } = post;
 
     let tagElements;
-    if (tags) {
-        tagElements = tags.map((tag, key) => <span key={key}>{tag}</span>);
-    }
-    else {
-        tagElements = <span>no tags</span>
-    }
+
+    if (tags) tagElements = tags.map((tag, key) => <span key={key}>{tag}</span>);
+
+    else tagElements = <span>empty tags</span>
 
     return (
         <div className="header">
-            <Avatar user={user} post={post} />
+            <Avatar post={post} />
             <div className="container">
                 <h2 className="subtitle">{title}</h2>
                 <div className="tags">

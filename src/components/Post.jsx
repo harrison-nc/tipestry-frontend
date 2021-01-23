@@ -111,7 +111,7 @@ const Post = (props) => {
     };
 
     const handleAddTag = (e) => {
-        if (tagName === '') return;
+        if (tagName && tagName.trim() === '') return;
 
         const items = [...tagItems];
 
@@ -126,7 +126,7 @@ const Post = (props) => {
 
         const input = Validators[name];
 
-        if (input) return input.setValue(value && value.trim());
+        if (input) return input.setValue(value);
 
         console.error(`'${name}' is not a valid input`);
     }
@@ -153,7 +153,12 @@ const Post = (props) => {
 
         if (isValid) try {
 
-            const error = await onPost({ resourceUrl: url, title, description });
+            const error = await onPost({
+                resourceUrl: url,
+                title,
+                description,
+                tags: tagItems
+            });
 
             if (!error) handleReset(e);
 

@@ -30,6 +30,17 @@ class App extends Component {
         ]
     };
 
+    componentDidMount = async () => {
+        try {
+            const response = await fetch(postAction);
+            const posts = await response.json();
+
+            this.setState({ posts });
+        } catch (ex) {
+            console.error(ex.message, ex);
+        }
+    };
+
     addPost = (post) => {
         const posts = [...this.state.posts];
         posts.push(post);

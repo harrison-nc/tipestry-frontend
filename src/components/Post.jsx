@@ -82,6 +82,16 @@ const Post = (props) => {
         setDescriptionError('');
     };
 
+    const showError = (error) => {
+        const { key, value, message } = error;
+
+        const input = Validators[key];
+
+        if (input) input.setError(message);
+
+        else console.error(`${message}: '${key}', '${value}`, error);
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -114,13 +124,15 @@ const Post = (props) => {
 
         if (isValid) try {
 
-            const error = await onPost({ url, title, description });
+            const error = await onPost({ resourceUrl: url, title, description });
 
-            if (error && error.auth) setServerError(error.auth.message);
+            if (!error) handleReset(e);
 
-            else if (!error) handleReset(e);
+            else if (error.auth) setServerError(error.auth.message);
 
-            console.log(error);
+            else if (error instanceof Array) error.forEach(showError);
+
+            else showError(error);
 
         } catch (ex) {
             console.error(ex);

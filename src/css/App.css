@@ -1,5 +1,5 @@
 @font-face {
-  font-family: "Quicksand";
+  font-family: "Quicksand", "sans serif";
   src: URL("../fonts/static/Quicksand-Regular.ttf"), local("Quicksand Regular");
 }
 
@@ -397,6 +397,20 @@ body {
 
 .tag__input:focus {
   border: 0;
+}
+
+.cards {
+  row-gap: var(--size-medium);
+}
+
+.header .header__content {
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.header__content .subtitle {
+  font-size: calc(var(--size-medium) + 4px);
+  font-weight: bold;
 }
 
 @media (width: 768px) {

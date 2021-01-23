@@ -8,7 +8,7 @@ const Cards = (props) => {
     const content = posts.map((post, key) => <Card key={key} post={post} />);
 
     return (
-        <div className="cards">
+        <div className="cards is-flex flex-column">
             {content}
         </div>
     );

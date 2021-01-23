@@ -7,14 +7,14 @@ const Header = ({ post }) => {
 
     let tagElements;
 
-    if (tags) tagElements = tags.map((tag, key) => <span key={key}>{tag}</span>);
+    if (tags) tagElements = tags.map((tag, key) => <span key={key}>#{tag}</span>);
 
     else tagElements = <span>empty tags</span>
 
     return (
         <div className="header">
             <Avatar post={post} />
-            <div className="container">
+            <div className="header__content is-flex flex-column">
                 <h2 className="subtitle">{title}</h2>
                 <div className="tags">
                     {tagElements}

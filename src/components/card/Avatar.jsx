@@ -1,8 +1,15 @@
 import React from 'react';
 
 const Avatar = (props) => {
-    const { date } = props.post;
-    const { name, avatarUrl } = props.user;
+    const { post } = props;
+
+    if (!post) return (<span>no avatar</span>);
+
+    let { date, user } = post;
+
+    if (!user) user = { name: 'no user', avatarUrl: '' };
+
+    const { name, avatarUrl } = user;
 
     return (
         <div className="avatar">

@@ -5,7 +5,7 @@ import Card from "./Card";
 const Cards = (props) => {
     const { posts } = props;
 
-    const content = posts.map(post => <Card post={post} />);
+    const content = posts.map((post, key) => <Card key={key} post={post} />);
 
     return (
         <div className="cards">

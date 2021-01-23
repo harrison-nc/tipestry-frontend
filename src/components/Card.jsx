@@ -7,15 +7,7 @@ import Header from "./card/Header";
 const Card = (props) => {
     const { post } = props;
 
-    const {
-        description,
-        resourceUrl,
-        likes,
-        disLikes,
-        comments,
-        shares,
-        views,
-    } = post;
+    const { description, resourceUrl, likes, disLikes, comments, shares, views, } = post;
 
     return (
         <div className="card has-background-white py-3 px-3 box">

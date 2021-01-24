@@ -38,13 +38,15 @@ export default function Input(props) {
 
 export const createInput = (attrs) => {
     const { name, type, label, placeholder, id } = attrs;
+    const defaultId = id;
 
     return (props) => {
-        const { value, hasError } = props;
+        const { id, value, hasError } = props;
         const { onChange, onBlur, onFocus } = props;
+        const currentId = id ? id : defaultId;
 
         return (
-            <Input id={id ? id : name}
+            <Input id={currentId ? currentId : name}
                 label={label}
                 type={type}
                 name={name}
@@ -58,8 +60,32 @@ export const createInput = (attrs) => {
     }
 }
 
+export const createInputTextArea = (attrs) => {
+    const { id, name, label, placeholder } = attrs;
+    const defaultId = id;
+
+    return (props) => {
+
+        const { id, value, hasError } = props;
+        const { onChange, onBlur, onFocus } = props;
+        const currentId = id ? id : defaultId;
+
+        return (
+            <InputContainer label={label} hasError={hasError}>
+                <textarea className="input size-medium py-4 px-4"
+                    id={currentId ? currentId : name}
+                    name={name}
+                    placeholder={placeholder}
+                    value={value}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onChange={onChange}></textarea>
+            </InputContainer>
+        );
+    };
+};
+
 export const Email = createInput({
-    id: 'register-email',
     name: 'email',
     type: 'email',
     label: 'Email*',
@@ -74,7 +100,6 @@ export const Name = createInput({
 });
 
 export const Password = createInput({
-    id: 'register-password',
     name: 'password',
     type: 'password',
     label: 'Password*',

@@ -1,10 +1,7 @@
 import '../css/modal.css';
-
 import { useState } from 'react';
-
-import { FormModal } from './Modal';
+import { FormModal } from './modal/Modal';
 import Input, { InputContainer } from './Input';
-
 import { createValidator } from '../util/validators';
 
 const none = (e) => { };

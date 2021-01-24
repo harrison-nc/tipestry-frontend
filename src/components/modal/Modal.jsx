@@ -1,8 +1,7 @@
-import '../css/modal.css';
-
+import '../../css/modal.css';
 import React from 'react';
 
-const Modal = (props) => {
+export default function Modal(props) {
     const { id, children, classes } = props;
     return (
         <div id={id} className={"modal-window " + classes}>
@@ -35,4 +34,21 @@ export const FormModal = (props) => {
     );
 }
 
-export default Modal;
+export function createModal(attrs) {
+    const { id, type, text } = attrs;
+
+    return (props) => {
+        return (
+            <Modal id={id}>
+                <div
+                    className={type + " box is-flex flex-column has-background-white py-3 px-3"}>
+                    <p className="flex-grow is-flex subtitle">
+                        {text}
+                    </p>
+                    <a className="modal-close close" alt="close modal" href="#app">Close</a>
+                </div>
+            </Modal>
+        );
+    };
+};
+

@@ -1,8 +1,8 @@
 import '../css/modal.css';
+import React, { Fragment } from 'react';
 import { validateEmail } from '../util/validators';
-import Modal, { FormModal } from './Modal';
-import { createInput } from './Input';
-import React, { Fragment, useState } from 'react';
+import { FormModal, createModal } from './modal/Modal';
+import { Email, Password, ConfirmPassword, Name } from './Input';
 
 const Register = (props) => {
     const { id, onRegister } = props;

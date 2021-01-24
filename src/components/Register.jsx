@@ -3,6 +3,9 @@ import React, { Fragment } from 'react';
 import { validateEmail } from '../util/validators';
 import { FormModal, createModal } from './modal/Modal';
 import { Email, Password, ConfirmPassword, Name } from './Input';
+import { useFormInputWithValidator } from './hooks/InputHooks';
+
+const useFormInput = useFormInputWithValidator;
 
 const Register = (props) => {
     const { id, onRegister } = props;
@@ -23,6 +26,18 @@ const Register = (props) => {
     const handleClose = (e) => {
         handleClear(e);
         window.location.href = '#app';
+    };
+
+    const handleSubmitFailure = (error) => {
+        if (error instanceof Array) error.forEach(err => showError(err));
+        else if (error instanceof Object) showError(error);
+        else window.location.href = '#rfailure';
+        console.error(error);
+    };
+
+    const handleSubmitSuccess = () => {
+        Inputs.asArray().forEach(input => input.reset());
+        window.location.href = "#rsuccess";
     };
 
     const handleSubmit = async (e) => {
@@ -49,18 +64,6 @@ const Register = (props) => {
         }
     };
 
-    const handleSubmitFailure = (error) => {
-        if (error instanceof Array) error.forEach(err => showError(err));
-        else if (error instanceof Object) showError(error);
-        else window.location.href = '#rfailure';
-        console.error(error);
-    };
-
-    const handleSubmitSuccess = () => {
-        Inputs.asArray().forEach(input => input.reset());
-        window.location.href = "#rsuccess";
-    };
-
     const closeButton = <input className="close modal-close btn" type="reset" value="X" />
 
     const form = {
@@ -83,25 +86,23 @@ const Register = (props) => {
                     <Control onClear={handleClear} />
                 </FormModal>
             </div >
-            <Dailog
-                id="rsuccess"
-                type="success"
-                text="Account created successfully"
-            />
-            <Dailog
-                id="rfailure"
-                type="failure"
-                text="Account creation failed"
-            />
+            <Failure />
+            <Success />
         </Fragment>
     );
 };
 
 const useInputs = () => {
-    const inputs = {
-        name: useFormInput('', NameValidator),
-        email: useFormInput('', EmailValidator),
-        password: useFormInput('', PasswordValidator),
+    const name = useFormInput('', NameValidator);
+    const email = useFormInput('', EmailValidator);
+    const password = useFormInput('', PasswordValidator);
+    const cpassword = useFormInput('', ConfirmPaswordValidator(password.getValue()));
+
+    return Object.freeze({
+        name,
+        email,
+        password,
+        cpassword,
 
         asArray() {
             return [this.name, this.email, this.password, this.cpassword];
@@ -112,53 +113,7 @@ const useInputs = () => {
             const isValid = (a, b) => a && b;
             return this.asArray().map(validate).reduce(isValid, true);
         }
-    };
-
-    inputs.cpassword = useFormInput('', ConfirmPaswordValidator(inputs.password.getValue()));
-
-    return inputs;
-};
-
-const useFormInput = (initialState, getErrorMessage) => {
-    const [value, setValue] = useState(initialState);
-    const [error, setError] = useState('');
-
-    const handleChange = (e) => setValue(e.target.value);
-
-    const handleBlur = (e) => validate();
-
-    const handleFocus = (e) => setError('');
-
-    const isValid = () => error === '';
-
-    const getValue = () => value;
-
-    const validate = () => {
-        const errorMessage = getErrorMessage(value);
-        setError(errorMessage);
-        return errorMessage;
-    };
-
-    const reset = () => {
-        setValue('');
-        setError('');
-    };
-
-    return {
-        getValue,
-        setValue,
-        setError,
-        isValid,
-        validate,
-        reset,
-        props: {
-            value,
-            hasError: error,
-            onChange: handleChange,
-            onBlur: handleBlur,
-            onFocus: handleFocus,
-        }
-    };
+    });
 };
 
 const NameValidator = value => {
@@ -188,11 +143,6 @@ const ConfirmPaswordValidator = (password) => {
     };
 };
 
-const Email = createInput('email', 'email', 'Email*', 'Enter email address', 'register-email');
-const Name = createInput('name', 'name', 'Username*', 'Enter username');
-const Password = createInput('password', 'password', 'Password*', 'Enter password', 'register-password');
-const ConfirmPassword = createInput('cpassword', 'password', 'Confirm password*', 'Confirm password');
-
 const Control = (props) => {
     const { onClear } = props;
 
@@ -204,20 +154,16 @@ const Control = (props) => {
     );
 };
 
-const Dailog = (props) => {
-    const { id, type, text } = props;
+const Success = createModal({
+    id: "rsuccess",
+    type: "success",
+    text: "Account created successfully",
+});
 
-    return (
-        <Modal id={id}>
-            <div
-                className={type + " box is-flex flex-column has-background-white py-3 px-3"}>
-                <p className="flex-grow is-flex subtitle">
-                    {text}
-                </p>
-                <a className="modal-close close" alt="close modal" href="#app">Close</a>
-            </div>
-        </Modal>
-    );
-};
+const Failure = createModal({
+    id: "rfailure",
+    type: "failure",
+    text: "Account creation failed",
+});
 
 export default Register;

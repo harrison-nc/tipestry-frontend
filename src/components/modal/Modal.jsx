@@ -42,7 +42,7 @@ export function createModal(attrs) {
             <Modal id={id}>
                 <div
                     className={type + " box is-flex flex-column has-background-white py-3 px-3"}>
-                    <p className="flex-grow is-flex subtitle">
+                    <p className="is-flex subtitle">
                         {text}
                     </p>
                     <a className="modal-close close" alt="close modal" href="#app">Close</a>

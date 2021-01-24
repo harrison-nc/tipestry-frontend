@@ -1,8 +1,11 @@
 import { useState } from 'react';
 
-export const useFormInputWithValidator = (initialState, getErrorMessage) => {
+export const useFormInput = (initialState, getErrorMessage, emptyValue) => {
     const [value, setValue] = useState(initialState);
     const [error, setError] = useState('');
+
+    if (!getErrorMessage) getErrorMessage = () => '';
+    if (!emptyValue) emptyValue = '';
 
     const handleChange = (e) => setValue(e.target.value);
 
@@ -21,7 +24,7 @@ export const useFormInputWithValidator = (initialState, getErrorMessage) => {
     };
 
     const reset = () => {
-        setValue('');
+        setValue(emptyValue);
         setError('');
     };
 

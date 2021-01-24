@@ -3,9 +3,7 @@ import React, { Fragment } from 'react';
 import { validateEmail } from '../util/validators';
 import { FormModal, createModal } from './modal/Modal';
 import { Email, Password, ConfirmPassword, Name } from './Input';
-import { useFormInputWithValidator } from './hooks/InputHooks';
-
-const useFormInput = useFormInputWithValidator;
+import { useFormInput } from './hooks/InputHooks';
 
 const Register = (props) => {
     const { id, onRegister } = props;

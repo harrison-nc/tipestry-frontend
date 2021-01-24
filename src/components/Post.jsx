@@ -1,239 +1,215 @@
 import '../css/modal.css';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { FormModal } from './modal/Modal';
-import Input, { InputContainer } from './Input';
-import { createValidator } from '../util/validators';
-
-const none = (e) => { };
+import { createInput, createInputTextArea } from './Input';
+import { useFormInput } from './hooks/InputHooks';
 
 const Post = (props) => {
     const { id, onPost } = props;
-
-    const [url, setURL] = useState('');
-    const [urlError, setURLError] = useState('');
-
-    const [title, setTitle] = useState('');
-    const [titleError, setTitleError] = useState('');
-
-    const [description, setDescription] = useState('');
-
-    const [tagItems, setTagItems] = useState([]);
-    const [tagName, setTagName] = useState('');
-
+    const Inputs = useInputs();
     const [serverError, setServerError] = useState('');
-
-    const Validators = {
-        resourceUrl: {
-            ...createValidator(value => !value ? 'Resource url is required' : ''),
-            setValue: setURL,
-            setError: setURLError
-        },
-
-        title: {
-            ...createValidator(value => !value ? 'Title is required' : ''),
-            setValue: setTitle,
-            setError: setTitleError,
-        },
-
-        description: {
-            ...createValidator(none),
-            setValue: setDescription,
-            setError: none
-        },
-
-        tagName: {
-            ...createValidator(none),
-            setValue: setTagName,
-            setError: none
-        }
-    };
-
-    const reportValidity = () => {
-        resetInputError();
-
-        checkValidity('resourceUrl', url);
-        checkValidity('title', title);
-        checkValidity('description', description);
-    };
-
-    const checkValidity = (name, value) => {
-        const input = Validators[name];
-
-        if (!input) return console.error(`'${name}' is not a valid input`);
-
-        else input.validate(value);
-    };
-
-    const isValid = (name, value) => {
-        const validator = Validators[name];
-
-        if (!validator) return false;
-
-        return validator.isValid(value);
-    };
-
-    const validateInputs = () => {
-        return isValid('resourceUrl', url)
-            && isValid('title', title)
-            && isValid('description', description);
-    };
-
-    const resetInputError = (name) => {
-        const input = Validators[name];
-
-        if (input) return input.setError('');
-
-        setServerError('');
-        setURLError('');
-        setTitleError('');
-    };
 
     const showError = (error) => {
         const { key, value, message } = error;
-
-        const input = Validators[key];
-
+        const input = Inputs[key];
         if (input) input.setError(message);
-
         else console.error(`${message}: '${key}', '${value}`, error);
     };
 
+    const handleClear = (e) => {
+        Inputs.asArray().forEach(input => input.reset());
+        setServerError('');
+    };
+
     const handleRemoveTag = (item) => {
-        const items = [...tagItems];
+        const { tagItems } = Inputs;
+        const items = [...tagItems.getValue()];
         const index = items.indexOf(item);
-
         items.splice(index, 1);
-
-        setTagItems(items);
+        tagItems.setValue(items);
     };
 
     const handleAddTag = (e) => {
-        if (tagName && tagName.trim() === '') return;
+        const { tagName, tagItems } = Inputs;
+        const { value } = tagName.props;
 
-        const items = [...tagItems];
+        if (value.trim() === '') return;
 
-        items.push(tagName);
-
-        setTagItems(items);
-        setTagName('');
+        const items = [...tagItems.getValue()];
+        items.push(value);
+        tagItems.setValue(items);
+        tagName.setValue('');
     };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-
-        const input = Validators[name];
-
-        if (input) return input.setValue(value);
-
-        console.error(`'${name}' is not a valid input`);
-    }
-
-    const handleFocus = (e) => resetInputError(e.target.name);
-
-    const handleBlur = (e) => checkValidity(e.target.name, e.target.value);
-
-    const handleReset = (e) => {
+    const handleClose = (e) => {
         e.preventDefault();
-
-        setURL('');
-        setTitle('');
-        setDescription('');
-        resetInputError();
-
+        handleClear(e);
         window.location.href = '#app';
     }
+
+    const handleSubmitFailure = (error) => {
+        if (error.auth) setServerError(error.auth.message);
+        else if (error instanceof Array) error.forEach(showError);
+        else showError(error);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const isValid = validateInputs();
+        const isValid = Inputs.validateAll();
 
-        if (isValid) try {
+        if (!isValid) return;
 
+        try {
             const error = await onPost({
-                resourceUrl: url,
-                title,
-                description,
-                tags: tagItems
+                resourceUrl: Inputs.url.getValue(),
+                title: Inputs.title.getValue(),
+                description: Inputs.description.getValue(),
+                tags: Inputs.tagItems.getValue(),
             });
 
-            if (!error) handleReset(e);
-
-            else if (error.auth) setServerError(error.auth.message);
-
-            else if (error instanceof Array) error.forEach(showError);
-
-            else showError(error);
+            if (!error) handleClose(e);
+            else handleSubmitFailure(error);
 
         } catch (ex) {
-            console.error(ex);
+            handleSubmitFailure(ex);
         }
-
-        else reportValidity();
     }
+
+    const closeButton = <input className="close modal-close btn" type="reset" value="X" />;
+
+    const form = {
+        id,
+        method: "post",
+        onReset: handleClose,
+        onSubmit: handleSubmit,
+        title: "Add post",
+        close: closeButton,
+    };
 
     return (
         <div className="post">
-            <FormModal id={id}
-                method="post"
-                onReset={handleReset}
-                onSubmit={handleSubmit}
-                title="Add post">
-
-                <Input type='url'
-                    name='resourceUrl'
-                    label='Resource url'
-                    placeholder='Enter resource url'
-                    value={url}
-                    hasError={urlError}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    onChange={handleChange} />
-
-                <Input
-                    label="Title"
-                    name="title"
-                    type="text"
-                    placeholder="Enter post title"
-                    value={title}
-                    hasError={titleError}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    onChange={handleChange} />
-
-                <InputContainer label="Description">
-                    <textarea id="description"
-                        className="input py-4 px-4 size-medium"
-                        name="description"
-                        placeholder="Enter post details"
-                        value={description}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                        onChange={handleChange}></textarea>
-                </InputContainer>
-
-                <ul className="tags is-flex"> {tagItems.map((item, i) =>
-                    <li key={i} className="tag__item">
-                        <span className="tag__item__hash">#</span><span className="tag__item__text">{item}</span><span className="tag__item__btn" onClick={() => handleRemoveTag(item)}>x</span>
-                    </li>)}
-                </ul>
-
-                <fieldset className="tag__control py-6 px-6">
-                    <legend>Tags</legend>
-                    <div className="is-flex mt-3">
-                        <input className="tag__input flex-grow py-4 px-4" type="text" name="tagName" value={tagName} onChange={handleChange} />
-                        <button type="button" onClick={handleAddTag}>Add</button>
-                    </div>
-                </fieldset>
-
-                {serverError && <span className="error">{serverError}</span>}
-
-                <div className="control is-flex right-control mt-2">
-                    <button className="btn modal-close close" type="reset">Cancel</button>
-                    <button className="btn modal-accept has-color-white is-primary">Save</button>
-                </div>
+            <FormModal {...form}>
+                <URL {...Inputs.url.props} />
+                <Title {...Inputs.title.props} />
+                <Description {...Inputs.description.props} />
+                <Tags
+                    values={Inputs.tagItems.props.value}
+                    onRemove={handleRemoveTag}
+                />
+                <TagInput
+                    value={Inputs.tagName.props.value}
+                    onAdd={handleAddTag}
+                    onChange={Inputs.tagName.props.onChange}
+                />
+                <Error hasError={serverError} />
+                <Control onClear={handleClear} />
             </FormModal>
         </div>
+    );
+};
+
+const useInputs = () => {
+    const url = useFormInput('', value => {
+        return !value ? 'Resource url is required' : '';
+    });
+
+    const title = useFormInput('', value => {
+        return !value ? 'Title is required' : '';
+    });
+
+    const tagItems = useFormInput([], () => '', []);
+    const tagName = useFormInput('');
+    const description = useFormInput('');
+
+    return Object.freeze({
+        url,
+        title,
+        description,
+        tagItems,
+        tagName,
+
+        asArray() {
+            return [url, title, description, tagItems, tagName];
+        },
+
+        validateAll() {
+            const validate = input => input.validate() === '';
+            const isValid = (a, b) => a && b;
+            return this.asArray().map(validate).reduce(isValid, true);
+        }
+    });
+};
+
+const URL = createInput({
+    type: 'url',
+    name: 'resourceUrl',
+    label: 'Resource url*',
+    placeholder: 'Enter resource url',
+});
+
+const Title = createInput({
+    type: "text",
+    name: "title",
+    label: "Title*",
+    placeholder: "Enter post title",
+});
+
+const Description = createInputTextArea({
+    id: "description",
+    name: "description",
+    label: "Description",
+    placeholder: "Enter post details",
+});
+
+const Tags = (props) => {
+    const { values, onRemove } = props;
+
+    return (
+        <ul className="post__tags is-flex"> {values.map((item, i) =>
+            <li key={i} className="tag__item">
+                <span className="tag__item__hash">#</span><span className="tag__item__text">{item}</span><span className="tag__item__btn" onClick={() => onRemove(item)}>x</span>
+            </li>)}
+        </ul>
+    );
+};
+
+const TagInput = (props) => {
+    const { value, onAdd, onChange } = props;
+
+    return (
+        <fieldset className="tag__control py-6 px-6">
+            <legend>Tags</legend>
+            <div className="is-flex mt-3">
+                <input className="tag__input flex-grow py-4 px-4" type="text" name="tagName" value={value} onChange={onChange} />
+                <button type="button" onClick={onAdd}>Add</button>
+            </div>
+        </fieldset>
+    );
+};
+
+const Control = (props) => {
+    const { onClear } = props;
+
+    return (
+        <div className="control is-flex right-control mt-2">
+            <button className="btn modal-close close" type="button" onClick={onClear}>
+                clear
+            </button>
+            <button className="btn has-color-white is-primary py-4 px-3">
+                Save
+            </button>
+        </div>
+    );
+};
+
+const Error = (props) => {
+    const { hasError } = props;
+
+    return (
+        <Fragment>
+            {hasError && <span className="error">{hasError}</span>}
+        </Fragment>
     );
 };
 

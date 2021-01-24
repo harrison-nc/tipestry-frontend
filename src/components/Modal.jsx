@@ -3,19 +3,19 @@ import '../css/modal.css';
 import React from 'react';
 
 const Modal = (props) => {
-    const { id, children } = props;
+    const { id, children, classes } = props;
     return (
-        <div id={id} className="modal-window">
+        <div id={id} className={"modal-window " + classes}>
             {children}
         </div>
     );
 }
 
 export const FormModal = (props) => {
-    const { id, children, method, onReset, onSubmit, title, close } = props;
+    const { id, children, method, onReset, onSubmit, title, close, classes } = props;
 
     return (
-        <div id={id} className="modal-window">
+        <div id={id} className={"modal-window " + classes}>
             <form method={method}
                 onReset={onReset}
                 onSubmit={onSubmit}

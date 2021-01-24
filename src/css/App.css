@@ -298,45 +298,39 @@ body {
 .success,
 .failure {
   height: 400px;
+  width: 400px;
   align-items: center;
   justify-content: center;
+  row-gap: var(--size-medium);
+}
+
+.success .close,
+.failure .close {
+  border: 1px solid var(--color-grey);
+  color: var(--color-grey);
+  width: 100px;
+  text-align: center;
+  border-radius: 20px;
+  text-transform: lowercase;
+}
+
+.success .close:hover,
+.failure .close:hover {
+  border: 1px solid var(--color-black);
+  color: var(--color-black);
+}
+
+.success .subtitle,
+.failure .subtitle {
+  font-size: var(--size-large);
 }
 
 .success .subtitle {
-  font-size: var(--size-large);
-  align-items: flex-end;
-  color: var(--color-info);
-}
-
-.success .close-container,
-.failure .close-container {
-  align-self: stretch;
-  align-items: stretch;
-  justify-content: center;
-}
-
-.success .close-container .close {
-  align-self: flex-end;
-  color: var(--color-white);
-  width: 100px;
-  height: 38px;
-  text-align: center;
-  border-radius: 20px;
+  color: var(--color-success);
 }
 
 .failure .subtitle {
-  font-size: var(--size-large);
-  align-items: flex-end;
   color: var(--color-danger);
-}
-
-.failure .close-container .close {
-  align-self: flex-end;
-  color: var(--color-white);
-  width: 100px;
-  height: 38px;
-  text-align: center;
-  border-radius: 20px;
 }
 
 .tags {

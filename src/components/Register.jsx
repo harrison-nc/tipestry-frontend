@@ -58,7 +58,6 @@ const Register = (props) => {
         }
         catch (ex) {
             handleSubmitFailure(ex);
-            console.error(ex);
         }
     };
 
@@ -78,8 +77,8 @@ const Register = (props) => {
             <div className="register">
                 <FormModal {...form}>
                     <Name {...Inputs.name.props} />
-                    <Email {...Inputs.email.props} />
-                    <Password {...Inputs.password.props} />
+                    <Email id="r-email" {...Inputs.email.props} />
+                    <Password id="r-password" {...Inputs.password.props} />
                     <ConfirmPassword {...Inputs.cpassword.props} />
                     <Control onClear={handleClear} />
                 </FormModal>

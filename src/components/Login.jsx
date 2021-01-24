@@ -84,8 +84,8 @@ const Login = (props) => {
     return (
         <div className="login">
             <FormModal {...form}>
-                <Email {...Inputs.email.props} />
-                <Password {...Inputs.password.props} />
+                <Email id="l-email" {...Inputs.email.props} />
+                <Password id="l-password" {...Inputs.password.props} />
 
                 {serverError && <span className="error">{serverError}</span>}
 

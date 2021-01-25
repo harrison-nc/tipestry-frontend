@@ -1,6 +1,8 @@
 import { Fragment } from 'react';
 
-const Content = ({ resourceUrl, description }) => {
+const Content = (props) => {
+    const { resourceUrl, description } = props.post;
+
     return (
         <Fragment>
             <figure>

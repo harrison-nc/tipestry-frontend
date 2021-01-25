@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Footer = (props) => {
-    const { likes, disLikes, comments, shares, views } = props;
+    const { likes, disLikes, comments, shares, views } = props.post;
 
     return (
         <div className="footer">
@@ -26,8 +26,9 @@ const Link = ({ name, value }) => {
 
 const Views = ({ value }) => {
     return (
-        <div className="views"><hr />
-                View: {value}
+        <div className="views">
+            <hr />
+            View: {value}
         </div>
     );
 };

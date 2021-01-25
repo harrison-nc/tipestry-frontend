@@ -104,16 +104,10 @@ class App extends Component {
 
     handlePost = async (post) => {
         try {
-            console.log('user', this.state.user);
-            console.log('payload', post);
-
-            if (this.state.user) console.log('token', this.state.user['access-token']);
-
             const headers = { 'Content-Type': 'application/json' }
 
-            if (this.state.user) headers['x-auth-token'] = this.state.user['access-token'];
-
-            console.log('headers', headers);
+            if (this.state.user)
+                headers['x-auth-token'] = this.state.user['access-token'];
 
             const response = await fetch(postAction, {
                 method: 'POST',
@@ -137,6 +131,80 @@ class App extends Component {
         }
     };
 
+    handleUpVotes = async (postId, votes, headers) => {
+        const endPoint = `${postAction}/${postId}/upVotes`;
+        await this.updateVotes(postId, 'upVotes', votes, headers, endPoint);
+    };
+
+    handleDownVotes = async (postId, votes, headers) => {
+        const endPoint = `${postAction}/${postId}/downVotes`;
+        await this.updateVotes(postId, 'downVotes', votes, headers, endPoint);
+    };
+
+    updateVotes = async (postId, name, votes, headers, endPoint) => {
+        try {
+            const payload = {};
+            payload[name] = votes;
+
+            const response = await fetch(endPoint, {
+                method: 'POST',
+                mode: 'cors',
+                headers,
+                body: JSON.stringify(payload),
+            })
+
+            if (Number(response.status) === 200) {
+                const { posts } = this.state;
+                const selectedPost = posts.filter(p => p._id === postId);
+
+                if (!selectedPost || selectedPost.length === 0) return;
+
+                const post = selectedPost[0];
+
+                post[name] = votes;
+
+                const index = posts.indexOf(post);
+                posts[index] = post;
+
+                this.setState({ posts });
+            }
+            else console.error(response);
+        }
+        catch (ex) {
+            console.error(ex);
+        }
+    };
+
+    handleCardAction = async (e) => {
+        const headers = { 'Content-Type': 'application/json' }
+
+        if (this.state.user)
+            headers['x-auth-token'] = this.state.user['access-token'];
+
+        const { name, value, postId } = e.target;
+
+        switch (name.toLowerCase()) {
+            case 'like':
+                await this.handleUpVotes(postId, value, headers);
+                break;
+
+            case 'dislike':
+                await this.handleDownVotes(postId, value, headers);
+                break;
+
+            case 'comment':
+                console.log(name, value);
+                break;
+
+            case 'share':
+                console.log(name, value);
+                break;
+            default:
+                console.error('invalid action', name, value);
+                break;
+        }
+    };
+
     render() {
         const { user, posts, toptags } = this.state;
 
@@ -148,7 +216,7 @@ class App extends Component {
             <Fragment>
                 <Search />
                 <Filter />
-                <Cards posts={posts} />
+                <Cards posts={posts} onAction={this.handleCardAction} />
             </Fragment>
         );
 

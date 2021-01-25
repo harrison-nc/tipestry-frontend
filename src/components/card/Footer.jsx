@@ -1,25 +1,61 @@
 import React from 'react';
 
 const Footer = (props) => {
-    const { likes, disLikes, comments, shares, views } = props.post;
+    const { post, onAction } = props;
+    const { _id, upVotes, downVotes, comments, shares, views } = post;
 
     return (
         <div className="footer">
             <div className="control">
-                <Link name="Like" value={likes} />
-                <Link name="Dislike" value={disLikes} />
-                <Link name="Comment" value={comments && comments.count} />
-                <Link name="Share" value={shares && shares.count} />
+                <Link
+                    postId={_id}
+                    name="Like"
+                    value={upVotes}
+                    onClick={onAction} />
+
+                <Link
+                    postId={_id}
+                    name="Dislike"
+                    value={downVotes}
+                    onClick={onAction} />
+
+                <Link
+                    postId={_id}
+                    name="Comment"
+                    value={comments && comments.length}
+                    onClick={onAction} />
+
+                <Link
+                    postId={_id}
+                    name="Share"
+                    value={shares && shares.length}
+                    onClick={onAction} />
             </div>
             <Views value={views && views.count} />
         </div>
     );
 };
 
-const Link = ({ name, value }) => {
+const Link = (props) => {
+    const { postId, name, value, onClick } = props;
+
+    function handleClick(e) {
+        try {
+            let newValue = Number(value);
+            newValue++;
+            e.target.name = name;
+            e.target.value = newValue;
+            e.target.postId = postId;
+            onClick(e)
+        }
+        catch (ex) {
+            console.error(ex);
+        }
+    }
+
     return (
         <label>
-            <button className="btn py-5 px-5">{name}</button> {value}
+            <button className="btn py-5 px-5" onClick={handleClick}>{name}</button> {value}
         </label>
     );
 };
@@ -27,8 +63,7 @@ const Link = ({ name, value }) => {
 const Views = ({ value }) => {
     return (
         <div className="views">
-            <hr />
-            View: {value}
+            <hr /> View: {value}
         </div>
     );
 };

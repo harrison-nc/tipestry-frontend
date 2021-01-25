@@ -5,8 +5,10 @@
 
 *,
 *:before,
-*:after {
+*:after,
+*:focus {
   box-sizing: inherit;
+  outline: none;
 }
 
 html {
@@ -229,16 +231,10 @@ body {
 }
 
 .btn {
-  text-decoration: none;
-}
-.btn {
   border: 0;
-  border-radius: 2px;
-  box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.2);
-}
-
-.btn.is-primary:hover {
-  background-color: var(--color-primary-dark);
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .btn.is-cancel {
@@ -410,6 +406,30 @@ body {
 .header__content .subtitle {
   font-size: calc(var(--size-medium) + 4px);
   font-weight: bold;
+}
+
+.modal-window .comment h1 {
+  font-size: var(--size-medium);
+}
+
+.modal-window .comment textarea {
+  border-color: var(--color-grey-light);
+  border-radius: 5px;
+  padding: var(--size-normal);
+  font-size: var(--size-medium);
+}
+
+.modal-window .comment textarea:focus {
+  border: 2px solid var(--color-link);
+}
+
+.modal-window .comment .control {
+  justify-content: flex-end;
+  column-gap: var(--size-medium);
+}
+
+.modal-window .comment .control .btn {
+  text-transform: uppercase;
 }
 
 @media (width: 768px) {

@@ -13,6 +13,7 @@ import Navbar from './components/Navbar';
 import Search from './components/Search';
 import Filter from './components/Filter';
 import Cards from './components/Cards';
+import Comment from './components/modal/Comment';
 
 const registerAction = 'http://localhost:3000/api/users'
 const loginAction = 'http://localhost:3000/api/logins'
@@ -175,6 +176,14 @@ class App extends Component {
         }
     };
 
+    handleComment = (postId) => {
+        window.location.hash = '#post-comment';
+    };
+
+    handleUpdatePostComment = (e) => {
+
+    };
+
     handleCardAction = async (e) => {
         const headers = { 'Content-Type': 'application/json' }
 
@@ -193,7 +202,7 @@ class App extends Component {
                 break;
 
             case 'comment':
-                console.log(name, value);
+                this.handleComment(postId);
                 break;
 
             case 'share':
@@ -237,6 +246,8 @@ class App extends Component {
                 <Register id="register" onRegister={this.handleRegister} />
                 <Login id="login" onLogin={this.handleLogin} />
                 <Post id="post" onPost={this.handlePost} />
+
+                <Comment id="post-comment" onSend={this.handleUpdatePostComment} />
             </Fragment>
         );
     }

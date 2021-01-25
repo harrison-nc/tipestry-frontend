@@ -27,8 +27,8 @@
   --color-info-light: hsl(204, 86%, 70%);
   --color-light: hsl(0, 0%, 96%);
   --color-grey: hsl(0, 0%, 48%);
-  --color-grey-light: hsl(0, 0%, 71%);
-  --color-grey-lighter: hsl(0, 0%, 86%);
+  --color-grey-light: hsl(0, 0%, 80%);
+  --color-grey-lighter: hsl(0, 0%, 96%);
 
   --main-bg-color: #e6ecf0;
   --error-color: rgba(255, 128, 128, 1);
@@ -284,18 +284,22 @@
 }
 
 .is-primary {
+  color: var(--color-white);
   background-color: var(--color-primary);
 }
 
 .is-warning {
+  color: var(--color-white);
   background-color: var(--color-warning);
 }
 
 .is-success {
+  color: var(--color-white);
   background-color: var(--color-success);
 }
 
 .is-link {
+  color: var(--color-white);
   background-color: var(--color-link);
 }
 
@@ -305,6 +309,7 @@
 }
 
 .is-white {
+  color: var(--color-black);
   background-color: var(--color-white);
 }
 
@@ -312,8 +317,36 @@
   display: none;
 }
 
+.is-primary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.is-white:hover {
+  background-color: var(--color-grey-lighter);
+}
+
+.is-link:hover {
+  background-color: var(--color-link-dark);
+}
+
+.is-white.is-outlined {
+  border: 1px solid var(--color-black);
+  border-radius: 5px;
+}
+
+.is-link.is-outlined {
+  border: 1px solid var(--color-link);
+  border-radius: 5px;
+  background-color: var(--color-white);
+  color: var(--color-link);
+}
+
 .is-not-visible {
   visibility: hidden;
+}
+
+.has-shodow {
+  box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.2);
 }
 
 .has-color-primary {

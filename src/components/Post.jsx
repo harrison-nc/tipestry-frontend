@@ -2,7 +2,7 @@ import '../css/modal.css';
 import { Fragment, useState } from 'react';
 import { FormModal } from './modal/Modal';
 import { createInput, createInputTextArea } from './Input';
-import { useFormInput } from './hooks/InputHooks';
+import { useFormInput } from '../hooks/InputHooks';
 
 const Post = (props) => {
     const { id, onPost } = props;

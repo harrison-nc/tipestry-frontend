@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Email, Password } from './Input';
 import { validateEmail } from '../util/validators';
 import { FormModal, createModal } from './modal/Modal';
-import { useFormInput } from './hooks/InputHooks';
+import { useFormInput } from '../hooks/InputHooks';
 
 const Login = (props) => {
     const { id, onLogin } = props;

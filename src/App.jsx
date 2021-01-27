@@ -1,63 +1,56 @@
-import './css/util.css';
-import './css/App.css';
-import './css/minireset.min.css';
+import React, { useState, useEffect } from 'react';
+import { Switch, Route, useLocation } from 'react-router-dom';
 
-import React, { Component, Fragment } from 'react';
-
-import Hashtags from './components/Hashtags';
-import Suggestions from './components/Suggestions';
-import Register from './components/Register';
-import Login from './components/Login';
-import Post from './components/Post';
+import './assets/css/minireset.min.css';
+import './assets/css/util.css';
+import './assets/css/App.css';
+import Home from './pages/Home';
+import Modal from './modal/Modal';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import Post from './pages/Post';
+import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
-import Search from './components/Search';
-import Filter from './components/Filter';
-import Cards from './components/Cards';
-import Comment from './components/modal/Comment';
 
 const registerAction = 'http://localhost:3000/api/users'
 const loginAction = 'http://localhost:3000/api/logins'
 const postAction = 'http://localhost:3000/api/posts'
 
-class App extends Component {
-    state = {
-        user: '',
-        posts: [],
-        toptags: [
-            "#programing", "#java", "#html",
-            "#coding", "#marketing", "#cat",
-            "#dog", "#mouse", "#football",
-            "#css", "#javascript",
-        ]
-    };
+const defaultTags = [
+    "#programing", "#java", "#html",
+    "#coding", "#marketing", "#cat",
+    "#dog", "#mouse", "#football",
+    "#css", "#javascript",
+];
 
-    componentDidMount = async () => {
-        try {
-            const response = await fetch(postAction);
-            const posts = await response.json();
+export default function App() {
+    const location = useLocation();
+    const background = location.state && location.state.background;
 
-            this.setState({ posts });
-        } catch (ex) {
-            console.error(ex.message, ex);
+    const [user, setUser] = useState('');
+    const [posts, setPosts] = useState([]);
+    const [toptags] = useState(defaultTags);
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await fetch(postAction);
+                const posts = await response.json();
+                setPosts(posts);
+            } catch (ex) {
+                console.error(ex.message, ex);
+            }
         }
+        fetchData();
+    }, []);
+
+    const addPost = (post) => {
+        const array = [...posts];
+        array.push(post);
+        setPosts(array);
     };
 
-    addPost = (post) => {
-        const posts = [...this.state.posts];
-        posts.push(post);
-
-        this.setState({ posts });
-    };
-
-    updateLoginUser = (newUser) => {
-        const user = { ...newUser.login };
-
-        this.setState({ user });
-
-        console.log(this.state);
-    };
-
-    handleRegister = async (user) => {
+    const handleRegister = async (user) => {
         try {
             const response = await fetch(registerAction, {
                 method: 'POST',
@@ -75,7 +68,7 @@ class App extends Component {
         }
     };
 
-    handleLogin = async (user) => {
+    const handleLogin = async (user) => {
         try {
             const response = await fetch(loginAction, {
                 method: 'POST',
@@ -90,11 +83,11 @@ class App extends Component {
 
             if (result.error) return result;
 
-            else window.location.href = '#app';
-
             result.loggedIn = true;
 
-            this.updateLoginUser(result);
+            const { login } = result;
+
+            setUser(login);
 
             return true;
 
@@ -103,12 +96,11 @@ class App extends Component {
         }
     };
 
-    handlePost = async (post) => {
+    const handlePost = async (post) => {
         try {
             const headers = { 'Content-Type': 'application/json' }
 
-            if (this.state.user)
-                headers['x-auth-token'] = this.state.user['access-token'];
+            if (user) headers['x-auth-token'] = user['access-token'];
 
             const response = await fetch(postAction, {
                 method: 'POST',
@@ -121,9 +113,7 @@ class App extends Component {
 
             if (result.error) return result.error;
 
-            else window.location.href = '#app';
-
-            this.addPost(result);
+            addPost(result);
 
             return true;
 
@@ -132,42 +122,39 @@ class App extends Component {
         }
     };
 
-    handleUpVotes = async (postId, votes, headers) => {
+    const handleUpVotes = async (postId, votes, headers) => {
         const endPoint = `${postAction}/${postId}/upVotes`;
-        await this.updateVotes(postId, 'upVotes', votes, headers, endPoint);
+        await updateVotes(postId, 'upVotes', votes, headers, endPoint);
     };
 
-    handleDownVotes = async (postId, votes, headers) => {
+    const handleDownVotes = async (postId, votes, headers) => {
         const endPoint = `${postAction}/${postId}/downVotes`;
-        await this.updateVotes(postId, 'downVotes', votes, headers, endPoint);
+        await updateVotes(postId, 'downVotes', votes, headers, endPoint);
     };
 
-    updateVotes = async (postId, name, votes, headers, endPoint) => {
+    const updateVotes = async (postId, name, votes, headers, endPoint) => {
         try {
-            const payload = {};
-            payload[name] = votes;
-
             const response = await fetch(endPoint, {
                 method: 'POST',
                 mode: 'cors',
                 headers,
-                body: JSON.stringify(payload),
+                body: JSON.stringify({ [name]: votes }),
             })
 
-            if (Number(response.status) === 200) {
-                const { posts } = this.state;
-                const selectedPost = posts.filter(p => p._id === postId);
+            if (Number(response.status) === 200 && posts) {
+                const postArray = [...posts];
+
+                const selectedPost = postArray.filter(p => p._id === postId);
 
                 if (!selectedPost || selectedPost.length === 0) return;
 
                 const post = selectedPost[0];
-
                 post[name] = votes;
 
-                const index = posts.indexOf(post);
-                posts[index] = post;
+                const index = postArray.indexOf(post);
+                postArray[index] = post;
 
-                this.setState({ posts });
+                setPosts(postArray);
             }
             else console.error(response);
         }
@@ -176,33 +163,26 @@ class App extends Component {
         }
     };
 
-    handleComment = (postId) => {
-        window.location.hash = '#post-comment';
-    };
+    const handleComment = (postId) => { };
 
-    handleUpdatePostComment = (e) => {
-
-    };
-
-    handleCardAction = async (e) => {
+    const handleCardAction = async (e) => {
         const headers = { 'Content-Type': 'application/json' }
 
-        if (this.state.user)
-            headers['x-auth-token'] = this.state.user['access-token'];
+        if (user) headers['x-auth-token'] = user['access-token'];
 
         const { name, value, postId } = e.target;
 
         switch (name.toLowerCase()) {
             case 'like':
-                await this.handleUpVotes(postId, value, headers);
+                await handleUpVotes(postId, value, headers);
                 break;
 
             case 'dislike':
-                await this.handleDownVotes(postId, value, headers);
+                await handleDownVotes(postId, value, headers);
                 break;
 
             case 'comment':
-                this.handleComment(postId);
+                handleComment(postId);
                 break;
 
             case 'share':
@@ -214,43 +194,52 @@ class App extends Component {
         }
     };
 
-    render() {
-        const { user, posts, toptags } = this.state;
+    return (
+        <>
+            <Navbar loggedInUser={user} />
+            <main className="main is-flex flex-column pt-3 px-4">
+                <Switch location={background || location}>
+                    <Route exact path="/" children={<Home posts={posts} toptags={toptags} onCardAction={handleCardAction} />} />
+                    <Route path="/register" children={<Register onRegister={handleRegister} />} />
+                    <Route path="/login" children={<Login onLogin={handleLogin} />} />
+                    <Route path="/post" children={<Post onPost={handlePost} />} />
+                    <Route children={<NotFound />} />
+                </Switch>
 
-        let content;
-
-        if (!posts || posts.length === 0) content = <span>So much empty</span>;
-
-        else content = (
-            <Fragment>
-                <Search />
-                <Filter />
-                <Cards posts={posts} onAction={this.handleCardAction} />
-            </Fragment>
-        );
-
-        return (
-            <Fragment>
-                <Navbar loggedInUser={user} />
-
-                <main id="app" className="main is-flex pt-3 mt-1">
-                    <Suggestions />
-
-                    <section className="section flex-grow">
-                        {content}
-                    </section>
-
-                    <Hashtags toptags={toptags} />
-                </main>
-
-                <Register id="register" onRegister={this.handleRegister} />
-                <Login id="login" onLogin={this.handleLogin} />
-                <Post id="post" onPost={this.handlePost} />
-
-                <Comment id="post-comment" onSend={this.handleUpdatePostComment} />
-            </Fragment>
-        );
-    }
+                {background && <RegisterModal onRegister={handleRegister} />}
+                {background && <LoginModal onLogin={handleLogin} />}
+                {background && <PostModal onPost={handlePost} />}
+            </main>
+        </>
+    );
 }
 
-export default App;
+const RegisterModal = ({ onRegister }) => {
+    return (
+        <Route path="/register" >
+            <Modal>
+                <Register isModal={true} onRegister={onRegister} />
+            </Modal>
+        </Route>
+    );
+};
+
+const LoginModal = ({ onLogin }) => {
+    return (
+        <Route path="/login" >
+            <Modal>
+                <Login isModal={true} onLogin={onLogin} />
+            </Modal>
+        </Route>
+    );
+};
+
+const PostModal = ({ onPost }) => {
+    return (
+        <Route path="/post" >
+            <Modal>
+                <Post isModal={true} onPost={onPost} />
+            </Modal>
+        </Route>
+    );
+};

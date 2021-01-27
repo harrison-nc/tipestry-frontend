@@ -1,13 +1,18 @@
-import '../css/modal.css';
-import React, { Fragment } from 'react';
+import React, { useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { validateEmail } from '../util/validators';
-import { FormModal, createModal } from './modal/Modal';
-import { Email, Password, ConfirmPassword, Name } from './Input';
 import { useFormInput } from '../hooks/InputHooks';
+import { Email, Password, ConfirmPassword, Name } from '../components/Input';
+import FancyButton from '../components/FancyButton';
 
 const Register = (props) => {
-    const { id, onRegister } = props;
+    const location = useLocation();
+    const history = useHistory();
     const Inputs = useInputs();
+    const [isSending, setIsSending] = useState(false);
+
+    const { id, isModal, onRegister } = props;
+    const background = location.state && location.state.background;
 
     const showError = (error) => {
         const { key, value, message } = error;
@@ -23,19 +28,15 @@ const Register = (props) => {
 
     const handleClose = (e) => {
         handleClear(e);
-        window.location.href = '#app';
+        if (isModal && background) history.replace(background.pathname, background.state);
+        else history.goBack();
     };
 
     const handleSubmitFailure = (error) => {
         if (error instanceof Array) error.forEach(err => showError(err));
         else if (error instanceof Object) showError(error);
-        else window.location.href = '#rfailure';
+        // else window.location.href = '#rfailure';
         console.error(error);
-    };
-
-    const handleSubmitSuccess = () => {
-        Inputs.asArray().forEach(input => input.reset());
-        window.location.href = "#rsuccess";
     };
 
     const handleSubmit = async (e) => {
@@ -45,6 +46,9 @@ const Register = (props) => {
 
         if (!isValid) return;
 
+        setIsSending(true);
+        Inputs.disableAll();
+
         try {
             const { error } = await onRegister({
                 name: Inputs.name.getValue(),
@@ -53,39 +57,51 @@ const Register = (props) => {
             });
 
             if (error) handleSubmitFailure(error);
-            else handleSubmitSuccess();
-
+            else handleClose(e);
         }
         catch (ex) {
             handleSubmitFailure(ex);
         }
-    };
 
-    const closeButton = <input className="close modal-close btn" type="reset" value="X" />
-
-    const form = {
-        id: id,
-        method: "post",
-        title: "Register user",
-        close: closeButton,
-        onReset: handleClose,
-        onSubmit: handleSubmit,
+        setIsSending(false);
+        Inputs.enableAll();
     };
 
     return (
-        <Fragment>
-            <div className="register">
-                <FormModal {...form}>
-                    <Name {...Inputs.name.props} />
-                    <Email id="r-email" {...Inputs.email.props} />
-                    <Password id="r-password" {...Inputs.password.props} />
-                    <ConfirmPassword {...Inputs.cpassword.props} />
-                    <Control onClear={handleClear} />
-                </FormModal>
-            </div >
-            <Failure />
-            <Success />
-        </Fragment>
+        <div className="register is-flex">
+            <div id={id} className="is-flex flex-column register__content has-background-white box py-4 px-3" >
+
+                <Header onClose={handleClose} />
+                <Name {...Inputs.name.props} />
+                <Email {...Inputs.email.props} />
+                <Password {...Inputs.password.props} />
+                <ConfirmPassword {...Inputs.cpassword.props} />
+                <Control isSending={isSending} onClear={handleClear} onSubmit={handleSubmit} />
+            </div>
+        </div >
+    );
+};
+
+const Header = ({ onClose }) => {
+    return (
+        <div className="header is-flex">
+            <p className="title has-text-link">
+                Register user
+            </p>
+            <button className="close btn" onClick={onClose}>X</button>
+        </div>
+    );
+};
+
+const Control = (props) => {
+    const { isSending, onClear, onSubmit } = props;
+    const ref = React.createRef();
+
+    return (
+        <div className="register__control is-flex mt-3">
+            <input className="btn cancel is-white is-outlined is-bold" type="button" value="clear" onClick={onClear} disabled={isSending} />
+            <FancyButton className="is-primary btn is-bold" text="Register" isSending={isSending} ref={ref} onClick={onSubmit} />
+        </div>
     );
 };
 
@@ -109,6 +125,14 @@ const useInputs = () => {
             const validate = input => input.validate() === '';
             const isValid = (a, b) => a && b;
             return this.asArray().map(validate).reduce(isValid, true);
+        },
+
+        disableAll() {
+            this.asArray().forEach(i => i.disable());
+        },
+
+        enableAll() {
+            this.asArray().forEach(i => i.enable());
         }
     });
 };
@@ -139,28 +163,5 @@ const ConfirmPaswordValidator = (password) => {
         else return '';
     };
 };
-
-const Control = (props) => {
-    const { onClear } = props;
-
-    return (
-        <div className="control buttons is-flex mt-3">
-            <input className="close modal-close btn" type="button" value="clear" onClick={onClear} />
-            <input className="is-primary has-color-white btn py-4 px-3" type="submit" value="Register" />
-        </div>
-    );
-};
-
-const Success = createModal({
-    id: "rsuccess",
-    type: "success",
-    text: "Account created successfully",
-});
-
-const Failure = createModal({
-    id: "rfailure",
-    type: "failure",
-    text: "Account creation failed",
-});
 
 export default Register;

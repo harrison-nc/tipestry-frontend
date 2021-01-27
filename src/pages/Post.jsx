@@ -1,13 +1,18 @@
-import '../css/modal.css';
-import { Fragment, useState } from 'react';
-import { FormModal } from './modal/Modal';
-import { createInput, createInputTextArea } from './Input';
+import { createRef, useState } from 'react';
+import { createInput, createInputTextArea } from '../components/Input';
 import { useFormInput } from '../hooks/InputHooks';
+import { useHistory, useLocation } from 'react-router-dom';
+import FancyButton from '../components/FancyButton';
 
 const Post = (props) => {
-    const { id, onPost } = props;
+    const location = useLocation();
+    const history = useHistory();
     const Inputs = useInputs();
     const [serverError, setServerError] = useState('');
+    const [isSending, setIsSending] = useState('');
+
+    const { id, isModal, onPost } = props;
+    const background = location.state && location.state.background;
 
     const showError = (error) => {
         const { key, value, message } = error;
@@ -44,7 +49,8 @@ const Post = (props) => {
     const handleClose = (e) => {
         e.preventDefault();
         handleClear(e);
-        window.location.href = '#app';
+        if (isModal && background) history.replace(background.pathname, location.state);
+        else history.goBack();
     }
 
     const handleSubmitFailure = (error) => {
@@ -60,85 +66,67 @@ const Post = (props) => {
 
         if (!isValid) return;
 
+        setIsSending(true);
+        Inputs.disableAll();
+
         try {
-            const error = await onPost({
+            const { error } = await onPost({
                 resourceUrl: Inputs.url.getValue(),
                 title: Inputs.title.getValue(),
                 description: Inputs.description.getValue(),
                 tags: Inputs.tagItems.getValue(),
             });
 
-            if (!error) handleClose(e);
-            else handleSubmitFailure(error);
+            if (error) handleSubmitFailure(error);
+            else handleClose(e);
 
         } catch (ex) {
             handleSubmitFailure(ex);
         }
+        setTimeout(() => {
+            setIsSending(false);
+            Inputs.enableAll();
+
+        }, 5000);
     }
 
-    const closeButton = <input className="close modal-close btn" type="reset" value="X" />;
-
-    const form = {
-        id,
-        method: "post",
-        onReset: handleClose,
-        onSubmit: handleSubmit,
-        title: "Add post",
-        close: closeButton,
-    };
 
     return (
-        <div className="post">
-            <FormModal {...form}>
+        <div className="post is-flex">
+            <div id={id} className="post__content is-flex flex-column has-background-white box py-4 px-3" >
+
+                <Header onClose={handleClose} />
                 <URL {...Inputs.url.props} />
                 <Title {...Inputs.title.props} />
                 <Description {...Inputs.description.props} />
+
                 <Tags
                     values={Inputs.tagItems.props.value}
                     onRemove={handleRemoveTag}
                 />
+
                 <TagInput
-                    value={Inputs.tagName.props.value}
                     onAdd={handleAddTag}
-                    onChange={Inputs.tagName.props.onChange}
+                    {...Inputs.tagName.props}
                 />
-                <Error hasError={serverError} />
-                <Control onClear={handleClear} />
-            </FormModal>
+
+                {serverError && <ErrorMessage value={serverError} />}
+
+                <Control isSending={isSending} onClear={handleClear} onSubmit={handleSubmit} />
+            </div>
         </div>
     );
 };
 
-const useInputs = () => {
-    const url = useFormInput('', value => {
-        return !value ? 'Resource url is required' : '';
-    });
-
-    const title = useFormInput('', value => {
-        return !value ? 'Title is required' : '';
-    });
-
-    const tagItems = useFormInput([], () => '', []);
-    const tagName = useFormInput('');
-    const description = useFormInput('');
-
-    return Object.freeze({
-        url,
-        title,
-        description,
-        tagItems,
-        tagName,
-
-        asArray() {
-            return [url, title, description, tagItems, tagName];
-        },
-
-        validateAll() {
-            const validate = input => input.validate() === '';
-            const isValid = (a, b) => a && b;
-            return this.asArray().map(validate).reduce(isValid, true);
-        }
-    });
+const Header = ({ onClose }) => {
+    return (
+        <div className="header is-flex">
+            <p className="title has-text-link">
+                Add post
+            </p>
+            <button className="close btn" onClick={onClose}>X</button>
+        </div>
+    );
 };
 
 const URL = createInput({
@@ -175,42 +163,74 @@ const Tags = (props) => {
 };
 
 const TagInput = (props) => {
-    const { value, onAdd, onChange } = props;
+    const { value, onAdd, onChange, ...rest } = props;
 
     return (
-        <fieldset className="tag__control py-6 px-6">
+        <fieldset className="tag__control py-6 px-6 field">
             <legend>Tags</legend>
             <div className="is-flex mt-3">
-                <input className="tag__input flex-grow py-4 px-4" type="text" name="tagName" value={value} onChange={onChange} />
+                <input className="tag__input input size-medium flex-grow py-4 px-4" type="text" name="tagName" placeholder="Enter tag name" {...rest} value={value} onChange={onChange} />
                 <button type="button" onClick={onAdd}>Add</button>
             </div>
         </fieldset>
     );
 };
 
-const Control = (props) => {
-    const { onClear } = props;
+const Control = ({ isSending, onClear, onSubmit }) => {
+    const ref = createRef();
 
     return (
-        <div className="control is-flex right-control mt-2">
-            <button className="btn modal-close close" type="button" onClick={onClear}>
+        <div className="post__control is-flex right-control mt-2">
+            <button className="btn cancel is-white is-outlined" type="button" onClick={onClear}>
                 clear
             </button>
-            <button className="btn has-color-white is-primary py-4 px-3">
-                Save
-            </button>
+            <FancyButton className="btn is-primary py-4 px-3 is-bold" text="Post" ref={ref} isSending={isSending} onClick={onSubmit} />
         </div>
     );
 };
 
-const Error = (props) => {
-    const { hasError } = props;
+const ErrorMessage = ({ value }) => {
+    return <span className="error">{value}</span>
+};
 
-    return (
-        <Fragment>
-            {hasError && <span className="error">{hasError}</span>}
-        </Fragment>
-    );
+const useInputs = () => {
+    const url = useFormInput('', value => {
+        return !value ? 'Resource url is required' : '';
+    });
+
+    const title = useFormInput('', value => {
+        return !value ? 'Title is required' : '';
+    });
+
+    const tagItems = useFormInput(['tag'], () => '', []);
+    const tagName = useFormInput('');
+    const description = useFormInput('');
+
+    return Object.freeze({
+        url,
+        title,
+        description,
+        tagItems,
+        tagName,
+
+        asArray() {
+            return [url, title, description, tagItems, tagName];
+        },
+
+        validateAll() {
+            const validate = input => input.validate() === '';
+            const isValid = (a, b) => a && b;
+            return this.asArray().map(validate).reduce(isValid, true);
+        },
+
+        disableAll() {
+            this.asArray().forEach(i => i.disable());
+        },
+
+        enableAll() {
+            this.asArray().forEach(i => i.enable());
+        }
+    });
 };
 
 export default Post;

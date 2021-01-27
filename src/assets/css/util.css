@@ -27,8 +27,8 @@
   --color-info-light: hsl(204, 86%, 70%);
   --color-light: hsl(0, 0%, 96%);
   --color-grey: hsl(0, 0%, 48%);
-  --color-grey-light: hsl(0, 0%, 80%);
-  --color-grey-lighter: hsl(0, 0%, 96%);
+  --color-grey-light: hsl(0, 0%, 76%);
+  --color-grey-lighter: hsl(0, 0%, 86%);
 
   --main-bg-color: #e6ecf0;
   --error-color: rgba(255, 128, 128, 1);
@@ -332,6 +332,7 @@
 .is-white.is-outlined {
   border: 1px solid var(--color-black);
   border-radius: 5px;
+  background-color: unset;
 }
 
 .is-link.is-outlined {
@@ -341,39 +342,47 @@
   color: var(--color-link);
 }
 
-.is-not-visible {
-  visibility: hidden;
+.is-fixed {
+  position: fixed;
+}
+
+.is-sticky {
+  position: sticky;
+}
+
+.is-rounded {
+  border-radius: 10px;
 }
 
 .has-shodow {
   box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.2);
 }
 
-.has-color-primary {
+.has-text-primary {
   color: var(--color-primary);
 }
 
-.has-color-black {
+.has-text-black {
   color: var(--color-black);
 }
 
-.has-color-link {
+.has-text-link {
   color: var(--color-link);
 }
 
-.has-color-white {
+.has-text-white {
   color: var(--color-white);
 }
 
-.has-color-grey {
+.has-text-grey {
   color: var(--color-grey);
 }
 
-.has-color-grey-light {
+.has-text-grey-light {
   color: var(--color-grey-light);
 }
 
-.has-color-grey-lighter {
+.has-text-grey-lighter {
   color: var(--color-grey-lighter);
 }
 
@@ -383,6 +392,10 @@
 
 .has-background-white {
   background-color: var(--color-white);
+}
+
+.has-background-grey {
+  background-color: var(--color-grey-lighter);
 }
 
 .is-flex {

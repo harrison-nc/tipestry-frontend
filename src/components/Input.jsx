@@ -1,12 +1,12 @@
 import React from 'react';
 
 export const InputContainer = (props) => {
-    const { children, label, hasError } = props;
+    const { children, label, hasError, ...rest } = props;
 
     const errorClasses = "error size-medium";
 
     return (
-        <div className="input-container control">
+        <div className="input-container control" {...rest}>
             <fieldset className="is-flex flex-column field py-5 px-5">
                 <span className={errorClasses}>{hasError}</span>
                 <legend className="legend size-medium">{label}</legend>
@@ -17,20 +17,14 @@ export const InputContainer = (props) => {
 };
 
 export default function Input(props) {
-    const { id, label, type, name, value, placeholder, hasError } = props;
-    const { onChange, onBlur, onFocus } = props;
+    const { id, name, label, hasError, ...rest } = props;
 
     return (
         <InputContainer label={label} hasError={hasError}>
             <input className="input py-4 px-4 size-medium"
                 id={id ? id : name}
-                type={type}
                 name={name}
-                value={value}
-                placeholder={placeholder}
-                onChange={onChange}
-                onBlur={onBlur}
-                onFocus={onFocus}
+                {...rest}
                 required={true} />
         </InputContainer>
     );
@@ -41,8 +35,7 @@ export const createInput = (attrs) => {
     const defaultId = id;
 
     return (props) => {
-        const { id, value, hasError } = props;
-        const { onChange, onBlur, onFocus } = props;
+        const { id, ...rest } = props;
         const currentId = id ? id : defaultId;
 
         return (
@@ -51,11 +44,7 @@ export const createInput = (attrs) => {
                 type={type}
                 name={name}
                 placeholder={placeholder}
-                value={value}
-                hasError={hasError}
-                onBlur={onBlur}
-                onFocus={onFocus}
-                onChange={onChange} />
+                {...rest} />
         );
     }
 }
@@ -65,9 +54,7 @@ export const createInputTextArea = (attrs) => {
     const defaultId = id;
 
     return (props) => {
-
-        const { id, value, hasError } = props;
-        const { onChange, onBlur, onFocus } = props;
+        const { id, hasError, ...rest } = props;
         const currentId = id ? id : defaultId;
 
         return (
@@ -76,10 +63,8 @@ export const createInputTextArea = (attrs) => {
                     id={currentId ? currentId : name}
                     name={name}
                     placeholder={placeholder}
-                    value={value}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
-                    onChange={onChange}></textarea>
+                    {...rest}>
+                </textarea>
             </InputContainer>
         );
     };

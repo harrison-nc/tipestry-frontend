@@ -1,17 +1,13 @@
 import React from "react";
 
-import Card from "./card/Card";
+import Card from "./Card";
 
 const Cards = (props) => {
-    const { posts, ...passThrough } = props;
+    const { posts, onAction } = props;
 
-    const content = posts.map((post, id) => <Card key={id} post={post} {...passThrough} />);
+    const content = posts.map((post, id) => <Card key={id} post={post} onAction={onAction} />);
 
-    return (
-        <div className="cards is-flex flex-column">
-            {content}
-        </div>
-    );
+    return (<div className="cards is-flex flex-column">{content}</div>);
 }
 
 export default Cards;

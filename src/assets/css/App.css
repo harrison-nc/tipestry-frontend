@@ -256,13 +256,15 @@ body {
 }
 
 .card .footer .btn.comment,
-.card .footer .btn.action {
+.card .footer .btn.action,
+.social .link {
   color: var(--color-grey);
   text-decoration: none;
 }
 
 .card .footer .btn.comment:hover,
-.card .footer .btn.action:hover {
+.card .footer .btn.action:hover,
+.social .link:hover {
   color: var(--color-black);
 }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import banner from '../assets/images/potw-banner.png';
 import Cards from '../components/Cards';
 
@@ -64,10 +65,10 @@ const Hashtags = (props) => {
                         <div>
                             <p>Follow Us on Social Media</p>
                             <div className="social pt-5 is-flex">
-                                <p><a className="link" href="/">Facebook</a></p>
-                                <p><a className="link" href="/">Twiter</a></p>
-                                <p><a className="link" href="/">Youtube</a></p>
-                                <p><a className="link" href="/">Telegram</a></p>
+                                <SocialLink>Facebook</SocialLink>
+                                <SocialLink>Twiter</SocialLink>
+                                <SocialLink>Youtube</SocialLink>
+                                <SocialLink>Telegram</SocialLink>
                             </div>
                         </div>
                     </div>
@@ -123,4 +124,12 @@ const Filter = () => {
             </div>
         </div>
     );
+}
+
+const SocialLink = ({ children }) => {
+    function handleClick(e) {
+        e.preventDefault();
+    }
+
+    return (<p><Link className="link" to="/" onClick={handleClick}>{children}</Link></p>);
 }

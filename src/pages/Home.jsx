@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import banner from '../assets/images/potw-banner.png';
 import Cards from '../components/Cards';
 
@@ -23,11 +23,9 @@ function Content(props) {
 
     return (
         <section className="home__content is-flex flex-column flex-grow">
-            <Fragment>
-                <Search />
-                <Filter />
-                <Cards posts={posts} onAction={onCardAction} />
-            </Fragment>
+            <Search />
+            <Filter />
+            <Cards posts={posts} onAction={onCardAction} />
         </section>
     );
 }
@@ -53,7 +51,7 @@ const Hashtags = (props) => {
                             <p className="py-4 px-3 is-flex flex-wrap">
                                 {toptags.map((tag, id) => <a className="tag" href="/" key={id}>{tag}</a>)}
                             </p>
-                            <img width="300" alt="Tipestry post of the week event"
+                            <img width="100%" alt="Tipestry post of the week event"
                                 src={banner} />
                         </div>
                     </div>

@@ -115,17 +115,28 @@ body {
 
 .home {
   column-gap: var(--size-medium);
+  justify-content: center;
 }
 
 .home__left,
 .home__right {
   flex-basis: 0;
   flex-grow: 1;
+  max-width: 300px;
 }
 
 .home__content {
   flex-basis: 0;
   flex-grow: 2;
+  max-width: 600px;
+}
+
+.home__left {
+  justify-self: flex-end;
+}
+
+.home__right {
+  justify-self: flex-start;
 }
 
 .home__content {
@@ -152,6 +163,11 @@ body {
 
 .home__right__content {
   top: 68px;
+}
+
+.home__right__content .banner-container img {
+  width: 300px;
+  max-width: 100%;
 }
 
 .search {

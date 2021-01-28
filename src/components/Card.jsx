@@ -19,19 +19,19 @@ const Card = (props) => {
 const Header = ({ post }) => {
     const { title, tags } = post;
 
-    let tagElements;
-
-    if (tags) tagElements = tags.map((tag, key) => <span className="tag has-text-link" key={key}>#{tag}</span>);
-
-    else tagElements = <span>empty tags</span>
-
     return (
         <div className="header">
             <Avatar post={post} />
             <div className="header__content is-flex flex-column py-6">
                 <h1 className="title">{title}</h1>
                 <div className="tags is-flex">
-                    {tagElements}
+                    {tags && tags.map((tag, key) =>
+                        <span className="tag has-text-link" key={key}>
+                            #{tag}
+                        </span>
+                    )}
+
+                    {!tags && <span>empty tags</span>}
                 </div>
             </div>
         </div>
@@ -56,18 +56,69 @@ const Avatar = (props) => {
 
     if (!post) return (<span>no avatar</span>);
 
-    let { date, user } = post;
+    let { createdAt, user } = post;
 
     if (!user) user = { name: 'no user', avatarUrl: '' };
 
     const { name, avatarUrl } = user;
 
+    function formatDate(date) {
+        try {
+
+            function format(today, date, type) {
+                if (today === date) return false;
+                else if (today > date) {
+                    const number = today - date;
+                    return `${number} ${type}s ago`;
+                }
+                else return type === 'hour' ? `an ${type} ago` : `a ${type} ago`;
+            }
+
+            const today = new Date();
+            const dateCreated = new Date(date);
+
+            const dateFormat =
+                format(today.getFullYear(), dateCreated.getFullYear(), 'year')
+                || format(today.getMonth(), dateCreated.getMonth(), 'month')
+                || format(today.getDate(), dateCreated.getDate(), 'day')
+                || format(today.getHours(), dateCreated.getHours(), 'hour')
+                || format(today.getMinutes(), dateCreated.getMinutes(), 'minute')
+                || format(today.getSeconds(), dateCreated.getSeconds(), 'second')
+
+            console.log(dateFormat, dateCreated, today);
+
+            return dateFormat;
+        }
+        catch (ex) {
+            console.error(ex);
+        }
+
+        return '';
+    }
+
+    function formatDateString(date) {
+        try {
+            const value = new Date(date);
+            return value.toUTCString();
+        }
+        catch (ex) {
+            console.error(ex);
+        }
+
+        return date;
+    }
+
     return (
         <div className="avatar">
             <img alt="user" src={avatarUrl} />
             <div>
-                <p><span>{name}</span></p>
-                <p><span className="date">{date}</span></p>
+                <p><span className="has-text-link">@{name}</span></p>
+                <p>
+                    <abbr className="date has-text-grey"
+                        title={formatDateString(createdAt)} >
+                        {formatDate(createdAt)}
+                    </abbr>
+                </p>
             </div>
         </div>
     );

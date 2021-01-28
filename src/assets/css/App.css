@@ -250,6 +250,11 @@ body {
   column-gap: var(--size-normal);
 }
 
+.card .header .avatar .date {
+  font-size: 13px;
+  text-decoration: none;
+}
+
 .card .footer {
   display: flex;
   column-gap: var(--size-normal);

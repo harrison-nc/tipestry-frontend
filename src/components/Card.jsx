@@ -85,8 +85,6 @@ const Avatar = (props) => {
                 || format(today.getMinutes(), dateCreated.getMinutes(), 'minute')
                 || format(today.getSeconds(), dateCreated.getSeconds(), 'second')
 
-            console.log(dateFormat, dateCreated, today);
-
             return dateFormat;
         }
         catch (ex) {

@@ -21,7 +21,7 @@ const Header = ({ post }) => {
 
     let tagElements;
 
-    if (tags) tagElements = tags.map((tag, key) => <span className="tag" key={key}>#{tag}</span>);
+    if (tags) tagElements = tags.map((tag, key) => <span className="tag has-text-link" key={key}>#{tag}</span>);
 
     else tagElements = <span>empty tags</span>
 
@@ -30,7 +30,7 @@ const Header = ({ post }) => {
             <Avatar post={post} />
             <div className="header__content is-flex flex-column py-6">
                 <h1 className="title">{title}</h1>
-                <div className="tags">
+                <div className="tags is-flex">
                     {tagElements}
                 </div>
             </div>

@@ -246,6 +246,10 @@ body {
   border-top: 2px solid var(--color-grey-light);
 }
 
+.card .header .tags {
+  column-gap: var(--size-normal);
+}
+
 .card .footer {
   display: flex;
   column-gap: var(--size-normal);

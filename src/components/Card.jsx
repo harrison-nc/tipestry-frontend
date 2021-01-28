@@ -86,21 +86,24 @@ const Footer = (props) => {
 
     return (
         <div className="footer">
-            <Btn postId={postId}
+            <Button postId={postId}
                 name="Like"
                 value={upVotes}
                 onClick={onAction} />
 
-            <Btn postId={postId}
+            <Button postId={postId}
                 name="Dislike"
                 value={downVotes}
                 onClick={onAction} />
 
-            <Link className="btn comment py-5 px-5" to={commentLink}>
-                Comment {comments && <span>{comments.length}</span>}
-            </Link>
+            <div>
+                <Link className="btn comment py-5 px-5" to={commentLink}>
+                    Comment
+                </Link>
+                {comments && <span>{comments.length}</span>}
+            </div>
 
-            <Btn postId={postId}
+            <Button postId={postId}
                 name="Share"
                 value={shares && shares.length}
                 onClick={onAction} />
@@ -112,10 +115,12 @@ const Views = ({ value }) => {
     return (<div className="views px-5 py-4">View: {value || '10.1k'}</div>);
 };
 
-const Btn = (props) => {
+const Button = (props) => {
     const { postId, name, value, onClick } = props;
 
     function handleClick(e) {
+        e.preventDefault();
+
         try {
             let newValue = Number(value);
             newValue++;
@@ -130,12 +135,12 @@ const Btn = (props) => {
     }
 
     return (
-        <label>
-            <button className="btn py-5 px-5" onClick={handleClick}>
+        <div>
+            <Link to="/" className="btn action py-5 px-5" onClick={handleClick}>
                 {name}
-            </button>
-            <span> {value}</span>
-        </label>
+            </Link>
+            <span>{value}</span>
+        </div>
     );
 };
 

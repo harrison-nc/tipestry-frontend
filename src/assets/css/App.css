@@ -235,6 +235,15 @@ body {
   column-gap: var(--size-normal);
 }
 
+.card .footer .btn.comment {
+  color: var(--color-grey);
+  text-decoration: none;
+}
+
+.card .footer .btn.comment:hover {
+  color: var(--color-black);
+}
+
 .box {
   border-radius: 5px;
   box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.1);
@@ -302,9 +311,9 @@ body {
 .register .register__content .btn.cancel,
 .login__content .btn.cancel,
 .post__content .btn.cancel,
-.register .register__content .btn.cancel:hover:disabled:hover,
-.login__content .btn.cancel:hover:disabled:hover,
-.post__content .btn.cancel:hover:disabled:hover {
+.register .register__content .btn.cancel,
+.login__content .btn.cancel,
+.post__content .btn.cancel {
   border-color: var(--color-grey-light);
   color: var(--color-grey);
 }
@@ -316,9 +325,9 @@ body {
   color: var(--color-black);
 }
 
-.register .register__content .btn.cancel:hover:disabled:hover,
-.login__content .btn.cancel:hover:disabled:hover,
-.post__content .btn.cancel:hover:disabled:hover {
+.register .register__content .btn.cancel:disabled:hover,
+.login__content .btn.cancel:disabled:hover,
+.post__content .btn.cancel:disabled:hover {
   cursor: not-allowed;
 }
 
@@ -395,6 +404,21 @@ body {
 
 .post__tags .tag__input:focus {
   border: 0;
+}
+
+.comment {
+  row-gap: var(--size-medium);
+}
+
+.comment .control {
+  justify-content: flex-end;
+  column-gap: var(--size-medium);
+}
+
+.comment .control.btn:disabled:hover {
+  background-color: var(--color-primary);
+  cursor: not-allowed;
+  border: 1px solid red;
 }
 
 .btn {

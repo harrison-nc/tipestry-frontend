@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 const Card = (props) => {
     const { post } = props;
@@ -73,40 +74,42 @@ const Avatar = (props) => {
 }
 
 const Footer = (props) => {
+    const location = useLocation();
     const { post, onAction } = props;
     const { _id, upVotes, downVotes, comments, shares } = post;
+    const postId = _id;
+
+    const commentLink = {
+        pathname: `/comment/${postId}`,
+        state: { background: location }
+    };
 
     return (
         <div className="footer">
-            <Btn
-                postId={_id}
+            <Btn postId={postId}
                 name="Like"
                 value={upVotes}
                 onClick={onAction} />
 
-            <Btn
-                postId={_id}
+            <Btn postId={postId}
                 name="Dislike"
                 value={downVotes}
                 onClick={onAction} />
 
-            <Btn
-                postId={_id}
-                name="Comment"
-                value={comments && comments.length}
-                onClick={onAction} />
+            <Link className="btn comment py-5 px-5" to={commentLink}>
+                Comment {comments && <span>{comments.length}</span>}
+            </Link>
 
-            <Btn
-                postId={_id}
+            <Btn postId={postId}
                 name="Share"
                 value={shares && shares.length}
                 onClick={onAction} />
-        </div>
+        </div >
     );
 };
 
 const Views = ({ value }) => {
-    return (<div className="views px-5 py-4"> View: {value || '10.1k'} </div>);
+    return (<div className="views px-5 py-4">View: {value || '10.1k'}</div>);
 };
 
 const Btn = (props) => {
@@ -128,7 +131,10 @@ const Btn = (props) => {
 
     return (
         <label>
-            <button className="btn py-5 px-5" onClick={handleClick}>{name}</button> {value}
+            <button className="btn py-5 px-5" onClick={handleClick}>
+                {name}
+            </button>
+            <span> {value}</span>
         </label>
     );
 };

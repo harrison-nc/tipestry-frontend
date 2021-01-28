@@ -163,7 +163,7 @@ const Tags = (props) => {
 };
 
 const TagInput = (props) => {
-    const { value, onAdd, onChange, ...rest } = props;
+    const { value, onAdd, onChange, hasError, ...rest } = props;
 
     return (
         <fieldset className="tag__control py-6 px-6 field">

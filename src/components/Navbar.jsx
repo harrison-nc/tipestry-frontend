@@ -47,7 +47,7 @@ const Navbar = (props) => {
             <div className="nav is-flex">
                 <div className="nav__brand">
                     <span className="title">
-                        <a alt="navigate to home" href="/">Tipestry</a>
+                        <Link alt="home" to="/">Tipestry</Link>
                     </span>
                 </div>
 

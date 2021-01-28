@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import Post from './pages/Post';
 import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
+import Comment from './components/Comment';
 
 const registerAction = 'http://localhost:3000/api/users'
 const loginAction = 'http://localhost:3000/api/logins'
@@ -48,6 +49,23 @@ export default function App() {
         const array = [...posts];
         array.push(post);
         setPosts(array);
+    };
+
+    const addComment = (postId, comment) => {
+        const postArray = [...posts];
+        const selectedPostArray = postArray.filter(p => p._id === postId);
+
+        if (selectedPostArray.length === 0) return;
+
+        const selectedPost = selectedPostArray[0];
+        const comments = [...selectedPost.comments];
+        comments.push(comment);
+        selectedPost.comments = comments;
+
+        const index = postArray.indexOf(selectedPost);
+        postArray[index] = selectedPost;
+
+        setPosts(postArray);
     };
 
     const handleRegister = async (user) => {
@@ -163,7 +181,34 @@ export default function App() {
         }
     };
 
-    const handleComment = (postId) => { };
+    const handleComment = async (e) => {
+        try {
+            const { postId, value } = e.target;
+
+            const headers = { 'Content-Type': 'application/json' };
+
+            if (user) headers['x-auth-token'] = user['access-token'];
+
+            const response = await fetch(`${postAction}/${postId}/comments`, {
+                method: 'POST',
+                mode: 'cors',
+                headers,
+                body: JSON.stringify({ text: value, postId })
+            });
+
+            const result = await response.json();
+            const status = Number(response.status);
+
+            if (status === 200) addComment(postId, result);
+
+            else console.log('response', response);
+
+            return status;
+        }
+        catch (ex) {
+            console.error(ex);
+        }
+    };
 
     const handleCardAction = async (e) => {
         const headers = { 'Content-Type': 'application/json' }
@@ -181,13 +226,10 @@ export default function App() {
                 await handleDownVotes(postId, value, headers);
                 break;
 
-            case 'comment':
-                handleComment(postId);
-                break;
-
             case 'share':
                 console.log(name, value);
                 break;
+
             default:
                 console.error('invalid action', name, value);
                 break;
@@ -206,40 +248,43 @@ export default function App() {
                     <Route children={<NotFound />} />
                 </Switch>
 
-                {background && <RegisterModal onRegister={handleRegister} />}
-                {background && <LoginModal onLogin={handleLogin} />}
-                {background && <PostModal onPost={handlePost} />}
+                {background && <ModalRouter
+                    onRegister={handleRegister}
+                    onLogin={handleLogin}
+                    onPost={handlePost}
+                    onComment={handleComment}
+                />}
             </main>
         </>
     );
 }
 
-const RegisterModal = ({ onRegister }) => {
+const ModalRouter = ({ onRegister, onLogin, onPost, onComment }) => {
     return (
-        <Route path="/register" >
-            <Modal>
-                <Register isModal={true} onRegister={onRegister} />
-            </Modal>
-        </Route>
-    );
-};
+        <Switch>
+            <Route path="/register" >
+                <Modal>
+                    <Register isModal={true} onRegister={onRegister} />
+                </Modal>
+            </Route>
 
-const LoginModal = ({ onLogin }) => {
-    return (
-        <Route path="/login" >
-            <Modal>
-                <Login isModal={true} onLogin={onLogin} />
-            </Modal>
-        </Route>
-    );
-};
+            <Route path="/login" >
+                <Modal>
+                    <Login isModal={true} onLogin={onLogin} />
+                </Modal>
+            </Route>
 
-const PostModal = ({ onPost }) => {
-    return (
-        <Route path="/post" >
-            <Modal>
-                <Post isModal={true} onPost={onPost} />
-            </Modal>
-        </Route>
+            <Route path="/post" >
+                <Modal>
+                    <Post isModal={true} onPost={onPost} />
+                </Modal>
+            </Route>
+
+            <Route path="/comment/:postId">
+                <Modal>
+                    <Comment id="comment" isModal={true} onSend={onComment} />
+                </Modal>
+            </Route>
+        </Switch>
     );
 };

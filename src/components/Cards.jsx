@@ -5,9 +5,11 @@ import Card from "./Card";
 const Cards = (props) => {
     const { posts, onAction } = props;
 
-    const content = posts.map((post, id) => <Card key={id} post={post} onAction={onAction} />);
-
-    return (<div className="cards is-flex flex-column">{content}</div>);
+    return (
+        <div className="cards is-flex flex-column">{posts &&
+            posts.map((post, id) => <Card key={id} post={post} onAction={onAction} />)}
+        </div>
+    );
 }
 
 export default Cards;

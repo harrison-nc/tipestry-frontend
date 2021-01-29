@@ -12,6 +12,7 @@ import Post from './pages/Post';
 import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
 import Comment from './components/Comment';
+import Search from './pages/Search';
 
 const registerAction = 'http://localhost:3000/api/users'
 const loginAction = 'http://localhost:3000/api/logins'
@@ -249,6 +250,7 @@ export default function App() {
                     </Route>
                     <Route path="/login" children={<Login onLogin={handleLogin} />} />
                     <Route path="/post" children={<Post onPost={handlePost} />} />
+                    <Route path="/search" children={<Search posts={posts} />}></Route>
                     <Route children={<NotFound />} />
                 </Switch>
 

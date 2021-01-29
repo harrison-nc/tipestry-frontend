@@ -473,3 +473,44 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+.search {
+  column-gap: var(--size-medium);
+  justify-content: center;
+}
+
+.search .search__content {
+  row-gap: var(--size-medium);
+}
+
+.search .search__right .banner-container.is-sticky {
+  top: 80px;
+}
+
+.search__left,
+.search__right {
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
+.search__content {
+  flex-basis: 0;
+  flex-grow: 2;
+  row-gap: var(--size-medium);
+}
+
+.search__content .title {
+  font-size: var(--size-large);
+}
+
+.search__left {
+  justify-content: flex-end;
+}
+
+.search__right {
+  justify-content: flex-start;
+}
+
+.search__right .search__content {
+  max-width: 300px;
+}

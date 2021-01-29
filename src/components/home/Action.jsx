@@ -2,7 +2,7 @@ import { actions } from '../../util/post-util';
 
 export default function Action({ filter, sort, onChange }) {
     return (
-        <div className="filter has-background-white box py-4 px-4">
+        <div className="filter has-background-white box py-4 px-3">
             <div className="filter__control">
                 <label>View</label>
                 <button className="btn py-5 px-5">List</button>

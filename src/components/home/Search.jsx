@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { findPostsMatchingQuery } from '../../App';
 
 export const Search = () => {
+    const history = useHistory();
     const [query, setQuery] = useState('');
 
     function handleChange(e) {
@@ -14,8 +16,10 @@ export const Search = () => {
         if (value) setQuery(value.trim());
     }
 
-    function handleSearch(e) {
-        if (!query) e.preventDefault();
+    async function handleSearch(e) {
+        if (!query) return e.preventDefault();
+        const matchingPosts = await findPostsMatchingQuery(query);
+        history.push(`/search?q=${query}`, { posts: JSON.stringify(matchingPosts) });
     }
 
     return (
@@ -30,14 +34,10 @@ export const Search = () => {
                     onBlur={handleBlur}
                     placeholder="Enter a URL or a Search" />
             </div>
-            <Link className="home__search__btn py-5 px-5"
-                onClick={handleSearch}
-                to={{
-                    pathname: '/search',
-                    search: `?q=${query}`
-                }}>
+            <button className="home__search__btn py-5 px-5"
+                onClick={handleSearch}>
                 Load
-            </Link>
+            </button>
         </div>
     );
 };

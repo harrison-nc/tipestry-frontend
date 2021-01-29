@@ -203,7 +203,9 @@ body {
 
 .home__search__btn {
   align-items: center;
+  background-color: unset;
   color: var(--color-black);
+  border: unset;
   display: flex;
   font-weight: 500;
   font-size: 14px;

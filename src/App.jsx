@@ -25,6 +25,26 @@ const defaultTags = [
     "#css", "#javascript",
 ];
 
+export const findPostsMatchingQuery = async (query) => {
+    const endPoint = `${postAction}/search/${query}`;
+
+    try {
+        const response = await fetch(endPoint, {
+            method: 'GET',
+            mode: 'cors'
+        });
+
+        if (!Number(response.status) === 200) return [];
+
+        return await response.json();
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+
+    return [];
+}
+
 export default function App() {
     const location = useLocation();
     const background = location.state && location.state.background;
@@ -243,14 +263,17 @@ export default function App() {
             <main className="main is-flex flex-column pt-3 px-4">
                 <Switch location={background || location}>
                     <Route exact path="/" >
-                        <Home posts={posts} toptags={toptags} onCardAction={handleCardAction} />
+                        <Home
+                            posts={posts}
+                            toptags={toptags}
+                            onCardAction={handleCardAction} />
                     </Route>
                     <Route path="/register" >
                         <Register onRegister={handleRegister} />
                     </Route>
                     <Route path="/login" children={<Login onLogin={handleLogin} />} />
                     <Route path="/post" children={<Post onPost={handlePost} />} />
-                    <Route path="/search" children={<Search posts={posts} />}></Route>
+                    <Route path="/search" children={<Search />} />
                     <Route children={<NotFound />} />
                 </Switch>
 

@@ -1,8 +1,14 @@
+import { useLocation } from 'react-router-dom';
 import banner from '../assets/images/potw-banner.png';
 import Cards from '../components/Cards';
 
-const Search = ({ posts }) => {
-    const number = 10;
+const Search = () => {
+    const location = useLocation();
+    let posts = location.state && location.state.posts;
+
+    posts = JSON.parse(posts);
+
+    if (!posts || !Array.isArray(posts)) posts = [];
 
     return (
         <div className="search is-flex px-3">
@@ -12,7 +18,7 @@ const Search = ({ posts }) => {
 
             <div className="search__content is-flex flex-column">
                 <header className="has-text-grey">
-                    <h1 className="title is-bold">({number}) Search Results</h1>
+                    <h1 className="title is-bold">({posts ? posts.length : 0}) Search Results</h1>
                     <p>Top posts that matches your search</p>
                 </header>
                 <Cards posts={posts} />

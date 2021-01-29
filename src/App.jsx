@@ -241,8 +241,12 @@ export default function App() {
             <Navbar loggedInUser={user} />
             <main className="main is-flex flex-column pt-3 px-4">
                 <Switch location={background || location}>
-                    <Route exact path="/" children={<Home posts={posts} toptags={toptags} onCardAction={handleCardAction} />} />
-                    <Route path="/register" children={<Register onRegister={handleRegister} />} />
+                    <Route exact path="/" >
+                        <Home posts={posts} toptags={toptags} onCardAction={handleCardAction} />
+                    </Route>
+                    <Route path="/register" >
+                        <Register onRegister={handleRegister} />
+                    </Route>
                     <Route path="/login" children={<Login onLogin={handleLogin} />} />
                     <Route path="/post" children={<Post onPost={handlePost} />} />
                     <Route children={<NotFound />} />

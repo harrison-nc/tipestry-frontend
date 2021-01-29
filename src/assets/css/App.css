@@ -170,20 +170,20 @@ body {
   max-width: 100%;
 }
 
-.search {
+.home__search {
   display: flex;
   flex-direction: row;
   column-gap: var(--size-medium);
 }
 
-.search__control {
+.home__search__control {
   display: flex;
   column-gap: var(--size-medium);
   flex-grow: 1;
   align-items: center;
 }
 
-.search__control > .input {
+.home__search__control > .input {
   border-width: 0 0 1px 0;
   border-color: var(--color-black);
   outline: 0;

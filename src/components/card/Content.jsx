@@ -11,9 +11,7 @@ export default function Content(props) {
 
         const { _id: postId, title } = post;
 
-        const state = JSON.stringify(post);
-
-        history.push(`/detail/${postId}/${title}`, { post: state });
+        history.push(`/detail/${postId}/${title}`, { postId });
     }
 
     return (

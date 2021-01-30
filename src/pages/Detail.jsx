@@ -1,16 +1,27 @@
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import banner from '../assets/images/potw-banner.png';
 import SocialLinks from '../components/card/SocialLink';
 import Comment from '../components/Comment';
 import { formatDate } from '../util/date-util';
 
-export default function Detail({ onAction, onComment }) {
+export default function Detail({ posts, onAction, onComment }) {
     const location = useLocation();
-    let post = location.state && location.state.post;
+    const [currentPost, setCurrentPost] = useState([]);
 
-    post = JSON.parse(post);
+    const postId = location.state && location.state.postId;
 
-    if (!post) return (
+    useEffect(() => {
+        const selectedPosts = posts.filter(p => p._id === postId);
+
+        if (!selectedPosts) return;
+
+        const post = selectedPosts[0];
+        setCurrentPost(post);
+
+    }, [location.state, postId, posts]);
+
+    if (!currentPost) return (
         <div className="detail">
             <div className="detail__content">
                 <span>No was post selected</span>
@@ -18,7 +29,7 @@ export default function Detail({ onAction, onComment }) {
         </div>
     );
 
-    let { title, user, createAt, tags, resourceUrl } = post;
+    let { title, user, createAt, tags, resourceUrl } = currentPost;
 
     if (!user) user = { name: 'no user', avatar: '' };
 
@@ -50,7 +61,7 @@ export default function Detail({ onAction, onComment }) {
 
                         <SocialLinks
                             className="social box is-flex has-background-white px-4"
-                            post={post}
+                            post={currentPost}
                             onAction={onAction} />
 
                         <Comment

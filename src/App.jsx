@@ -240,6 +240,7 @@ export default function App() {
                     <Route path="/post" children={<Post onPost={handlePost} />} />
                     <Route path="/search" children={<Search />} />
                     <Route path="/detail/:postId/:title" children={<Detail
+                        posts={posts}
                         onAction={handleCardAction}
                         onComment={handleComment} />} />
                     <Route children={<NotFound />} />

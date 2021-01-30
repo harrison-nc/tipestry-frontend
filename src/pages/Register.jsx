@@ -4,6 +4,7 @@ import { validateEmail } from '../util/validators';
 import { useFormInput } from '../hooks/InputHooks';
 import { Email, Password, ConfirmPassword, Name } from '../components/Input';
 import FancyButton from '../components/FancyButton';
+import { registerUser } from '../App';
 
 const Register = (props) => {
     const location = useLocation();
@@ -11,7 +12,7 @@ const Register = (props) => {
     const Inputs = useInputs();
     const [isSending, setIsSending] = useState(false);
 
-    const { id, isModal, onRegister } = props;
+    const { id, isModal } = props;
     const background = location.state && location.state.background;
 
     const showError = (error) => {
@@ -50,7 +51,7 @@ const Register = (props) => {
         Inputs.disableAll();
 
         try {
-            const { error } = await onRegister({
+            const { error } = await registerUser({
                 name: Inputs.name.getValue(),
                 email: Inputs.email.getValue(),
                 password: Inputs.password.getValue(),

@@ -26,26 +26,6 @@ const defaultTags = [
     "#css", "#javascript",
 ];
 
-export const findPostsMatchingQuery = async (query) => {
-    const endPoint = `${postAction}/search/${query}`;
-
-    try {
-        const response = await fetch(endPoint, {
-            method: 'GET',
-            mode: 'cors'
-        });
-
-        if (!Number(response.status) === 200) return [];
-
-        return await response.json();
-    }
-    catch (ex) {
-        console.error(ex);
-    }
-
-    return [];
-}
-
 export default function App() {
     const location = useLocation();
     const background = location.state && location.state.background;
@@ -88,24 +68,6 @@ export default function App() {
         postArray[index] = selectedPost;
 
         setPosts(postArray);
-    };
-
-    const handleRegister = async (user) => {
-        try {
-            const response = await fetch(registerAction, {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(user)
-            })
-
-            return response.json();
-        }
-        catch (ex) {
-            throw ex;
-        }
     };
 
     const handleLogin = async (user) => {
@@ -273,9 +235,7 @@ export default function App() {
                             toptags={toptags}
                             onCardAction={handleCardAction} />
                     </Route>
-                    <Route path="/register" >
-                        <Register onRegister={handleRegister} />
-                    </Route>
+                    <Route path="/register" children={<Register onRegister={registerUser} />} />
                     <Route path="/login" children={<Login onLogin={handleLogin} />} />
                     <Route path="/post" children={<Post onPost={handlePost} />} />
                     <Route path="/search" children={<Search />} />
@@ -286,7 +246,7 @@ export default function App() {
                 </Switch>
 
                 {background && <ModalRouter
-                    onRegister={handleRegister}
+                    onRegister={registerUser}
                     onLogin={handleLogin}
                     onPost={handlePost}
                     onComment={handleComment}
@@ -296,36 +256,66 @@ export default function App() {
     );
 }
 
-const ModalRouter = ({ onRegister, onLogin, onPost, onComment }) => {
+const ModalRouter = ({ onLogin, onPost, onComment }) => {
     return (
         <Switch>
             <Route path="/register" >
-                <Modal>
-                    <Register isModal={true} onRegister={onRegister} />
-                </Modal>
+                <Modal children={<Register isModal={true} />} />
             </Route>
 
             <Route path="/login" >
-                <Modal>
-                    <Login isModal={true} onLogin={onLogin} />
-                </Modal>
+                <Modal children={<Login isModal={true} onLogin={onLogin} />} />
             </Route>
 
             <Route path="/post" >
-                <Modal>
-                    <Post isModal={true} onPost={onPost} />
-                </Modal>
+                <Modal children={<Post isModal={true} onPost={onPost} />} />
             </Route>
 
             <Route path="/comment/:postId">
-                <Modal>
-                    <Comment
-                        className="comment box is-flex flex-column has-background-white py-3 px-2"
-                        id="comment"
-                        isModal={true}
-                        onSend={onComment} />
-                </Modal>
+                <Modal children={<Comment
+                    className="comment box is-flex flex-column has-background-white py-3 px-2"
+                    id="comment"
+                    isModal={true}
+                    onSend={onComment} />} />
             </Route>
         </Switch>
     );
+};
+
+export const findPostsMatchingQuery = async (query) => {
+    const endPoint = `${postAction}/search/${query}`;
+
+    try {
+        const response = await fetch(endPoint, {
+            method: 'GET',
+            mode: 'cors'
+        });
+
+        if (!Number(response.status) === 200) return [];
+
+        return await response.json();
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+
+    return [];
+}
+
+export const registerUser = async (user) => {
+    try {
+        const response = await fetch(registerAction, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user)
+        })
+
+        return response.json();
+    }
+    catch (ex) {
+        throw ex;
+    }
 };

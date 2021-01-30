@@ -1,14 +1,56 @@
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { updateVotes, postAction } from '../App';
 import banner from '../assets/images/potw-banner.png';
 import Cards from '../components/Cards';
 
 const Search = () => {
     const location = useLocation();
-    let posts = location.state && location.state.posts;
+    const [matchingPosts, setMatchingPosts] = useState([]);
 
-    posts = JSON.parse(posts);
+    useEffect(() => {
+        let posts = location.state && location.state.posts;
 
-    if (!posts || !Array.isArray(posts)) posts = [];
+        posts = JSON.parse(posts);
+
+        if (!posts || !Array.isArray(posts)) posts = [];
+
+        setMatchingPosts(posts);
+
+    }, [location.state]);
+
+    const handleVotes = async (e) => {
+        let { name, value, postId } = e.target;
+
+        name = name.toLowerCase();
+
+        let action = name === 'like' ? 'upVotes' :
+            name === 'dislike' ? 'downVotes' : 'invalid';
+
+        const endPoint = `${postAction}/${postId}/${action}`;
+        const voteCount = await updateVotes(action, value, { 'Content-Type': 'application/json' }, endPoint);
+
+        updateVote(postId, action, voteCount);
+    };
+
+    const updateVote = (postId, name, value) => {
+        const selectedPost = matchingPosts.filter(p => p._id === postId);
+
+        if (!value || !selectedPost || selectedPost.length === 0) {
+            console.log('error search post');
+            return false;
+        }
+
+        const post = selectedPost[0];
+        post[name] = value;
+
+        const index = matchingPosts.indexOf(post);
+        matchingPosts[index] = post;
+
+        setMatchingPosts([...matchingPosts]);
+
+        return matchingPosts;
+    };
 
     return (
         <div className="search is-flex px-3">
@@ -18,10 +60,10 @@ const Search = () => {
 
             <div className="search__content is-flex flex-column">
                 <header className="has-text-grey">
-                    <h1 className="title is-bold">({posts ? posts.length : 0}) Search Results</h1>
+                    <h1 className="title is-bold">({matchingPosts ? matchingPosts.length : 0}) Search Results</h1>
                     <p>Top posts that matches your search</p>
                 </header>
-                <Cards posts={posts} />
+                <Cards posts={matchingPosts} onAction={handleVotes} />
             </div>
 
             <div className="search__right">

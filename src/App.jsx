@@ -15,9 +15,9 @@ import Comment from './components/Comment';
 import Search from './pages/Search';
 import Detail from './pages/Detail';
 
-const registerAction = 'http://localhost:3000/api/users'
-const loginAction = 'http://localhost:3000/api/logins'
-const postAction = 'http://localhost:3000/api/posts'
+export const registerAction = 'http://localhost:3000/api/users'
+export const loginAction = 'http://localhost:3000/api/logins'
+export const postAction = 'http://localhost:3000/api/posts'
 
 const defaultTags = [
     "#programing", "#java", "#html",
@@ -126,47 +126,33 @@ export default function App() {
 
     const handleUpVotes = async (postId, votes, headers) => {
         const endPoint = `${postAction}/${postId}/upVotes`;
-        return updateVotes(postId, 'upVotes', votes, headers, endPoint);
+        const voteCount = await updateVotes('upVotes', votes, headers, endPoint);
+        return updateVote(postId, 'upVotes', voteCount);
     };
 
     const handleDownVotes = async (postId, votes, headers) => {
         const endPoint = `${postAction}/${postId}/downVotes`;
-        return updateVotes(postId, 'downVotes', votes, headers, endPoint);
+        const voteCount = await updateVotes('downVotes', votes, headers, endPoint);
+        return updateVote(postId, 'downVotes', voteCount);
     };
 
-    const updateVotes = async (postId, name, votes, headers, endPoint) => {
-        try {
-            const response = await fetch(endPoint, {
-                method: 'POST',
-                mode: 'cors',
-                headers,
-                body: JSON.stringify({ [name]: votes }),
-            })
+    const updateVote = (postId, name, value) => {
+        const selectedPost = posts.filter(p => p._id === postId);
 
-            if (Number(response.status) === 200 && posts) {
-                const postArray = [...posts];
-
-                const selectedPost = postArray.filter(p => p._id === postId);
-
-                if (!selectedPost || selectedPost.length === 0) return;
-
-                const post = selectedPost[0];
-                post[name] = votes;
-
-                const index = postArray.indexOf(post);
-                postArray[index] = post;
-
-                setPosts(postArray);
-
-                return postArray;
-            }
-            else console.error(response);
-        }
-        catch (ex) {
-            console.error(ex);
+        if (!value || !selectedPost || selectedPost.length === 0) {
+            console.log('error post not found');
+            return false;
         }
 
-        return [];
+        const post = selectedPost[0];
+        post[name] = value;
+
+        const index = posts.indexOf(post);
+        posts[index] = post;
+
+        setPosts([...posts]);
+
+        return posts;
     };
 
     const handleComment = async (e) => {
@@ -238,7 +224,7 @@ export default function App() {
                     <Route path="/register" children={<Register onRegister={registerUser} />} />
                     <Route path="/login" children={<Login onLogin={handleLogin} />} />
                     <Route path="/post" children={<Post onPost={handlePost} />} />
-                    <Route path="/search" children={<Search />} />
+                    <Route path="/search" children={<Search onCardAction={handleCardAction} />} />
                     <Route path="/detail/:postId/:title" children={<Detail
                         posts={posts}
                         onAction={handleCardAction}
@@ -315,6 +301,27 @@ export const registerUser = async (user) => {
         })
 
         return response.json();
+    }
+    catch (ex) {
+        throw ex;
+    }
+};
+
+export const updateVotes = async (name, votes, headers, endPoint) => {
+    try {
+        const response = await fetch(endPoint, {
+            method: 'POST',
+            mode: 'cors',
+            headers,
+            body: JSON.stringify({ [name]: votes }),
+        })
+
+        if (Number(response.status) !== 200) {
+            console.error(response);
+            return false;
+        }
+
+        return votes;
     }
     catch (ex) {
         throw ex;

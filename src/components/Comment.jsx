@@ -13,7 +13,7 @@ const Comment = (props) => {
     function handleCancel(e) {
         setValue('');
         if (isModal && background) history.replace(background.pathname, location.state);
-        else history.goBack();
+        // else history.goBack();
     }
 
     async function handleSend(e) {
@@ -33,7 +33,7 @@ const Comment = (props) => {
     }
 
     return (
-        <div id={id} className="comment box is-flex flex-column has-background-white py-3 px-2" {...passThrough}>
+        <div id={id} {...passThrough}>
             <h1>Comment</h1>
 
             <textarea className="size-medium px-5 py-5"

@@ -370,6 +370,10 @@
   color: var(--color-link);
 }
 
+.has-text-link-dark {
+  color: var(--color-link-dark);
+}
+
 .has-text-white {
   color: var(--color-white);
 }

@@ -13,6 +13,7 @@ import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
 import Comment from './components/Comment';
 import Search from './pages/Search';
+import Detail from './pages/Detail';
 
 const registerAction = 'http://localhost:3000/api/users'
 const loginAction = 'http://localhost:3000/api/logins'
@@ -163,12 +164,12 @@ export default function App() {
 
     const handleUpVotes = async (postId, votes, headers) => {
         const endPoint = `${postAction}/${postId}/upVotes`;
-        await updateVotes(postId, 'upVotes', votes, headers, endPoint);
+        return updateVotes(postId, 'upVotes', votes, headers, endPoint);
     };
 
     const handleDownVotes = async (postId, votes, headers) => {
         const endPoint = `${postAction}/${postId}/downVotes`;
-        await updateVotes(postId, 'downVotes', votes, headers, endPoint);
+        return updateVotes(postId, 'downVotes', votes, headers, endPoint);
     };
 
     const updateVotes = async (postId, name, votes, headers, endPoint) => {
@@ -194,12 +195,16 @@ export default function App() {
                 postArray[index] = post;
 
                 setPosts(postArray);
+
+                return postArray;
             }
             else console.error(response);
         }
         catch (ex) {
             console.error(ex);
         }
+
+        return [];
     };
 
     const handleComment = async (e) => {
@@ -274,6 +279,9 @@ export default function App() {
                     <Route path="/login" children={<Login onLogin={handleLogin} />} />
                     <Route path="/post" children={<Post onPost={handlePost} />} />
                     <Route path="/search" children={<Search />} />
+                    <Route path="/detail/:postId/:title" children={<Detail
+                        onAction={handleCardAction}
+                        onComment={handleComment} />} />
                     <Route children={<NotFound />} />
                 </Switch>
 
@@ -311,7 +319,11 @@ const ModalRouter = ({ onRegister, onLogin, onPost, onComment }) => {
 
             <Route path="/comment/:postId">
                 <Modal>
-                    <Comment id="comment" isModal={true} onSend={onComment} />
+                    <Comment
+                        className="comment box is-flex flex-column has-background-white py-3 px-2"
+                        id="comment"
+                        isModal={true}
+                        onSend={onComment} />
                 </Modal>
             </Route>
         </Switch>

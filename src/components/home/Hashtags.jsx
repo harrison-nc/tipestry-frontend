@@ -28,10 +28,10 @@ export const Hashtags = (props) => {
                         <div>
                             <p>Follow Us on Social Media</p>
                             <div className="social pt-5 is-flex">
-                                <SocialLink>Facebook</SocialLink>
-                                <SocialLink>Twiter</SocialLink>
-                                <SocialLink>Youtube</SocialLink>
-                                <SocialLink>Telegram</SocialLink>
+                                <FollowLink>Facebook</FollowLink>
+                                <FollowLink>Twiter</FollowLink>
+                                <FollowLink>Youtube</FollowLink>
+                                <FollowLink>Telegram</FollowLink>
                             </div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@ export const Hashtags = (props) => {
     );
 };
 
-export const SocialLink = ({ children }) => {
+export const FollowLink = ({ children }) => {
     function handleClick(e) {
         e.preventDefault();
     }

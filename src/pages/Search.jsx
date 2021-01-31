@@ -53,7 +53,7 @@ const Search = () => {
     };
 
     return (
-        <div className="search is-flex px-3">
+        <div className="search is-flex px-3 pb-1">
             <div className="search__left sidebar">
                 <div className="search__content"></div>
             </div>

@@ -29,7 +29,7 @@ export default function Detail({ posts, onAction, onComment }) {
         </div>
     );
 
-    let { title, user, createAt, tags, resourceUrl } = currentPost;
+    let { title, user, createAt, tags, resourceUrl, description } = currentPost;
 
     if (!user) user = { name: 'no user', avatar: '' };
 
@@ -52,11 +52,14 @@ export default function Detail({ posts, onAction, onComment }) {
 
                 <div className="detail__container is-flex">
                     <div className="tags-social-comment is-flex flex-column">
-                        <div className="tags box has-background-white is-flex px-4 py-4">
-                            {tags && tags.map((tag, key) =>
-                                <span key={key} className="tag has-text-link-dark">
-                                    #{tag}
-                                </span>)}
+                        <div className="box has-background-white is-flex flex-column px-4 py-4">
+                            <div className="tags is-flex">
+                                {tags && tags.map((tag, key) =>
+                                    <span key={key} className="tag has-text-link-dark">
+                                        #{tag}
+                                    </span>)}
+                            </div>
+                            <p>{description}</p>
                         </div>
 
                         <SocialLinks

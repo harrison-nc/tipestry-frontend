@@ -3,13 +3,13 @@ import React from 'react';
 export const InputContainer = (props) => {
     const { children, label, hasError, ...rest } = props;
 
-    const errorClasses = "error size-medium";
+    const errorClasses = "error";
 
     return (
         <div className="input-container control" {...rest}>
             <fieldset className="is-flex flex-column field py-5 px-5">
                 <span className={errorClasses}>{hasError}</span>
-                <legend className="legend size-medium">{label}</legend>
+                <legend className="legend">{label}</legend>
                 {children}
             </fieldset>
         </div>
@@ -21,7 +21,7 @@ export default function Input(props) {
 
     return (
         <InputContainer label={label} hasError={hasError}>
-            <input className="input py-4 px-4 size-medium"
+            <input className="input py-4 px-4"
                 id={id ? id : name}
                 name={name}
                 {...rest}
@@ -59,7 +59,7 @@ export const createInputTextArea = (attrs) => {
 
         return (
             <InputContainer label={label} hasError={hasError}>
-                <textarea className="input size-medium py-4 px-4"
+                <textarea className="input py-4 px-4"
                     id={currentId ? currentId : name}
                     name={name}
                     placeholder={placeholder}

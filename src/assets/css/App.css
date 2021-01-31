@@ -328,7 +328,7 @@ body {
 .post .post__content {
   width: 400px;
   max-width: 100%;
-  row-gap: var(--size-medium);
+  row-gap: calc(var(--size-2) * 0.5);
 }
 
 .register__content .btn.close,
@@ -357,7 +357,7 @@ body {
 .register__content .header .title,
 .login__content .header .title,
 .post__content .header .title {
-  font-size: var(--size-larger);
+  font-size: var(--size-3);
 }
 
 .register__control,
@@ -415,7 +415,8 @@ body {
 }
 
 .post__tags {
-  align-items: center;
+  /* align-items: center; */
+  align-items: flex-end;
   color: var(--color-link-light);
   justify-content: center;
   min-height: 32px;
@@ -472,6 +473,28 @@ body {
 
 .post__tags .tag__input:focus {
   border: 0;
+}
+
+.post__content .upload .buttons {
+  column-gap: var(--size-normal);
+}
+
+.post__content .upload > p {
+  font-size: calc(var(--size-3) * 0.5);
+}
+
+.post__content .field .legend {
+  text-transform: uppercase;
+  font-size: calc(var(--size-2) * 0.7);
+}
+
+.post__content .field .input {
+  font-size: var(--size-2);
+}
+
+.post__content .upload-image {
+  max-width: 150px;
+  max-height: 150px;
 }
 
 .comment {
@@ -617,4 +640,8 @@ body {
 
 .detail .detail__container .comment {
   row-gap: var(--size-normal);
+}
+
+.is-block {
+  display: block;
 }

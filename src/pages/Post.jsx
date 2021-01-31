@@ -1,4 +1,4 @@
-import { createRef, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { createInput, createInputTextArea } from '../components/Input';
 import { useFormInput } from '../hooks/InputHooks';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -10,9 +10,12 @@ const Post = (props) => {
     const Inputs = useInputs();
     const [serverError, setServerError] = useState('');
     const [isSending, setIsSending] = useState('');
+    const [uploadImageURL, setUploadImageURL] = useState('');
 
     const { id, isModal, onPost } = props;
     const background = location.state && location.state.background;
+
+    useEffect(() => console.log('upload', Inputs.upload.value), [Inputs.upload.value]);
 
     const showError = (error) => {
         const { key, value, message } = error;
@@ -83,35 +86,43 @@ const Post = (props) => {
         } catch (ex) {
             handleSubmitFailure(ex);
         }
-        setTimeout(() => {
-            setIsSending(false);
-            Inputs.enableAll();
 
-        }, 5000);
+        setIsSending(false);
+        Inputs.enableAll();
     }
 
+    const handleRemoveFile = (e) => {
+        Inputs.upload.setValue(false);
+    };
+
+    const handleFileChange = (e) => {
+        const { files } = e.target;
+        console.log('files', files);
+        const file = files && files[0];
+        Inputs.upload.setValue(file || false);
+
+        if (file) setUploadImageURL(window.URL.createObjectURL(file));
+    };
 
     return (
         <div className="post is-flex">
-            <div id={id} className="post__content is-flex flex-column has-background-white box py-4 px-3" >
-
+            <div className="post__content is-flex flex-column has-background-white box py-4 px-3"
+                id={id}>
                 <Header onClose={handleClose} />
-                <URL {...Inputs.url.props} />
-                <Title {...Inputs.title.props} />
-                <Description {...Inputs.description.props} />
-
-                <Tags
-                    values={Inputs.tagItems.props.value}
-                    onRemove={handleRemoveTag}
-                />
-
-                <TagInput
-                    onAdd={handleAddTag}
-                    {...Inputs.tagName.props}
-                />
 
                 {serverError && <ErrorMessage value={serverError} />}
 
+                <Upload value={Inputs.upload.props.value}
+                    src={uploadImageURL}
+                    onRemove={handleRemoveFile}
+                    onFileChange={handleFileChange} />
+
+                {!Inputs.upload.props.value && <URL {...Inputs.url.props} />}
+
+                <Title {...Inputs.title.props} />
+                <Description {...Inputs.description.props} />
+                <Tags values={Inputs.tagItems.props.value} onRemove={handleRemoveTag} />
+                <TagInput onAdd={handleAddTag} {...Inputs.tagName.props} />
                 <Control isSending={isSending} onClear={handleClear} onSubmit={handleSubmit} />
             </div>
         </div>
@@ -129,10 +140,26 @@ const Header = ({ onClose }) => {
     );
 };
 
+const Upload = ({ value, src, onRemove, onFileChange }) => {
+    return (
+        <div className="upload is-flex flex-column mt-4">
+            {value && <img className="upload-image" src={src} alt="file to upload" />}
+            <div className="buttons is-flex mt-5">
+                <label>
+                    <input hidden type="file" name="file" onChange={onFileChange} />
+                    <span className="btn px-3 py-4 is-block is-rounded is-outlined is-link">Upload</span>
+                </label>
+                <button className="btn px-3 py-4 is-rounded is-outlined is-danger" onClick={onRemove}>Remove</button>
+            </div>
+            <p className="has-text-grey">Your maximun upload size if 5MB</p>
+        </div>
+    );
+};
+
 const URL = createInput({
     type: 'url',
     name: 'resourceUrl',
-    label: 'Resource url*',
+    label: 'Url*',
     placeholder: 'Enter resource url',
 });
 
@@ -167,9 +194,9 @@ const TagInput = (props) => {
 
     return (
         <fieldset className="tag__control py-6 px-6 field">
-            <legend>Tags</legend>
+            <legend className="legend">Tags</legend>
             <div className="is-flex mt-3">
-                <input className="tag__input input size-medium flex-grow py-4 px-4" type="text" name="tagName" placeholder="Enter tag name" {...rest} value={value} onChange={onChange} />
+                <input className="tag__input input flex-grow py-4 px-4" type="text" name="tagName" placeholder="Enter tag name" {...rest} value={value} onChange={onChange} />
                 <button type="button" onClick={onAdd}>Add</button>
             </div>
         </fieldset>
@@ -205,6 +232,7 @@ const useInputs = () => {
     const tagItems = useFormInput(['tag'], () => '', []);
     const tagName = useFormInput('');
     const description = useFormInput('');
+    const upload = useFormInput(false);
 
     return Object.freeze({
         url,
@@ -212,9 +240,10 @@ const useInputs = () => {
         description,
         tagItems,
         tagName,
+        upload,
 
         asArray() {
-            return [url, title, description, tagItems, tagName];
+            return [url, title, description, tagItems, tagName, upload];
         },
 
         validateAll() {

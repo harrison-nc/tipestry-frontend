@@ -42,7 +42,7 @@ export const useFormInput = (initialState, getErrorMessage, emptyValue) => {
 
     return {
         getValue,
-        setValue,
+        setValue: (value) => { console.log('setting value', value); setValue(value) },
         setError,
         isValid,
         validate,

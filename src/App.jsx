@@ -15,9 +15,10 @@ import Comment from './components/Comment';
 import Search from './pages/Search';
 import Detail from './pages/Detail';
 
-export const registerAction = 'http://localhost:3000/api/users'
-export const loginAction = 'http://localhost:3000/api/logins'
-export const postAction = 'http://localhost:3000/api/posts'
+export const backend = 'http://localhost:3000';
+export const registerAction = `${backend}/api/users`;
+export const loginAction = `${backend}/api/logins`;
+export const postAction = `${backend}/api/posts`;
 
 const defaultTags = [
     "#programing", "#java", "#html",
@@ -25,6 +26,27 @@ const defaultTags = [
     "#dog", "#mouse", "#football",
     "#css", "#javascript",
 ];
+
+const updatePostResourceUrl = (posts) => {
+    try {
+        const postBackup = [...posts];
+        const regex = /^(?!http|ftp)/;
+
+        const updateResourceUrl = (p) => {
+            p.resourceUrl = `${backend}/${p.resourceUrl}`;
+            return p;
+        };
+
+        return postBackup
+            .filter(p => regex.test(p.resourceUrl))
+            .map(updateResourceUrl);
+
+    } catch (ex) {
+        console.error(ex);
+    }
+
+    return [];
+};
 
 export default function App() {
     const location = useLocation();
@@ -38,8 +60,12 @@ export default function App() {
         async function fetchData() {
             try {
                 const response = await fetch(postAction);
-                const posts = await response.json();
-                setPosts(posts);
+                let posts = await response.json();
+                const updatedPosts = updatePostResourceUrl(posts);
+
+                posts = posts.filter(p1 => !updatedPosts.find(p2 => p1._id === p2._id));
+
+                setPosts([...posts, ...updatedPosts]);
             } catch (ex) {
                 console.error(ex.message, ex);
             }
@@ -98,17 +124,21 @@ export default function App() {
         }
     };
 
-    const handlePost = async (post) => {
+    const handlePost = async (data, upload = false) => {
         try {
-            const headers = { 'Content-Type': 'application/json' }
+            const headers = {}
 
             if (user) headers['x-auth-token'] = user['access-token'];
 
-            const response = await fetch(postAction, {
+            let endPoint = postAction;
+
+            if (upload) endPoint = `${postAction}/uploads`;
+
+            const response = await fetch(endPoint, {
                 method: 'POST',
                 mode: 'cors',
                 headers,
-                body: JSON.stringify(post)
+                body: data,
             });
 
             const result = await response.json();
@@ -120,6 +150,7 @@ export default function App() {
             return true;
 
         } catch (ex) {
+            console.log(ex);
             throw ex;
         }
     };

@@ -1,4 +1,4 @@
-import { createRef, useEffect, useState } from 'react';
+import { createRef, useState, useEffect } from 'react';
 import { createInput, createInputTextArea } from '../components/Input';
 import { useFormInput } from '../hooks/InputHooks';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -15,7 +15,9 @@ const Post = (props) => {
     const { id, isModal, onPost } = props;
     const background = location.state && location.state.background;
 
-    useEffect(() => console.log('upload', Inputs.upload.value), [Inputs.upload.value]);
+    useEffect(() => {
+        Inputs.url.isRequired(Inputs.upload.props.value ? false : true);
+    }, [Inputs.url, Inputs.upload.props.value]);
 
     const showError = (error) => {
         const { key, value, message } = error;
@@ -62,6 +64,34 @@ const Post = (props) => {
         else showError(error);
     };
 
+    const sendFormDate = async (e) => {
+        const { url, title, description, tagItems } = Inputs;
+
+        const formData = new FormData();
+        formData.append('resourceUrl', url.getValue());
+        formData.append('title', title.getValue());
+        formData.append('description', description.getValue());
+        formData.append('tags', tagItems.getValue());
+
+        const { error } = await onPost(formData);
+
+        return error;
+    };
+
+    const sendUpload = async (e) => {
+        const { upload, title, description, tagItems } = Inputs;
+
+        const formData = new FormData();
+        formData.append('file', upload.getValue());
+        formData.append('title', title.getValue());
+        formData.append('description', description.getValue());
+        formData.append('tags', tagItems.getValue());
+
+        const { error } = await onPost(formData, true);
+
+        return error;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -73,14 +103,14 @@ const Post = (props) => {
         Inputs.disableAll();
 
         try {
-            const { error } = await onPost({
-                resourceUrl: Inputs.url.getValue(),
-                title: Inputs.title.getValue(),
-                description: Inputs.description.getValue(),
-                tags: Inputs.tagItems.getValue(),
-            });
+            let error;
+
+            if (Inputs.upload.props.value) error = await sendUpload(e);
+
+            else error = await sendFormDate(e);
 
             if (error) handleSubmitFailure(error);
+
             else handleClose(e);
 
         } catch (ex) {
@@ -97,7 +127,6 @@ const Post = (props) => {
 
     const handleFileChange = (e) => {
         const { files } = e.target;
-        console.log('files', files);
         const file = files && files[0];
         Inputs.upload.setValue(file || false);
 
@@ -232,7 +261,7 @@ const useInputs = () => {
     const tagItems = useFormInput(['tag'], () => '', []);
     const tagName = useFormInput('');
     const description = useFormInput('');
-    const upload = useFormInput(false);
+    const upload = useFormInput();
 
     return Object.freeze({
         url,

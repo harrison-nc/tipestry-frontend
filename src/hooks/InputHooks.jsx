@@ -4,6 +4,7 @@ export const useFormInput = (initialState, getErrorMessage, emptyValue) => {
     const [value, setValue] = useState(initialState);
     const [error, setError] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
+    const [isRequired, setIsRequired] = useState(true);
 
     if (!getErrorMessage) getErrorMessage = () => '';
     if (!emptyValue) emptyValue = '';
@@ -26,6 +27,8 @@ export const useFormInput = (initialState, getErrorMessage, emptyValue) => {
     const getValue = () => value;
 
     const validate = () => {
+        if (!isRequired) return '';
+
         const errorMessage = getErrorMessage(value);
         setError(errorMessage);
         return errorMessage;
@@ -42,13 +45,14 @@ export const useFormInput = (initialState, getErrorMessage, emptyValue) => {
 
     return {
         getValue,
-        setValue: (value) => { console.log('setting value', value); setValue(value) },
+        setValue,
         setError,
         isValid,
         validate,
         reset,
         disable,
         enable,
+        isRequired: setIsRequired,
         props: {
             value,
             hasError: error,

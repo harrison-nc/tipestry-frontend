@@ -77,34 +77,7 @@ export default function App() {
     };
 
     const handlePost = async (data, upload = false) => {
-        try {
-            const headers = {}
-
-            if (user) headers['x-auth-token'] = user['access-token'];
-
-            let endPoint = postAction;
-
-            if (upload) endPoint = `${postAction}/uploads`;
-
-            const response = await fetch(endPoint, {
-                method: 'POST',
-                mode: 'cors',
-                headers,
-                body: data,
-            });
-
-            const result = await response.json();
-
-            if (result.error) return result.error;
-
-            addPost(result);
-
-            return true;
-
-        } catch (ex) {
-            console.log(ex);
-            throw ex;
-        }
+        await createPost(user, data, addPost, upload);
     };
 
     const handleUpVotes = async (postId, votes, headers) => {
@@ -361,6 +334,38 @@ const updateComment = async (user, postId, comment, consumer) => {
         return status;
     }
     catch (ex) {
+        throw ex;
+    }
+};
+
+const createPost = async (user, data, consumer, upload = false) => {
+    try {
+        const headers = {}
+
+        if (user) headers['x-auth-token'] = user['access-token'];
+
+        let endPoint = postAction;
+
+        if (upload) endPoint = `${postAction}/uploads`;
+
+        const response = await fetch(endPoint, {
+            method: 'POST',
+            mode: 'cors',
+            headers,
+            body: data,
+        });
+
+        const result = await response.json();
+
+        if (result.error) return result.error;
+
+        // addPost(result);
+        consumer(result);
+
+        return true;
+
+    } catch (ex) {
+        console.log(ex);
         throw ex;
     }
 };

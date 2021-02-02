@@ -56,6 +56,11 @@ export default function App() {
         await createPost(user, data, addPost, upload);
     };
 
+    const handleComment = async (e) => {
+        const { postId, value } = e.target;
+        await updateComment(user, postId, value, addComment);
+    };
+
     const handleUpVotes = async (postId, votes, headers) => {
         const name = 'upVotes';
         const endPoint = `${postAction}/${postId}/${name}`;
@@ -68,35 +73,8 @@ export default function App() {
         await updateVotes(posts, postId, name, votes, headers, endPoint, setPosts);
     };
 
-    const handleComment = async (e) => {
-        const { postId, value } = e.target;
-        await updateComment(user, postId, value, addComment);
-    };
-
-    const handleCardAction = async (e) => {
-        const headers = { 'Content-Type': 'application/json' }
-
-        if (user) headers['x-auth-token'] = user['access-token'];
-
-        const { name, value, postId } = e.target;
-
-        switch (name.toLowerCase()) {
-            case 'like':
-                await handleUpVotes(postId, value, headers);
-                break;
-
-            case 'dislike':
-                await handleDownVotes(postId, value, headers);
-                break;
-
-            case 'share':
-                console.log(name, value);
-                break;
-
-            default:
-                console.error('invalid action', name, value);
-                break;
-        }
+    const handlePostVotes = async (e) => {
+        await postVotes(e, user, handleUpVotes, handleDownVotes);
     };
 
     return (
@@ -108,15 +86,15 @@ export default function App() {
                         <Home
                             posts={posts}
                             toptags={toptags}
-                            onCardAction={handleCardAction} />
+                            onCardAction={handlePostVotes} />
                     </Route>
                     <Route path="/register" children={<Register onRegister={registerUser} />} />
                     <Route path="/login" children={<Login onLogin={handleLogin} />} />
                     <Route path="/post" children={<Post onPost={handlePost} />} />
-                    <Route path="/search" children={<Search onCardAction={handleCardAction} />} />
+                    <Route path="/search" children={<Search onCardAction={handlePostVotes} />} />
                     <Route path="/detail/:postId/:title" children={<Detail
                         posts={posts}
-                        onAction={handleCardAction}
+                        onAction={handlePostVotes}
                         onComment={handleComment} />} />
                     <Route children={<NotFound />} />
                 </Switch>
@@ -228,6 +206,28 @@ export const updateVotes = async (posts, postId, name, votes, headers, endPoint,
     }
     catch (ex) {
         throw ex;
+    }
+};
+
+const postVotes = async (e, user, upcb, downcb) => {
+    const headers = { 'Content-Type': 'application/json' }
+
+    if (user) headers['x-auth-token'] = user['access-token'];
+
+    const { name, value, postId } = e.target;
+
+    switch (name.toLowerCase()) {
+        case 'like':
+            await upcb(postId, value, headers);
+            break;
+
+        case 'dislike':
+            await downcb(postId, value, headers);
+            break;
+
+        default:
+            console.error('invalid action', name, value);
+            break;
     }
 };
 

@@ -139,32 +139,8 @@ export default function App() {
     };
 
     const handleComment = async (e) => {
-        try {
-            const { postId, value } = e.target;
-
-            const headers = { 'Content-Type': 'application/json' };
-
-            if (user) headers['x-auth-token'] = user['access-token'];
-
-            const response = await fetch(`${postAction}/${postId}/comments`, {
-                method: 'POST',
-                mode: 'cors',
-                headers,
-                body: JSON.stringify({ text: value, postId })
-            });
-
-            const result = await response.json();
-            const status = Number(response.status);
-
-            if (status === 200) addComment(postId, result);
-
-            else console.log('response', response);
-
-            return status;
-        }
-        catch (ex) {
-            console.error(ex);
-        }
+        const { postId, value } = e.target;
+        await updateComment(user, postId, value, addComment);
     };
 
     const handleCardAction = async (e) => {
@@ -365,4 +341,31 @@ const usePostData = (consumer) => {
         fetchPostData();
 
     }, [consumer]);
+};
+
+const updateComment = async (user, postId, comment, consumer) => {
+    try {
+        const headers = { 'Content-Type': 'application/json' };
+
+        if (user) headers['x-auth-token'] = user['access-token'];
+
+        const response = await fetch(`${postAction}/${postId}/comments`, {
+            method: 'POST',
+            mode: 'cors',
+            headers,
+            body: JSON.stringify({ text: comment, postId })
+        });
+
+        const result = await response.json();
+        const status = Number(response.status);
+
+        if (status === 200) consumer(postId, result);
+
+        else console.log('response', response);
+
+        return status;
+    }
+    catch (ex) {
+        throw ex;
+    }
 };

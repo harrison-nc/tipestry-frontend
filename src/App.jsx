@@ -108,34 +108,15 @@ export default function App() {
     };
 
     const handleUpVotes = async (postId, votes, headers) => {
-        const endPoint = `${postAction}/${postId}/upVotes`;
-        const voteCount = await updateVotes('upVotes', votes, headers, endPoint);
-        return updateVote(postId, 'upVotes', voteCount);
+        const name = 'upVotes';
+        const endPoint = `${postAction}/${postId}/${name}`;
+        await updateVotes(posts, postId, name, votes, headers, endPoint, setPosts);
     };
 
     const handleDownVotes = async (postId, votes, headers) => {
-        const endPoint = `${postAction}/${postId}/downVotes`;
-        const voteCount = await updateVotes('downVotes', votes, headers, endPoint);
-        return updateVote(postId, 'downVotes', voteCount);
-    };
-
-    const updateVote = (postId, name, value) => {
-        const selectedPost = posts.filter(p => p._id === postId);
-
-        if (!value || !selectedPost || selectedPost.length === 0) {
-            console.log('error post not found');
-            return false;
-        }
-
-        const post = selectedPost[0];
-        post[name] = value;
-
-        const index = posts.indexOf(post);
-        posts[index] = post;
-
-        setPosts([...posts]);
-
-        return posts;
+        const name = 'downVotes'
+        const endPoint = `${postAction}/${postId}/${name}`;
+        await updateVotes(posts, postId, name, votes, headers, endPoint, setPosts);
     };
 
     const handleComment = async (e) => {
@@ -266,7 +247,17 @@ export const registerUser = async (user) => {
     }
 };
 
-export const updateVotes = async (name, votes, headers, endPoint) => {
+export const updateVotes = async (posts, postId, name, votes, headers, endPoint, consumer) => {
+    const selectedPost = posts.filter(p => p._id === postId);
+
+    if (!selectedPost || selectedPost.length === 0) {
+        console.log('error post not found');
+        return false;
+    }
+
+    const post = selectedPost[0];
+    const index = posts.indexOf(post);
+
     try {
         const response = await fetch(endPoint, {
             method: 'POST',
@@ -280,6 +271,10 @@ export const updateVotes = async (name, votes, headers, endPoint) => {
             return false;
         }
 
+        post[name] = votes;
+        posts[index] = post;
+
+        consumer([...posts]);
         return votes;
     }
     catch (ex) {

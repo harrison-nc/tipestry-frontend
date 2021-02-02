@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { updateVotes, postAction } from '../App';
+import { updateVotes, postAddress } from '../App';
 import banner from '../assets/images/potw-banner.png';
 import Cards from '../components/Cards';
 
@@ -28,7 +28,7 @@ const Search = () => {
         const action = name === 'like' ? 'upVotes' :
             name === 'dislike' ? 'downVotes' : 'invalid';
 
-        const endPoint = `${postAction}/${postId}/${action}`;
+        const endPoint = `${postAddress}/${postId}/${action}`;
         const headers = { 'Content-Type': 'application/json' };
 
         await updateVotes(matchingPosts, postId, name, value, headers, endPoint, setMatchingPosts);

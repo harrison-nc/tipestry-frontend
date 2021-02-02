@@ -15,6 +15,21 @@ import Comment from './components/Comment';
 import Search from './pages/Search';
 import Detail from './pages/Detail';
 
+const server_address = process.env.REACT_APP_SERVER_ADDRESS;
+const user_api = process.env.REACT_APP_USER_API;
+const login_api = process.env.REACT_APP_LOGIN_API;
+const post_api = process.env.REACT_APP_POST_API;
+
+if (!server_address || !user_api || !login_api || !post_api) {
+    console.error('configuration variables not defined');
+    throw new Error('Missing required configuration variables');
+}
+
+export const serverAddress = `${server_address}`;
+export const registerAddress = `${user_api}`;
+export const loginAddress = `${login_api}`;
+export const postAddress = `${post_api}`;
+
 export default function App() {
     const location = useLocation();
     const background = location.state && location.state.background;
@@ -63,13 +78,13 @@ export default function App() {
 
     const handleUpVotes = async (postId, votes, headers) => {
         const name = 'upVotes';
-        const endPoint = `${postAction}/${postId}/${name}`;
+        const endPoint = `${postAddress}/${postId}/${name}`;
         await updateVotes(posts, postId, name, votes, headers, endPoint, setPosts);
     };
 
     const handleDownVotes = async (postId, votes, headers) => {
         const name = 'downVotes'
-        const endPoint = `${postAction}/${postId}/${name}`;
+        const endPoint = `${postAddress}/${postId}/${name}`;
         await updateVotes(posts, postId, name, votes, headers, endPoint, setPosts);
     };
 
@@ -141,11 +156,6 @@ const ModalRouter = ({ onLogin, onPost, onComment }) => {
     );
 };
 
-export const backend = 'http://localhost:3000';
-export const registerAction = `${backend}/api/users`;
-export const loginAction = `${backend}/api/logins`;
-export const postAction = `${backend}/api/posts`;
-
 const defaultTags = [
     "programing", "java", "html",
     "coding", "marketing", "cat",
@@ -160,7 +170,7 @@ const updatePostResourceUrl = (posts) => {
         const regex = /^(?!http|ftp)/;
 
         const updateResourceUrl = (p) => {
-            p.resourceUrl = `${backend}/${p.resourceUrl}`;
+            p.resourceUrl = `${serverAddress}/${p.resourceUrl}`;
             return p;
         };
         // Add the domain name of the backend server posts with a relative
@@ -180,7 +190,7 @@ const usePostData = (consumer) => {
     useEffect(() => {
         async function fetchPostData() {
             try {
-                const response = await fetch(postAction);
+                const response = await fetch(postAddress);
                 let posts = await response.json();
                 const updatedPosts = updatePostResourceUrl(posts);
                 // Remove all the posts that have been updated from
@@ -199,7 +209,7 @@ const usePostData = (consumer) => {
 
 export const registerUser = async (user) => {
     try {
-        const response = await fetch(registerAction, {
+        const response = await fetch(registerAddress, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -217,7 +227,7 @@ export const registerUser = async (user) => {
 
 const loginUser = async (user, consumer) => {
     try {
-        const response = await fetch(loginAction, {
+        const response = await fetch(loginAddress, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -307,7 +317,7 @@ const updateComment = async (user, postId, comment, consumer) => {
 
         if (user) headers['x-auth-token'] = user['access-token'];
 
-        const response = await fetch(`${postAction}/${postId}/comments`, {
+        const response = await fetch(`${postAddress}/${postId}/comments`, {
             method: 'POST',
             mode: 'cors',
             headers,
@@ -334,9 +344,9 @@ const createPost = async (user, data, consumer, upload = false) => {
 
         if (user) headers['x-auth-token'] = user['access-token'];
 
-        let endPoint = postAction;
+        let endPoint = postAddress;
 
-        if (upload) endPoint = `${postAction}/uploads`;
+        if (upload) endPoint = `${postAddress}/uploads`;
 
         const response = await fetch(endPoint, {
             method: 'POST',
@@ -361,7 +371,7 @@ const createPost = async (user, data, consumer, upload = false) => {
 };
 
 export const findPostsMatchingQuery = async (query) => {
-    const endPoint = `${postAction}/search/${query}`;
+    const endPoint = `${postAddress}/search/${query}`;
 
     try {
         const response = await fetch(endPoint, {

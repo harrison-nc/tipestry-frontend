@@ -26,5 +26,6 @@ yarn-error.log*
 .*
 .*/
 !.gitIgonre
+!.env*
 src/fonts
 src/images

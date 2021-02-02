@@ -82,20 +82,30 @@ export default function App() {
             <Navbar loggedInUser={user} />
             <main className="main is-flex flex-column pt-3 px-4">
                 <Switch location={background || location}>
-                    <Route exact path="/" >
-                        <Home
+                    <Route exact path="/"
+                        children={<Home
                             posts={posts}
                             toptags={toptags}
-                            onCardAction={handlePostVotes} />
-                    </Route>
-                    <Route path="/register" children={<Register onRegister={registerUser} />} />
-                    <Route path="/login" children={<Login onLogin={handleLogin} />} />
-                    <Route path="/post" children={<Post onPost={handlePost} />} />
-                    <Route path="/search" children={<Search onCardAction={handlePostVotes} />} />
-                    <Route path="/detail/:postId/:title" children={<Detail
-                        posts={posts}
-                        onAction={handlePostVotes}
-                        onComment={handleComment} />} />
+                            onCardAction={handlePostVotes} />} />
+
+                    <Route path="/register"
+                        children={<Register onRegister={registerUser} />} />
+
+                    <Route path="/login"
+                        children={<Login onLogin={handleLogin} />} />
+
+                    <Route path="/post"
+                        children={<Post onPost={handlePost} />} />
+
+                    <Route path="/search"
+                        children={<Search onCardAction={handlePostVotes} />} />
+
+                    <Route path="/detail/:postId/:title"
+                        children={<Detail
+                            posts={posts}
+                            onAction={handlePostVotes}
+                            onComment={handleComment} />} />
+
                     <Route children={<NotFound />} />
                 </Switch>
 
@@ -103,8 +113,7 @@ export default function App() {
                     onRegister={registerUser}
                     onLogin={handleLogin}
                     onPost={handlePost}
-                    onComment={handleComment}
-                />}
+                    onComment={handleComment} />}
             </main>
         </>
     );
@@ -113,48 +122,80 @@ export default function App() {
 const ModalRouter = ({ onLogin, onPost, onComment }) => {
     return (
         <Switch>
-            <Route path="/register" >
-                <Modal children={<Register isModal={true} />} />
-            </Route>
+            <Route path="/register" children={
+                <Modal children={<Register isModal={true} />} />} />
 
-            <Route path="/login" >
-                <Modal children={<Login isModal={true} onLogin={onLogin} />} />
-            </Route>
+            <Route path="/login" children={
+                <Modal children={<Login isModal={true} onLogin={onLogin} />} />} />
 
-            <Route path="/post" >
-                <Modal children={<Post isModal={true} onPost={onPost} />} />
-            </Route>
+            <Route path="/post" children={
+                <Modal children={<Post isModal={true} onPost={onPost} />} />} />
 
-            <Route path="/comment/:postId">
+            <Route path="/comment/:postId" children={
                 <Modal children={<Comment
                     className="comment box is-flex flex-column has-background-white py-3 px-2"
                     id="comment"
                     isModal={true}
-                    onSend={onComment} />} />
-            </Route>
+                    onSend={onComment} />} />} />
         </Switch>
     );
 };
 
-export const findPostsMatchingQuery = async (query) => {
-    const endPoint = `${postAction}/search/${query}`;
+export const backend = 'http://localhost:3000';
+export const registerAction = `${backend}/api/users`;
+export const loginAction = `${backend}/api/logins`;
+export const postAction = `${backend}/api/posts`;
 
+const defaultTags = [
+    "programing", "java", "html",
+    "coding", "marketing", "cat",
+    "dog", "mouse", "football",
+    "css", "javascript",
+];
+
+const updatePostResourceUrl = (posts) => {
     try {
-        const response = await fetch(endPoint, {
-            method: 'GET',
-            mode: 'cors'
-        });
+        const postBackup = [...posts];
+        // Match strings not beginning with http or ftp
+        const regex = /^(?!http|ftp)/;
 
-        if (!Number(response.status) === 200) return [];
+        const updateResourceUrl = (p) => {
+            p.resourceUrl = `${backend}/${p.resourceUrl}`;
+            return p;
+        };
+        // Add the domain name of the backend server posts with a relative
+        // resource url.
+        return postBackup
+            .filter(p => regex.test(p.resourceUrl))
+            .map(updateResourceUrl);
 
-        return await response.json();
-    }
-    catch (ex) {
+    } catch (ex) {
         console.error(ex);
     }
 
     return [];
-}
+};
+
+const usePostData = (consumer) => {
+    useEffect(() => {
+        async function fetchPostData() {
+            try {
+                const response = await fetch(postAction);
+                let posts = await response.json();
+                const updatedPosts = updatePostResourceUrl(posts);
+                // Remove all the posts that have been updated from
+                posts = posts.filter(p1 => !updatedPosts.find(p2 => p1._id === p2._id));
+                // Pass to consumer all the posts and updated posts
+                consumer([...posts, ...updatedPosts]);
+
+            } catch (ex) {
+                console.error(ex.message, ex);
+            }
+        }
+        fetchPostData();
+
+    }, [consumer]);
+};
 
 export const registerUser = async (user) => {
     try {
@@ -170,6 +211,35 @@ export const registerUser = async (user) => {
         return response.json();
     }
     catch (ex) {
+        throw ex;
+    }
+};
+
+const loginUser = async (user, consumer) => {
+    try {
+        const response = await fetch(loginAction, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user)
+        });
+
+        const result = await response.json();
+
+        if (result.error) return result;
+
+        result.loggedIn = true;
+
+        const { login } = result;
+
+        // setUser(login);
+        consumer(login);
+
+        return true;
+
+    } catch (ex) {
         throw ex;
     }
 };
@@ -231,62 +301,6 @@ const postVotes = async (e, user, upcb, downcb) => {
     }
 };
 
-export const backend = 'http://localhost:3000';
-export const registerAction = `${backend}/api/users`;
-export const loginAction = `${backend}/api/logins`;
-export const postAction = `${backend}/api/posts`;
-
-const defaultTags = [
-    "programing", "java", "html",
-    "coding", "marketing", "cat",
-    "dog", "mouse", "football",
-    "css", "javascript",
-];
-
-const updatePostResourceUrl = (posts) => {
-    try {
-        const postBackup = [...posts];
-        // Match strings not beginning with http or ftp
-        const regex = /^(?!http|ftp)/;
-
-        const updateResourceUrl = (p) => {
-            p.resourceUrl = `${backend}/${p.resourceUrl}`;
-            return p;
-        };
-        // Add the domain name of the backend server posts with a relative
-        // resource url.
-        return postBackup
-            .filter(p => regex.test(p.resourceUrl))
-            .map(updateResourceUrl);
-
-    } catch (ex) {
-        console.error(ex);
-    }
-
-    return [];
-};
-
-const usePostData = (consumer) => {
-    useEffect(() => {
-        async function fetchPostData() {
-            try {
-                const response = await fetch(postAction);
-                let posts = await response.json();
-                const updatedPosts = updatePostResourceUrl(posts);
-                // Remove all the posts that have been updated from
-                posts = posts.filter(p1 => !updatedPosts.find(p2 => p1._id === p2._id));
-                // Pass to consumer all the posts and updated posts
-                consumer([...posts, ...updatedPosts]);
-
-            } catch (ex) {
-                console.error(ex.message, ex);
-            }
-        }
-        fetchPostData();
-
-    }, [consumer]);
-};
-
 const updateComment = async (user, postId, comment, consumer) => {
     try {
         const headers = { 'Content-Type': 'application/json' };
@@ -346,31 +360,22 @@ const createPost = async (user, data, consumer, upload = false) => {
     }
 };
 
-const loginUser = async (user, consumer) => {
+export const findPostsMatchingQuery = async (query) => {
+    const endPoint = `${postAction}/search/${query}`;
+
     try {
-        const response = await fetch(loginAction, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user)
+        const response = await fetch(endPoint, {
+            method: 'GET',
+            mode: 'cors'
         });
 
-        const result = await response.json();
+        if (!Number(response.status) === 200) return [];
 
-        if (result.error) return result;
-
-        result.loggedIn = true;
-
-        const { login } = result;
-
-        // setUser(login);
-        consumer(login);
-
-        return true;
-
-    } catch (ex) {
-        throw ex;
+        return await response.json();
     }
-};
+    catch (ex) {
+        console.error(ex);
+    }
+
+    return [];
+}

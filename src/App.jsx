@@ -40,40 +40,17 @@ export default function App() {
 
     usePostData(setPosts);
 
-    const addPost = (post) => {
-        const array = [...posts];
-        array.push(post);
-        setPosts(array);
-    };
-
-    const addComment = (postId, comment) => {
-        const postArray = [...posts];
-        const selectedPostArray = postArray.filter(p => p._id === postId);
-
-        if (selectedPostArray.length === 0) return;
-
-        const selectedPost = selectedPostArray[0];
-        const comments = [...selectedPost.comments];
-        comments.push(comment);
-        selectedPost.comments = comments;
-
-        const index = postArray.indexOf(selectedPost);
-        postArray[index] = selectedPost;
-
-        setPosts(postArray);
-    };
-
     const handleLogin = async (user) => {
         await loginUser(user, setUser);
     };
 
     const handlePost = async (data, upload = false) => {
-        await createPost(user, data, addPost, upload);
+        await createPost(user, posts, data, setPosts, upload);
     };
 
     const handleComment = async (e) => {
         const { postId, value } = e.target;
-        await updateComment(user, postId, value, addComment);
+        await updateComment(user, posts, postId, value, setPosts);
     };
 
     const handleUpVotes = async (postId, votes, headers) => {
@@ -254,6 +231,112 @@ const loginUser = async (user, consumer) => {
     }
 };
 
+const postVotes = async (e, user, upcb, downcb) => {
+    const headers = { 'Content-Type': 'application/json' }
+
+    if (user) headers['x-auth-token'] = user['access-token'];
+
+    const { name, value, postId } = e.target;
+
+    switch (name.toLowerCase()) {
+        case 'like':
+            await upcb(postId, value, headers);
+            break;
+
+        case 'dislike':
+            await downcb(postId, value, headers);
+            break;
+
+        default:
+            console.error('invalid action', name, value);
+            break;
+    }
+};
+
+const addComment = (posts, postId, comment, consumer) => {
+    const postArray = [...posts];
+    const selectedPostArray = postArray.filter(p => p._id === postId);
+
+    if (selectedPostArray.length === 0) return;
+
+    const selectedPost = selectedPostArray[0];
+    const comments = [...selectedPost.comments];
+    comments.push(comment);
+    selectedPost.comments = comments;
+
+    const index = postArray.indexOf(selectedPost);
+    postArray[index] = selectedPost;
+
+    // setPosts(postArray);
+    consumer(postArray);
+};
+
+const createPost = async (user, posts, data, consumer, upload = false) => {
+    try {
+        const headers = {}
+
+        if (user) headers['x-auth-token'] = user['access-token'];
+
+        let endPoint = postAddress;
+
+        if (upload) endPoint = `${postAddress}/uploads`;
+
+        const response = await fetch(endPoint, {
+            method: 'POST',
+            mode: 'cors',
+            headers,
+            body: data,
+        });
+
+        const result = await response.json();
+
+        if (result.error) return result.error;
+
+        // addPost(result);
+        addPost(posts, result, consumer);
+
+        return true;
+
+    } catch (ex) {
+        console.log(ex);
+        throw ex;
+    }
+};
+
+const addPost = (posts, post, consumer) => {
+    const array = [...posts];
+    array.push(post);
+    // setPosts(array);
+    consumer(array);
+};
+
+export const updateComment = async (user, posts, postId, comment, consumer) => {
+    try {
+        const headers = { 'Content-Type': 'application/json' };
+
+        if (user) headers['x-auth-token'] = user['access-token'];
+
+        const response = await fetch(`${postAddress}/${postId}/comments`, {
+            method: 'POST',
+            mode: 'cors',
+            headers,
+            body: JSON.stringify({ text: comment, postId })
+        });
+
+        const result = await response.json();
+        const status = Number(response.status);
+
+        if (status === 200) addComment(posts, postId, result, consumer);
+
+        else console.log('response', response);
+
+        return status;
+    }
+    catch (ex) {
+        throw ex;
+    }
+};
+
 export const updateVotes = async (posts, postId, name, votes, headers, endPoint, consumer) => {
     const selectedPost = posts.filter(p => p._id === postId);
 
@@ -285,87 +368,6 @@ export const updateVotes = async (posts, postId, name, votes, headers, endPoint,
         return votes;
     }
     catch (ex) {
-        throw ex;
-    }
-};
-
-const postVotes = async (e, user, upcb, downcb) => {
-    const headers = { 'Content-Type': 'application/json' }
-
-    if (user) headers['x-auth-token'] = user['access-token'];
-
-    const { name, value, postId } = e.target;
-
-    switch (name.toLowerCase()) {
-        case 'like':
-            await upcb(postId, value, headers);
-            break;
-
-        case 'dislike':
-            await downcb(postId, value, headers);
-            break;
-
-        default:
-            console.error('invalid action', name, value);
-            break;
-    }
-};
-
-const updateComment = async (user, postId, comment, consumer) => {
-    try {
-        const headers = { 'Content-Type': 'application/json' };
-
-        if (user) headers['x-auth-token'] = user['access-token'];
-
-        const response = await fetch(`${postAddress}/${postId}/comments`, {
-            method: 'POST',
-            mode: 'cors',
-            headers,
-            body: JSON.stringify({ text: comment, postId })
-        });
-
-        const result = await response.json();
-        const status = Number(response.status);
-
-        if (status === 200) consumer(postId, result);
-
-        else console.log('response', response);
-
-        return status;
-    }
-    catch (ex) {
-        throw ex;
-    }
-};
-
-const createPost = async (user, data, consumer, upload = false) => {
-    try {
-        const headers = {}
-
-        if (user) headers['x-auth-token'] = user['access-token'];
-
-        let endPoint = postAddress;
-
-        if (upload) endPoint = `${postAddress}/uploads`;
-
-        const response = await fetch(endPoint, {
-            method: 'POST',
-            mode: 'cors',
-            headers,
-            body: data,
-        });
-
-        const result = await response.json();
-
-        if (result.error) return result.error;
-
-        // addPost(result);
-        consumer(result);
-
-        return true;
-
-    } catch (ex) {
-        console.log(ex);
         throw ex;
     }
 };

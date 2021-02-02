@@ -49,31 +49,7 @@ export default function App() {
     };
 
     const handleLogin = async (user) => {
-        try {
-            const response = await fetch(loginAction, {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(user)
-            });
-
-            const result = await response.json();
-
-            if (result.error) return result;
-
-            result.loggedIn = true;
-
-            const { login } = result;
-
-            setUser(login);
-
-            return true;
-
-        } catch (ex) {
-            throw ex;
-        }
+        await loginUser(user, setUser);
     };
 
     const handlePost = async (data, upload = false) => {
@@ -366,6 +342,35 @@ const createPost = async (user, data, consumer, upload = false) => {
 
     } catch (ex) {
         console.log(ex);
+        throw ex;
+    }
+};
+
+const loginUser = async (user, consumer) => {
+    try {
+        const response = await fetch(loginAction, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user)
+        });
+
+        const result = await response.json();
+
+        if (result.error) return result;
+
+        result.loggedIn = true;
+
+        const { login } = result;
+
+        // setUser(login);
+        consumer(login);
+
+        return true;
+
+    } catch (ex) {
         throw ex;
     }
 };

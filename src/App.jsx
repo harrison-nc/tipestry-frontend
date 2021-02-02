@@ -15,39 +15,6 @@ import Comment from './components/Comment';
 import Search from './pages/Search';
 import Detail from './pages/Detail';
 
-export const backend = 'http://localhost:3000';
-export const registerAction = `${backend}/api/users`;
-export const loginAction = `${backend}/api/logins`;
-export const postAction = `${backend}/api/posts`;
-
-const defaultTags = [
-    "#programing", "#java", "#html",
-    "#coding", "#marketing", "#cat",
-    "#dog", "#mouse", "#football",
-    "#css", "#javascript",
-];
-
-const updatePostResourceUrl = (posts) => {
-    try {
-        const postBackup = [...posts];
-        const regex = /^(?!http|ftp)/;
-
-        const updateResourceUrl = (p) => {
-            p.resourceUrl = `${backend}/${p.resourceUrl}`;
-            return p;
-        };
-
-        return postBackup
-            .filter(p => regex.test(p.resourceUrl))
-            .map(updateResourceUrl);
-
-    } catch (ex) {
-        console.error(ex);
-    }
-
-    return [];
-};
-
 export default function App() {
     const location = useLocation();
     const background = location.state && location.state.background;
@@ -56,22 +23,7 @@ export default function App() {
     const [posts, setPosts] = useState([]);
     const [toptags] = useState(defaultTags);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await fetch(postAction);
-                let posts = await response.json();
-                const updatedPosts = updatePostResourceUrl(posts);
-
-                posts = posts.filter(p1 => !updatedPosts.find(p2 => p1._id === p2._id));
-
-                setPosts([...posts, ...updatedPosts]);
-            } catch (ex) {
-                console.error(ex.message, ex);
-            }
-        }
-        fetchData();
-    }, []);
+    usePostData(setPosts);
 
     const addPost = (post) => {
         const array = [...posts];
@@ -357,4 +309,60 @@ export const updateVotes = async (name, votes, headers, endPoint) => {
     catch (ex) {
         throw ex;
     }
+};
+
+export const backend = 'http://localhost:3000';
+export const registerAction = `${backend}/api/users`;
+export const loginAction = `${backend}/api/logins`;
+export const postAction = `${backend}/api/posts`;
+
+const defaultTags = [
+    "programing", "java", "html",
+    "coding", "marketing", "cat",
+    "dog", "mouse", "football",
+    "css", "javascript",
+];
+
+const updatePostResourceUrl = (posts) => {
+    try {
+        const postBackup = [...posts];
+        // Match strings not beginning with http or ftp
+        const regex = /^(?!http|ftp)/;
+
+        const updateResourceUrl = (p) => {
+            p.resourceUrl = `${backend}/${p.resourceUrl}`;
+            return p;
+        };
+        // Add the domain name of the backend server posts with a relative
+        // resource url.
+        return postBackup
+            .filter(p => regex.test(p.resourceUrl))
+            .map(updateResourceUrl);
+
+    } catch (ex) {
+        console.error(ex);
+    }
+
+    return [];
+};
+
+const usePostData = (consumer) => {
+    useEffect(() => {
+        async function fetchPostData() {
+            try {
+                const response = await fetch(postAction);
+                let posts = await response.json();
+                const updatedPosts = updatePostResourceUrl(posts);
+                // Remove all the posts that have been updated from
+                posts = posts.filter(p1 => !updatedPosts.find(p2 => p1._id === p2._id));
+                // Pass to consumer all the posts and updated posts
+                consumer([...posts, ...updatedPosts]);
+
+            } catch (ex) {
+                console.error(ex.message, ex);
+            }
+        }
+        fetchPostData();
+
+    }, [consumer]);
 };

@@ -170,6 +170,10 @@ body {
   max-width: 100%;
 }
 
+.home__right__content .tag {
+  text-decoration: none;
+}
+
 .home__search {
   display: flex;
   flex-direction: row;

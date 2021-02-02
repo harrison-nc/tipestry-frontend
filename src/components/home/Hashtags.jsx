@@ -13,7 +13,7 @@ export const Hashtags = (props) => {
                         <p className="mb-5 title">Top Hashtags</p>
                         <div className="has-background-white box banner-container is-flex flex-column">
                             <p className="py-4 px-3 is-flex flex-wrap">
-                                {toptags.map((tag, id) => <a className="tag" href="/" key={id}>{tag}</a>)}
+                                {toptags.map((tag, id) => <a className="tag" href="/" key={id}>#{tag}</a>)}
                             </p>
                             <img width="100%" alt="Tipestry post of the week event"
                                 src={banner} />

@@ -278,10 +278,12 @@ body {
 .card .resource {
   align-items: flex-start;
   display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 
 .card .resource img {
+  width: 100%;
   cursor: pointer;
 }
 

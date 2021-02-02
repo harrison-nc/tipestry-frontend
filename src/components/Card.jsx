@@ -8,7 +8,7 @@ export default function Card(props) {
 
     return (
         <div className="card has-background-white box pb-3">
-            <div className="card__content pt-3 px-3">
+            <div className="card__content pt-3">
                 <Header  {...props} />
                 <Content {...props} />
                 <Footer  {...props} />
@@ -20,6 +20,6 @@ export default function Card(props) {
 
 const Views = ({ value }) => {
     return (
-        <div className="views px-5 pt-5">View: {value || '10.1k'}</div>
+        <div className="views px-4 pt-5">View: {value || '10.1k'}</div>
     );
 };

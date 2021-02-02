@@ -5,7 +5,7 @@ export default function Header({ post }) {
     const { title, tags } = post;
 
     return (
-        <div className="header">
+        <div className="header px-3">
             <Avatar post={post} />
             <div className="header__content is-flex flex-column py-6">
                 <h1 className="title">{title}</h1>

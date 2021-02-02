@@ -15,11 +15,11 @@ export default function Content(props) {
     }
 
     return (
-        <div className="resource">
-            <figure>
-                <img onClick={handleClick} alt="Resource" src={resourceUrl} />
-                <figcaption>{description}</figcaption>
-            </figure>
-        </div>
+        <figure className="resource">
+            <img
+                onClick={handleClick} alt="Resource"
+                src={resourceUrl} />
+            <figcaption className="px-5">{description}</figcaption>
+        </figure>
     );
 };

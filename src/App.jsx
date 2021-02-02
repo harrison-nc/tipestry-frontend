@@ -140,29 +140,6 @@ const defaultTags = [
     "css", "javascript",
 ];
 
-const updatePostResourceUrl = (posts) => {
-    try {
-        const postBackup = [...posts];
-        // Match strings not beginning with http or ftp
-        const regex = /^(?!http|ftp)/;
-
-        const updateResourceUrl = (p) => {
-            p.resourceUrl = `${serverAddress}/${p.resourceUrl}`;
-            return p;
-        };
-        // Add the domain name of the backend server posts with a relative
-        // resource url.
-        return postBackup
-            .filter(p => regex.test(p.resourceUrl))
-            .map(updateResourceUrl);
-
-    } catch (ex) {
-        console.error(ex);
-    }
-
-    return [];
-};
-
 const usePostData = (consumer) => {
     useEffect(() => {
         async function fetchPostData() {
@@ -308,6 +285,29 @@ const addPost = (posts, post, consumer) => {
     array.push(post);
     // setPosts(array);
     consumer(array);
+};
+
+export const updatePostResourceUrl = (posts) => {
+    try {
+        const postBackup = [...posts];
+        // Match strings not beginning with http or ftp
+        const regex = /^(?!http|ftp)/;
+
+        const updateResourceUrl = (p) => {
+            p.resourceUrl = `${serverAddress}/${p.resourceUrl}`;
+            return p;
+        };
+        // Add the domain name of the backend server posts with a relative
+        // resource url.
+        return postBackup
+            .filter(p => regex.test(p.resourceUrl))
+            .map(updateResourceUrl);
+
+    } catch (ex) {
+        console.error(ex);
+    }
+
+    return [];
 };
 
 export const updateComment = async (user, posts, postId, comment, consumer) => {

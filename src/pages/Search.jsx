@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { updateVotes, postAddress } from '../App';
+import { updateVotes, postAddress, updatePostResourceUrl } from '../App';
 import banner from '../assets/images/potw-banner.png';
 import Cards from '../components/Cards';
 
@@ -15,7 +15,11 @@ const Search = () => {
 
         if (!posts || !Array.isArray(posts)) posts = [];
 
-        setMatchingPosts(posts);
+        const updatedPosts = updatePostResourceUrl(posts);
+
+        posts = posts.filter(p1 => !updatedPosts.find(p2 => p1._id === p2._id));
+
+        setMatchingPosts([...posts, ...updatedPosts]);
 
     }, [location.state]);
 
@@ -25,13 +29,15 @@ const Search = () => {
 
         name = name.toLowerCase();
 
-        const action = name === 'like' ? 'upVotes' :
-            name === 'dislike' ? 'downVotes' : 'invalid';
+        let action;
+        if (name === 'like') action = 'upVotes';
+        else if (name === 'dislike') action = 'downVotes';
+        else action = 'invalid';
 
         const endPoint = `${postAddress}/${postId}/${action}`;
         const headers = { 'Content-Type': 'application/json' };
 
-        await updateVotes(matchingPosts, postId, name, value, headers, endPoint, setMatchingPosts);
+        await updateVotes(matchingPosts, postId, action, value, headers, endPoint, setMatchingPosts);
     };
 
     return (

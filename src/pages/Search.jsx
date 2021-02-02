@@ -20,36 +20,18 @@ const Search = () => {
     }, [location.state]);
 
     const handleVotes = async (e) => {
-        let { name, value, postId } = e.target;
+        const { value, postId } = e.target;
+        let { name } = e.target;
 
         name = name.toLowerCase();
 
-        let action = name === 'like' ? 'upVotes' :
+        const action = name === 'like' ? 'upVotes' :
             name === 'dislike' ? 'downVotes' : 'invalid';
 
         const endPoint = `${postAction}/${postId}/${action}`;
-        const voteCount = await updateVotes(action, value, { 'Content-Type': 'application/json' }, endPoint);
+        const headers = { 'Content-Type': 'application/json' };
 
-        updateVote(postId, action, voteCount);
-    };
-
-    const updateVote = (postId, name, value) => {
-        const selectedPost = matchingPosts.filter(p => p._id === postId);
-
-        if (!value || !selectedPost || selectedPost.length === 0) {
-            console.log('error search post');
-            return false;
-        }
-
-        const post = selectedPost[0];
-        post[name] = value;
-
-        const index = matchingPosts.indexOf(post);
-        matchingPosts[index] = post;
-
-        setMatchingPosts([...matchingPosts]);
-
-        return matchingPosts;
+        await updateVotes(matchingPosts, postId, name, value, headers, endPoint, setMatchingPosts);
     };
 
     return (

@@ -20,6 +20,7 @@ export const registerAddress = '';
 export const loginAddress = '';
 export const getPostFunction = `${process.env.REACT_APP_POST_API}`;
 const upVoteFunction = `${process.env.REACT_APP_UP_VOTE_API}`;
+const downVoteFunction = `${process.env.REACT_APP_DOWN_VOTE_API}`;
 
 console.log('post api', getPostFunction);
 
@@ -58,7 +59,7 @@ export default function App() {
 
     const handleDownVotes = async (postId, votes, headers) => {
         const name = 'downVotes'
-        const endPoint = `${getPostFunction}/${postId}/${name}`;
+        const endPoint = downVoteFunction;
         await updateVotes(posts, postId, name, votes, headers, endPoint, setPosts);
     };
 

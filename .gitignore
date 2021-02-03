@@ -29,3 +29,6 @@ yarn-error.log*
 !.env*
 src/fonts
 src/images
+
+# Local Netlify folder
+.netlify

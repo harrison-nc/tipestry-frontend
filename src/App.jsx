@@ -18,11 +18,11 @@ import Detail from './pages/Detail';
 export const serverAddress = '';
 export const registerAddress = '';
 export const loginAddress = '';
-export const postAddress = `${process.env.REACT_APP_POST_API}`;
+export const getPostFunction = `${process.env.REACT_APP_POST_API}`;
 
-console.log('post api', postAddress);
+console.log('post api', getPostFunction);
 
-if (!postAddress) {
+if (!getPostFunction) {
     throw new Error('Post API URL not provided');
 }
 
@@ -51,13 +51,13 @@ export default function App() {
 
     const handleUpVotes = async (postId, votes, headers) => {
         const name = 'upVotes';
-        const endPoint = `${postAddress}/${postId}/${name}`;
+        const endPoint = `${getPostFunction}/${postId}/${name}`;
         await updateVotes(posts, postId, name, votes, headers, endPoint, setPosts);
     };
 
     const handleDownVotes = async (postId, votes, headers) => {
         const name = 'downVotes'
-        const endPoint = `${postAddress}/${postId}/${name}`;
+        const endPoint = `${getPostFunction}/${postId}/${name}`;
         await updateVotes(posts, postId, name, votes, headers, endPoint, setPosts);
     };
 
@@ -140,7 +140,7 @@ const usePostData = (consumer) => {
     useEffect(() => {
         async function fetchPostData() {
             try {
-                const response = await fetch(postAddress);
+                const response = await fetch(getPostFunction);
                 let posts = await response.json();
                 const updatedPosts = updatePostResourceUrl(posts);
                 // Remove all the posts that have been updated from
@@ -250,9 +250,9 @@ const createPost = async (user, posts, data, consumer, upload = false) => {
 
         if (user) headers['x-auth-token'] = user['access-token'];
 
-        let endPoint = postAddress;
+        let endPoint = getPostFunction;
 
-        if (upload) endPoint = `${postAddress}/uploads`;
+        if (upload) endPoint = `${getPostFunction}/uploads`;
 
         const response = await fetch(endPoint, {
             method: 'POST',
@@ -312,7 +312,7 @@ export const updateComment = async (user, posts, postId, comment, consumer) => {
 
         if (user) headers['x-auth-token'] = user['access-token'];
 
-        const response = await fetch(`${postAddress}/${postId}/comments`, {
+        const response = await fetch(`${getPostFunction}/${postId}/comments`, {
             method: 'POST',
             mode: 'cors',
             headers,
@@ -369,7 +369,7 @@ export const updateVotes = async (posts, postId, name, votes, headers, endPoint,
 };
 
 export const findPostsMatchingQuery = async (query) => {
-    const endPoint = `${postAddress}/search/${query}`;
+    const endPoint = `${getPostFunction}/search/${query}`;
 
     try {
         const response = await fetch(endPoint, {

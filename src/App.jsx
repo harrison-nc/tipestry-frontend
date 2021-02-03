@@ -19,6 +19,7 @@ export const serverAddress = '';
 export const registerAddress = '';
 export const loginAddress = '';
 export const getPostFunction = `${process.env.REACT_APP_POST_API}`;
+const upVoteFunction = `${process.env.REACT_APP_UP_VOTE_API}`;
 
 console.log('post api', getPostFunction);
 
@@ -51,7 +52,7 @@ export default function App() {
 
     const handleUpVotes = async (postId, votes, headers) => {
         const name = 'upVotes';
-        const endPoint = `${getPostFunction}/${postId}/${name}`;
+        const endPoint = upVoteFunction;
         await updateVotes(posts, postId, name, votes, headers, endPoint, setPosts);
     };
 
@@ -349,11 +350,11 @@ export const updateVotes = async (posts, postId, name, votes, headers, endPoint,
             method: 'POST',
             mode: 'cors',
             headers,
-            body: JSON.stringify({ [name]: votes }),
+            body: JSON.stringify({ count: votes, postId }),
         })
 
         if (Number(response.status) !== 200) {
-            console.error(response);
+            console.error(await response.text(), response);
             return false;
         }
 

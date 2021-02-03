@@ -1,6 +1,10 @@
 [build]
 functions = "functions/"
 publish = "build/"
+[build.environment]
+REACT_APP_LOGIN_API = "/.netlify/functions/logins"
+REACT_APP_POST_API = "/.netlify/functions/getPosts"
+REACT_APP_USER_API = "/.netlify/functions/getUsers"
 
 [dev]
 autoLaunch = false

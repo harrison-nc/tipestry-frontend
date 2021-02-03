@@ -20,9 +20,20 @@ const user_api = process.env.REACT_APP_USER_API;
 const login_api = process.env.REACT_APP_LOGIN_API;
 const post_api = process.env.REACT_APP_POST_API;
 
-if (!server_address || !user_api || !login_api || !post_api) {
-    console.error('configuration variables not defined');
+if (!server_address) {
     throw new Error('Missing required configuration variables');
+}
+
+if (!user_api) {
+    throw new Error('User API URL not provided');
+}
+
+if (!login_api) {
+    throw new Error('Login API URL not provided');
+}
+
+if (!post_api) {
+    throw new Error('Post API URL not provided');
 }
 
 export const serverAddress = `${server_address}`;

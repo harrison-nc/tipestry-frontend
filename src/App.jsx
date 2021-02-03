@@ -30,6 +30,9 @@ export const registerAddress = `${user_api}`;
 export const loginAddress = `${login_api}`;
 export const postAddress = `${post_api}`;
 
+console.log('post address', postAddress);
+console.log('post api', post_api);
+
 export default function App() {
     const location = useLocation();
     const background = location.state && location.state.background;

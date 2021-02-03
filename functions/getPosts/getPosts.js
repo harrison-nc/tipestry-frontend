@@ -19,6 +19,10 @@ exports.handler = async function (event, context) {
     const send = data => {
         return {
             statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type,Accept"
+            },
             body: JSON.stringify(data)
         }
     };
@@ -33,7 +37,6 @@ exports.handler = async function (event, context) {
     const getPost = async () => {
         try {
             await connectToDatabase();
-            console.debug('connected to database', DATABASE_URL);
         } catch (ex) {
             console.error(ex);
             return sendError("Unable connect to database");

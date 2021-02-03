@@ -20,6 +20,11 @@ const user_api = process.env.REACT_APP_USER_API;
 const login_api = process.env.REACT_APP_LOGIN_API;
 const post_api = process.env.REACT_APP_POST_API;
 
+console.log('server address', server_address);
+console.log('user api', post_api);
+console.log('login api', login_api);
+console.log('post api', post_api);
+
 if (!server_address) {
     throw new Error('Missing required configuration variables');
 }

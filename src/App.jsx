@@ -15,39 +15,16 @@ import Comment from './components/Comment';
 import Search from './pages/Search';
 import Detail from './pages/Detail';
 
-const server_address = process.env.REACT_APP_SERVER_ADDRESS;
-const user_api = process.env.REACT_APP_USER_API;
-const login_api = process.env.REACT_APP_LOGIN_API;
-const post_api = process.env.REACT_APP_POST_API;
+export const serverAddress = '';
+export const registerAddress = '';
+export const loginAddress = '';
+export const postAddress = `${process.env.REACT_APP_POST_API}`;
 
-console.log('server address', server_address);
-console.log('user api', post_api);
-console.log('login api', login_api);
-console.log('post api', post_api);
+console.log('post api', postAddress);
 
-if (!server_address) {
-    throw new Error('Missing required configuration variables');
-}
-
-if (!user_api) {
-    throw new Error('User API URL not provided');
-}
-
-if (!login_api) {
-    throw new Error('Login API URL not provided');
-}
-
-if (!post_api) {
+if (!postAddress) {
     throw new Error('Post API URL not provided');
 }
-
-export const serverAddress = `${server_address}`;
-export const registerAddress = `${user_api}`;
-export const loginAddress = `${login_api}`;
-export const postAddress = `${post_api}`;
-
-console.log('post address', postAddress);
-console.log('post api', post_api);
 
 export default function App() {
     const location = useLocation();

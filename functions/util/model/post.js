@@ -1,5 +1,7 @@
+require('../startup');
 const { schema: commentSchema } = require('./comment');
 const mongoose = require('mongoose');
+const Joi = require('joi');
 
 const ObjectId = mongoose.Types.ObjectId;
 const Schema = mongoose.Schema;
@@ -77,7 +79,7 @@ function createPost(post, user) {
     return new Post(dbPost).save();
 }
 
-schema.statics.create = createPost;
+schema.statics.newPost = createPost;
 
 schema.methods.addComment = async function (comment) {
     let { text, user } = comment;
@@ -96,4 +98,20 @@ schema.methods.addComment = async function (comment) {
 
 const Post = mongoose.model('posts', schema);
 
-module.exports = Post;
+const inputSchema = Joi.object({
+    title: Joi.string().min(5).required(),
+    resourceUrl: Joi.string().required(),
+    description: Joi.string().allow(''),
+    upVotes: Joi.number(),
+    downVotes: Joi.number(),
+    tags: Joi.array()
+}).label('post').required();
+
+function validatePost(input) {
+    return inputSchema.validate(input, { abortEarly: false });
+}
+
+module.exports = {
+    Post,
+    validate: validatePost
+};

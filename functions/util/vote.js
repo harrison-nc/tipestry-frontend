@@ -1,4 +1,4 @@
-const Post = require('../util/model/post');
+const { Post } = require('../util/model/post');
 const { connect, close } = require('../util/database');
 
 module.exports = async (postId, voteType, voteCount) => {

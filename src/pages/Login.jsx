@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import { Email, Password } from '../components/Input';
 import { validateEmail } from '../util/validators';
 import { useFormInput } from '../hooks/InputHooks';
 import FancyButton from '../components/FancyButton';
+import { useBackgroundNavigator } from '../hooks/useBackgroundNavigator';
 
-const Login = (props) => {
-    const location = useLocation();
-    const history = useHistory();
+const Login = ({ id, isModal, onLogin }) => {
     const Inputs = useInputs();
     const [serverError, setServerError] = useState('');
-    const [isSending, setIsSending] = useState(false);
-
-    const { id, isModal, onLogin } = props;
-    const background = location.state && location.state.background;
 
     const showError = (error) => {
         const { key, value, message } = error;
@@ -30,8 +24,6 @@ const Login = (props) => {
 
     const handleClose = (e) => {
         handleClear(e);
-        if (isModal && background) history.replace(background.pathname, background.state);
-        else history.goBack();
     }
 
     const handleSubmitFailure = (error) => {
@@ -57,7 +49,6 @@ const Login = (props) => {
 
         if (!isValid) return;
 
-        setIsSending(true);
         Inputs.disableAll();
 
         try {
@@ -67,13 +58,11 @@ const Login = (props) => {
             });
 
             if (error) handleSubmitFailure(error);
-            else handleClose(e);
 
         } catch (ex) {
             handleSubmitFailure(ex);
         }
 
-        setIsSending(false);
         Inputs.enableAll();
     }
 
@@ -87,7 +76,7 @@ const Login = (props) => {
 
                 {serverError && <ErrorMessage value={serverError} />}
 
-                <Control isSending={isSending} onClear={handleClear} onSubmit={handleSubmit} />
+                <Control isModal={isModal} onClear={handleClear} onSubmit={handleSubmit} />
             </div >
         </div>
     );
@@ -108,13 +97,26 @@ const ErrorMessage = ({ value }) => {
     return <span className="error">{value}</span>;
 };
 
-const Control = ({ onClear, onSubmit, isSending }) => {
+const Control = ({ isModal, onClear, onSubmit }) => {
     const ref = React.createRef();
+    const [isSending, setIsSending] = useState(false);
+    const navigator = useBackgroundNavigator(isModal);
+
+    const handleSubmit = async (e) => {
+        setIsSending(true);
+        await onSubmit(e);
+        setIsSending(false);
+        navigator.navigate();
+    };
 
     return (
         <div className="login__control is-flex mt-3">
             <input className="cancel btn is-white is-outlined" type="button" value="clear" disabled={isSending} onClick={onClear} />
-            <FancyButton ref={ref} className="btn py-4 px-3 is-primary is-bold" text="Login" isSending={isSending} onClick={onSubmit} />
+            <FancyButton className="btn py-4 px-3 is-primary is-bold"
+                ref={ref}
+                text="Login"
+                isSending={isSending}
+                onClick={handleSubmit} />
         </div>
     );
 };

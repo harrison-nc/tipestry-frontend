@@ -1,19 +1,14 @@
 import { createRef, useState, useEffect } from 'react';
 import { createInput, createInputTextArea } from '../components/Input';
 import { useFormInput } from '../hooks/InputHooks';
-import { useHistory, useLocation } from 'react-router-dom';
 import FancyButton from '../components/FancyButton';
+import { useBackgroundNavigator } from '../hooks/useBackgroundNavigator';
 
-const Post = (props) => {
-    const location = useLocation();
-    const history = useHistory();
+const Post = ({ id, isModal, onPost }) => {
     const Inputs = useInputs();
+    const navigator = useBackgroundNavigator(isModal);
     const [serverError, setServerError] = useState('');
-    const [isSending, setIsSending] = useState('');
     const [uploadImageURL, setUploadImageURL] = useState('');
-
-    const { id, isModal, onPost } = props;
-    const background = location.state && location.state.background;
 
     useEffect(() => {
         Inputs.url.isRequired(Inputs.upload.props.value ? false : true);
@@ -54,8 +49,7 @@ const Post = (props) => {
     const handleClose = (e) => {
         e.preventDefault();
         handleClear(e);
-        if (isModal && background) history.replace(background.pathname, location.state);
-        else history.goBack();
+        navigator.navigate();
     }
 
     const handleSubmitFailure = (error) => {
@@ -112,7 +106,6 @@ const Post = (props) => {
 
         if (!isValid) return;
 
-        setIsSending(true);
         Inputs.disableAll();
 
         try {
@@ -125,7 +118,6 @@ const Post = (props) => {
             handleSubmitFailure(ex);
         }
 
-        setIsSending(false);
         Inputs.enableAll();
     }
 
@@ -160,7 +152,7 @@ const Post = (props) => {
                 <Description {...Inputs.description.props} />
                 <Tags values={Inputs.tagItems.props.value} onRemove={handleRemoveTag} />
                 <TagInput onAdd={handleAddTag} {...Inputs.tagName.props} />
-                <Control isSending={isSending} onClear={handleClear} onSubmit={handleSubmit} />
+                <Control isModal={isModal} onClear={handleClear} onSubmit={handleSubmit} />
             </div>
         </div>
     );
@@ -240,15 +232,28 @@ const TagInput = (props) => {
     );
 };
 
-const Control = ({ isSending, onClear, onSubmit }) => {
+const Control = ({ isModal, onClear, onSubmit }) => {
     const ref = createRef();
+    const [isSending, setIsSending] = useState(false);
+    const navigator = useBackgroundNavigator(isModal);
+
+    const handleSubmit = async (e) => {
+        setIsSending(true);
+        await onSubmit(e);
+        setIsSending(false);
+        navigator.navigate();
+    };
 
     return (
         <div className="post__control is-flex right-control mt-2">
             <button className="btn cancel is-white is-outlined" type="button" onClick={onClear}>
                 clear
             </button>
-            <FancyButton className="btn is-primary py-4 px-3 is-bold" text="Post" ref={ref} isSending={isSending} onClick={onSubmit} />
+            <FancyButton className="btn is-primary py-4 px-3 is-bold"
+                text="Post"
+                ref={ref}
+                isSending={isSending}
+                onClick={handleSubmit} />
         </div>
     );
 };

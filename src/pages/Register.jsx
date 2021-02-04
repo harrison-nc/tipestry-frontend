@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import { validateEmail } from '../util/validators';
 import { useFormInput } from '../hooks/InputHooks';
 import { Email, Password, ConfirmPassword, Name } from '../components/Input';
 import FancyButton from '../components/FancyButton';
 import { registerUser } from '../App';
+import { useBackgroundNavigator } from '../hooks/useBackgroundNavigator';
 
-const Register = (props) => {
-    const location = useLocation();
-    const history = useHistory();
+const Register = ({ id, isModal }) => {
     const Inputs = useInputs();
-    const [isSending, setIsSending] = useState(false);
-
-    const { id, isModal } = props;
-    const background = location.state && location.state.background;
+    const navigator = useBackgroundNavigator(isModal);
 
     const showError = (error) => {
         const { key, value, message } = error;
@@ -29,8 +24,7 @@ const Register = (props) => {
 
     const handleClose = (e) => {
         handleClear(e);
-        if (isModal && background) history.replace(background.pathname, background.state);
-        else history.goBack();
+        navigator.navigate();
     };
 
     const handleSubmitFailure = (error) => {
@@ -47,7 +41,6 @@ const Register = (props) => {
 
         if (!isValid) return;
 
-        setIsSending(true);
         Inputs.disableAll();
 
         try {
@@ -58,13 +51,11 @@ const Register = (props) => {
             });
 
             if (error) handleSubmitFailure(error);
-            else handleClose(e);
         }
         catch (ex) {
             handleSubmitFailure(ex);
         }
 
-        setIsSending(false);
         Inputs.enableAll();
     };
 
@@ -77,7 +68,7 @@ const Register = (props) => {
                 <Email {...Inputs.email.props} />
                 <Password {...Inputs.password.props} />
                 <ConfirmPassword {...Inputs.cpassword.props} />
-                <Control isSending={isSending} onClear={handleClear} onSubmit={handleSubmit} />
+                <Control isModal={isModal} onClear={handleClear} onSubmit={handleSubmit} />
             </div>
         </div >
     );
@@ -95,13 +86,27 @@ const Header = ({ onClose }) => {
 };
 
 const Control = (props) => {
-    const { isSending, onClear, onSubmit } = props;
+    const { isModal, onClear, onSubmit } = props;
     const ref = React.createRef();
+
+    const [isSending, setIsSending] = useState(false);
+    const navigator = useBackgroundNavigator(isModal);
+
+    const handleSubmit = async (e) => {
+        setIsSending(true);
+        await onSubmit(e);
+        setIsSending(false);
+        navigator.navigate();
+    };
 
     return (
         <div className="register__control is-flex mt-3">
             <input className="btn cancel is-white is-outlined is-bold" type="button" value="clear" onClick={onClear} disabled={isSending} />
-            <FancyButton className="is-primary btn is-bold" text="Register" isSending={isSending} ref={ref} onClick={onSubmit} />
+            <FancyButton className="is-primary btn is-bold"
+                text="Register"
+                ref={ref}
+                isSending={isSending}
+                onClick={handleSubmit} />
         </div>
     );
 };

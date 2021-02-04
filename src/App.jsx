@@ -385,23 +385,3 @@ export const updateVotes = async (posts, postId, name, votes, headers, endPoint,
         throw ex;
     }
 };
-
-export const findPostsMatchingQuery = async (query) => {
-    const endPoint = `${getPostFunction}/search/${query}`;
-
-    try {
-        const response = await fetch(endPoint, {
-            method: 'GET',
-            mode: 'cors'
-        });
-
-        if (!Number(response.status) === 200) return [];
-
-        return await response.json();
-    }
-    catch (ex) {
-        console.error(ex);
-    }
-
-    return [];
-}

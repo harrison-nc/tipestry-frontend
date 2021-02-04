@@ -59,7 +59,9 @@ const Post = (props) => {
     }
 
     const handleSubmitFailure = (error) => {
-        if (error.auth) setServerError(error.auth.message);
+        if (!error) return console.error('An error occured while creating post:', error);
+        else if (error instanceof Error) console.error(error);
+        else if (error.auth) setServerError(error.auth.message);
         else if (error instanceof Array) error.forEach(showError);
         else showError(error);
     };
@@ -73,9 +75,11 @@ const Post = (props) => {
         formData.append('description', description.getValue());
         formData.append('tags', tagItems.getValue());
 
-        const { error } = await onPost(formData);
+        e.target.data = formData;
 
-        return error;
+        const response = await onPost(e);
+
+        responseHandler(e, response);
     };
 
     const sendUpload = async (e) => {
@@ -87,9 +91,18 @@ const Post = (props) => {
         formData.append('description', description.getValue());
         formData.append('tags', tagItems.getValue());
 
-        const { error } = await onPost(formData, true);
+        e.target.data = formData;
 
-        return error;
+        const response = await onPost(e, true);
+
+        responseHandler(e, response);
+    };
+
+    const responseHandler = (e, response) => {
+        if (!response) return showError(new Error('Invalid response:', response));
+        else if (response.succeeded === false) return handleSubmitFailure(response.error);
+
+        handleClose(e);
     };
 
     const handleSubmit = async (e) => {
@@ -103,15 +116,10 @@ const Post = (props) => {
         Inputs.disableAll();
 
         try {
-            let error;
 
-            if (Inputs.upload.props.value) error = await sendUpload(e);
+            if (Inputs.upload.props.value) await sendUpload(e);
 
-            else error = await sendFormDate(e);
-
-            if (error) handleSubmitFailure(error);
-
-            else handleClose(e);
+            else await sendFormDate(e);
 
         } catch (ex) {
             handleSubmitFailure(ex);

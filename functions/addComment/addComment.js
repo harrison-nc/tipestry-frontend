@@ -1,4 +1,4 @@
-const Post = require('../util/model/post');
+const { Post } = require('../util/model/post');
 const { validator: validate } = require('../util/model/comment');
 const { connect, close } = require('../util/database');
 const { parseJoiError } = require('../util/error');

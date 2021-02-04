@@ -22,11 +22,13 @@ const getPostFunction = `${process.env.REACT_APP_POST_API}`;
 const upVoteFunction = `${process.env.REACT_APP_UP_VOTE_API}`;
 const downVoteFunction = `${process.env.REACT_APP_DOWN_VOTE_API}`;
 const addCommentFunction = `${process.env.REACT_APP_ADD_COMMENT_API}`;
+const addPostFunction = `${process.env.REACT_APP_ADD_POST_API}`;
 
 console.log('get  post    api', getPostFunction);
 console.log('up   vote    api', upVoteFunction);
 console.log('down vote    api', downVoteFunction);
 console.log('add  comment api', addCommentFunction);
+console.log('add  post    api', addPostFunction);
 
 if (!getPostFunction) {
     throw new Error('Post API URL not provided');
@@ -44,6 +46,10 @@ if (!addCommentFunction) {
     throw new Error('Add Comment API URL not provided');
 }
 
+if (!addPostFunction) {
+    throw new Error('Add Post API URL not provided');
+}
+
 export default function App() {
     const location = useLocation();
     const background = location.state && location.state.background;
@@ -58,8 +64,12 @@ export default function App() {
         await loginUser(user, setUser);
     };
 
-    const handlePost = async (data, upload = false) => {
-        await createPost(user, posts, data, setPosts, upload);
+    const handlePost = async (e, upload = false) => {
+        const { data } = e.target;
+
+        if (!data) throw new Error('Invalid post form data');
+
+        return createPost(user, posts, data, setPosts, upload);
     };
 
     const handleComment = async (e) => {
@@ -268,9 +278,13 @@ const createPost = async (user, posts, data, consumer, upload = false) => {
 
         if (user) headers['x-auth-token'] = user['access-token'];
 
-        let endPoint = getPostFunction;
+        let endPoint = addPostFunction;
 
-        if (upload) endPoint = `${getPostFunction}/uploads`;
+        if (upload) endPoint = `${addPostFunction}/uploads`;
+        else {
+            data = new URLSearchParams(data).toString();
+            headers['Content-Type'] = "application/x-www-form-urlencoded";
+        }
 
         const response = await fetch(endPoint, {
             method: 'POST',
@@ -281,15 +295,17 @@ const createPost = async (user, posts, data, consumer, upload = false) => {
 
         const result = await response.json();
 
-        if (result.error) return result.error;
+        if (Number(response.status) !== 200) {
+            if (result && result.error) return { succeeded: false, error: result.error };
+            else return { succeeded: false, error: false };
+        }
 
-        // addPost(result);
         addPost(posts, result, consumer);
 
-        return true;
+        return { succeeded: true };
 
     } catch (ex) {
-        console.log(ex);
+        console.error(ex);
         throw ex;
     }
 };

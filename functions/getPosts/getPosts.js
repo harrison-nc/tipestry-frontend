@@ -1,4 +1,4 @@
-const Post = require('../util/model/post');
+const { Post } = require('../util/model/post');
 const { connect, close } = require('../util/database');
 const Response = require('../util/response');
 

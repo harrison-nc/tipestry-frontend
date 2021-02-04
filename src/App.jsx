@@ -21,11 +21,27 @@ export const loginAddress = '';
 export const getPostFunction = `${process.env.REACT_APP_POST_API}`;
 const upVoteFunction = `${process.env.REACT_APP_UP_VOTE_API}`;
 const downVoteFunction = `${process.env.REACT_APP_DOWN_VOTE_API}`;
+const addCommentFunction = `${process.env.REACT_APP_ADD_COMMENT_API}`;
 
-console.log('post api', getPostFunction);
+console.log('get post api', getPostFunction);
+console.log('up vote api', upVoteFunction);
+console.log('down vote api', downVoteFunction);
+console.log('add comment api', addCommentFunction);
 
 if (!getPostFunction) {
     throw new Error('Post API URL not provided');
+}
+
+if (!upVoteFunction) {
+    throw new Error('Up Vote API URL not provided');
+}
+
+if (!downVoteFunction) {
+    throw new Error('Down Vote API URL not provided');
+}
+
+if (!addCommentFunction) {
+    throw new Error('Add Comment API URL not provided');
 }
 
 export default function App() {
@@ -314,7 +330,7 @@ export const updateComment = async (user, posts, postId, comment, consumer) => {
 
         if (user) headers['x-auth-token'] = user['access-token'];
 
-        const response = await fetch(`${getPostFunction}/${postId}/comments`, {
+        const response = await fetch(addCommentFunction, {
             method: 'POST',
             mode: 'cors',
             headers,

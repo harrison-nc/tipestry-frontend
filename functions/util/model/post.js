@@ -1,33 +1,8 @@
+const { schema: commentSchema } = require('./comment');
 const mongoose = require('mongoose');
 
 const ObjectId = mongoose.Types.ObjectId;
 const Schema = mongoose.Schema;
-
-const commentSchema = new Schema({
-    text: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now(),
-    },
-    user: {
-        type: new Schema({
-            name: {
-                type: String,
-                default: 'annon',
-                trim: true,
-            },
-            email: {
-                type: String,
-                default: 'annon@mail.com',
-                trim: true,
-            }
-        }),
-    }
-});
 
 const schema = new Schema({
     user: {

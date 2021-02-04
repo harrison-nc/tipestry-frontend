@@ -15,18 +15,18 @@ import Comment from './components/Comment';
 import Search from './pages/Search';
 import Detail from './pages/Detail';
 
-export const serverAddress = '';
-export const registerAddress = '';
-export const loginAddress = '';
-export const getPostFunction = `${process.env.REACT_APP_POST_API}`;
+const serverAddress = '';
+const registerAddress = '';
+const loginAddress = '';
+const getPostFunction = `${process.env.REACT_APP_POST_API}`;
 const upVoteFunction = `${process.env.REACT_APP_UP_VOTE_API}`;
 const downVoteFunction = `${process.env.REACT_APP_DOWN_VOTE_API}`;
 const addCommentFunction = `${process.env.REACT_APP_ADD_COMMENT_API}`;
 
-console.log('get post api', getPostFunction);
-console.log('up vote api', upVoteFunction);
-console.log('down vote api', downVoteFunction);
-console.log('add comment api', addCommentFunction);
+console.log('get  post    api', getPostFunction);
+console.log('up   vote    api', upVoteFunction);
+console.log('down vote    api', downVoteFunction);
+console.log('add  comment api', addCommentFunction);
 
 if (!getPostFunction) {
     throw new Error('Post API URL not provided');

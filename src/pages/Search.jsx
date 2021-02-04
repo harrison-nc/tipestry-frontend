@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { updateVotes, getPostFunction, updatePostResourceUrl } from '../App';
+import { updateVotes, updatePostResourceUrl } from '../App';
 import banner from '../assets/images/potw-banner.png';
 import Cards from '../components/Cards';
 
-const Search = () => {
+const upVoteFunction = `${process.env.REACT_APP_UP_VOTE_API}`;
+const downVoteFunction = `${process.env.REACT_APP_DOWN_VOTE_API}`;
+
+export default function Search() {
     const location = useLocation();
     const [matchingPosts, setMatchingPosts] = useState([]);
 
@@ -28,16 +31,33 @@ const Search = () => {
         let { name } = e.target;
 
         name = name.toLowerCase();
-
-        let action;
-        if (name === 'like') action = 'upVotes';
-        else if (name === 'dislike') action = 'downVotes';
-        else action = 'invalid';
-
-        const endPoint = `${getPostFunction}/${postId}/${action}`;
         const headers = { 'Content-Type': 'application/json' };
 
-        await updateVotes(matchingPosts, postId, action, value, headers, endPoint, setMatchingPosts);
+        switch (name) {
+            case 'like':
+                await updateVotes(
+                    matchingPosts,
+                    postId,
+                    'upVotes',
+                    value,
+                    headers,
+                    upVoteFunction,
+                    setMatchingPosts);
+                break;
+
+            case 'dislike':
+                await updateVotes(
+                    matchingPosts,
+                    postId,
+                    'downVotes',
+                    value,
+                    headers,
+                    downVoteFunction,
+                    setMatchingPosts);
+                break;
+            default:
+                throw new Error('Invalid action: ' + name);
+        }
     };
 
     return (
@@ -62,5 +82,3 @@ const Search = () => {
         </div>
     );
 }
-
-export default Search;

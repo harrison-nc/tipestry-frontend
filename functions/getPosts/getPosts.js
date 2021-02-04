@@ -1,6 +1,6 @@
 const Post = require('../util/model/post');
 const { connect, close } = require('../util/database');
-const { send, error: sendError } = require('../util/result');
+const Response = require('../util/response');
 
 const findPostMatchingQuery = async (query) => {
     const regex = new RegExp(query, 'i');
@@ -9,13 +9,13 @@ const findPostMatchingQuery = async (query) => {
 }
 
 const findPosts = async (query) => {
-    if (!query && query.trim() === '') return send([]);
+    if (!query && query.trim() === '') return [];
 
     try {
         await connect();
     } catch (ex) {
-        console.error(ex);
-        return sendError("Unable connect to database");
+        console.debug(ex);
+        return new Error('Unable to connect to database');
     }
 
     try {
@@ -25,60 +25,58 @@ const findPosts = async (query) => {
         const flattenArray = matchingPosts.flat(100);
         const sortedPosts = flattenArray.sort((a, b) => b.views - a.views);
 
-        if (sortedPosts.length < 10) return send(sortedPosts);
+        if (sortedPosts.length < 10) return sortedPosts;
 
         const limit10 = sortedPosts.slice(0, 11);
 
-        return send(limit10);
+        return limit10;
     }
     catch (ex) {
         console.error(ex);
-        return sendError("Unable to retrieve data from database");
+        return new Error("Unable to retrieve data from database");
     }
 };
 
 const getPost = async () => {
     try {
         await connect();
-    } catch (ex) {
+    }
+    catch (ex) {
         console.error(ex);
-        return sendError("Unable connect to database");
+        return new Error("Unable connect to database");
     }
 
     try {
         const data = await Post.find();
-        return send(data);
+        return data;
     }
     catch (ex) {
         console.error(ex);
-        return sendError("Unable to fetch data from database");
+        return new Error("Unable to fetch data from database");
     }
 };
 
 exports.handler = async function (event) {
-    if (event.httpMethod === 'GET') {
+    if (event.httpMethod !== 'GET') {
+        return Response.of(new Error(`Request method ${event.httpMethod} not supported!`));
+    }
 
-        const queryParams = event.queryStringParameters;
+    const queryParams = event.queryStringParameters;
 
-        if (Object.values(queryParams).length !== 0 && queryParams.q) {
-            const query = queryParams.q;
+    if (Object.values(queryParams).length !== 0 && queryParams.q) {
+        const query = queryParams.q;
 
-            const result = await findPosts(query);
+        const result = await findPosts(query);
 
-            close();
+        close();
 
-            return result;
-        }
-        else {
-            const result = await getPost();
-
-            close();
-
-            return result;
-        }
+        return Response.of(result);
     }
     else {
+        const result = await getPost();
+
         close();
-        return sendError(`Request method ${event.httpMethod} not supported!`)
+
+        return Response.of(result);
     }
 }

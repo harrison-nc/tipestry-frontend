@@ -1,8 +1,8 @@
 const Post = require('../util/model/post');
 const { validator: validate } = require('../util/model/comment');
 const { connect, close } = require('../util/database');
-const { send, error } = require('../util/result');
 const { parseJoiError } = require('../util/error');
+const Response = require('../util/response');
 
 const addComment = async (postId, comment) => {
     try {
@@ -10,44 +10,39 @@ const addComment = async (postId, comment) => {
     }
     catch (ex) {
         console.debug(ex);
-        return error('Unable to connect to database');
+        return new Error('Unable to connect to database');
     }
 
-    const { error: validationError } = validate(comment);
+    const { error } = validate(comment);
 
-    if (validationError) {
-        console.debug(validationError);
-        return error(parseJoiError(validationError));
-    }
+    if (error) return new Error(parseJoiError(error));
 
     const post = await Post.findById(postId);
 
-    if (!post) return error('Post not found');
+    if (!post) return new Error('Post not found');
 
     await post.addComment(comment);
 
-    return send({ post });
+    return post;
 };
 
 exports.handler = async function (event) {
-    if (event.httpMethod === 'POST') {
-        const body = JSON.parse(event.body);
-        const { postId, text } = body;
-
-        const comment = {
-            postId,
-            text,
-            // todo: add valid user
-        };
-
-        const result = await addComment(postId, comment);
-
-        close();
-
-        return result;
+    if (event.httpMethod !== 'POST') {
+        return Response.of(new Error(`Request method ${event.httpMethod} not supported`));
     }
-    else {
-        close();
-        return error(`Request method ${event.httpMethod} not supported`);
-    }
+
+    const body = JSON.parse(event.body);
+    const { postId, text } = body;
+
+    const comment = {
+        postId,
+        text,
+        // todo: add valid user
+    };
+
+    const result = await addComment(postId, comment);
+
+    close();
+
+    return Response.of(result);
 }

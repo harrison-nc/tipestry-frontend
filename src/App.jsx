@@ -23,12 +23,14 @@ const upVoteFunction = `${process.env.REACT_APP_UP_VOTE_API}`;
 const downVoteFunction = `${process.env.REACT_APP_DOWN_VOTE_API}`;
 const addCommentFunction = `${process.env.REACT_APP_ADD_COMMENT_API}`;
 const addPostFunction = `${process.env.REACT_APP_ADD_POST_API}`;
+const uploadFunction = `${process.env.REACT_APP_UPLOAD_API}`;
 
 console.log('get  post    api', getPostFunction);
 console.log('up   vote    api', upVoteFunction);
 console.log('down vote    api', downVoteFunction);
 console.log('add  comment api', addCommentFunction);
 console.log('add  post    api', addPostFunction);
+console.log('upload       api', uploadFunction);
 
 if (!getPostFunction) {
     throw new Error('Post API URL not provided');
@@ -48,6 +50,10 @@ if (!addCommentFunction) {
 
 if (!addPostFunction) {
     throw new Error('Add Post API URL not provided');
+}
+
+if (!uploadFunction) {
+    throw new Error('Upload API URL not provided');
 }
 
 export default function App() {
@@ -280,11 +286,10 @@ const createPost = async (user, posts, data, consumer, upload = false) => {
 
         let endPoint = addPostFunction;
 
-        if (upload) endPoint = `${addPostFunction}/uploads`;
-        else {
-            data = new URLSearchParams(data).toString();
-            headers['Content-Type'] = "application/x-www-form-urlencoded";
-        }
+        if (upload) endPoint = uploadFunction;
+
+        data = new URLSearchParams(data).toString();
+        headers['Content-Type'] = "application/x-www-form-urlencoded";
 
         const response = await fetch(endPoint, {
             method: 'POST',

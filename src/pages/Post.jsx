@@ -49,7 +49,7 @@ const Post = ({ id, isModal, onPost }) => {
     const handleClose = (e) => {
         e.preventDefault();
         handleClear(e);
-        navigator.navigate();
+        navigator.back();
     }
 
     const handleSubmitFailure = (error) => {
@@ -241,7 +241,7 @@ const Control = ({ isModal, onClear, onSubmit }) => {
         setIsSending(true);
         await onSubmit(e);
         setIsSending(false);
-        navigator.navigate();
+        navigator.goBack();
     };
 
     return (

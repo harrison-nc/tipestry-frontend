@@ -24,7 +24,7 @@ const Register = ({ id, isModal }) => {
 
     const handleClose = (e) => {
         handleClear(e);
-        navigator.navigate();
+        navigator.goBack();
     };
 
     const handleSubmitFailure = (error) => {
@@ -96,7 +96,7 @@ const Control = (props) => {
         setIsSending(true);
         await onSubmit(e);
         setIsSending(false);
-        navigator.navigate();
+        navigator.goBack();
     };
 
     return (

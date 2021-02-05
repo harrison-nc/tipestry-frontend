@@ -106,7 +106,7 @@ const Control = ({ isModal, onClear, onSubmit }) => {
         setIsSending(true);
         await onSubmit(e);
         setIsSending(false);
-        navigator.navigate();
+        navigator.goBack();
     };
 
     return (

@@ -5,14 +5,19 @@ export const useBackgroundNavigator = (isModal) => {
     const location = useLocation();
     const background = location.state && location.state.background;
 
-    const back = async (e) => {
+    const goBack = async (e) => {
         if (isModal && background)
             history.replace(background.pathname, background.state);
         else
             history.goBack();
     };
 
+    const navigateTo = (path, state) => {
+        history.push(path, state);
+    };
+
     return {
-        navigate: back,
+        goBack,
+        navigateTo
     };
 };

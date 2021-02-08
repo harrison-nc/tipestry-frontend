@@ -284,9 +284,10 @@ const createPost = async (user, posts, data, consumer, upload = false) => {
 
         if (user) headers['x-auth-token'] = user['access-token'];
 
-        let endPoint = addPostFunction;
+        let endPoint;
 
         if (upload) endPoint = uploadFunction;
+        else endPoint = addPostFunction;
 
         data = new URLSearchParams(data).toString();
         headers['Content-Type'] = "application/x-www-form-urlencoded";
@@ -301,16 +302,15 @@ const createPost = async (user, posts, data, consumer, upload = false) => {
         const result = await response.json();
 
         if (Number(response.status) !== 200) {
-            if (result && result.error) return { succeeded: false, error: result.error };
-            else return { succeeded: false, error: false };
+            if (result && result.error) return new Result(false, ...result);
+            else return new Result(false);
         }
 
         addPost(posts, result, consumer);
 
-        return { succeeded: true };
+        return new Result(true);
 
     } catch (ex) {
-        console.error(ex);
         throw ex;
     }
 };
@@ -323,26 +323,27 @@ const addPost = (posts, post, consumer) => {
 };
 
 export const updatePostResourceUrl = (posts) => {
-    try {
-        const postBackup = [...posts];
-        // Match strings not beginning with http or ftp
-        const regex = /^(?!http|ftp)/;
+    return posts;
+    // try {
+    //     const postBackup = [...posts];
+    //     // Match strings not beginning with http or ftp
+    //     const regex = /^(?!http|ftp)/;
 
-        const updateResourceUrl = (p) => {
-            p.resourceUrl = `${serverAddress}/${p.resourceUrl}`;
-            return p;
-        };
-        // Add the domain name of the backend server posts with a relative
-        // resource url.
-        return postBackup
-            .filter(p => regex.test(p.resourceUrl))
-            .map(updateResourceUrl);
+    //     const updateResourceUrl = (p) => {
+    //         p.resourceUrl = `${serverAddress}/${p.resourceUrl}`;
+    //         return p;
+    //     };
+    //     // Add the domain name of the backend server posts with a relative
+    //     // resource url.
+    //     return postBackup
+    //         .filter(p => regex.test(p.resourceUrl))
+    //         .map(updateResourceUrl);
 
-    } catch (ex) {
-        console.error(ex);
-    }
+    // } catch (ex) {
+    //     console.error(ex);
+    // }
 
-    return [];
+    // return [];
 };
 
 export const updateComment = async (user, posts, postId, comment, consumer) => {
@@ -405,4 +406,11 @@ export const updateVotes = async (posts, postId, name, votes, headers, endPoint,
     catch (ex) {
         throw ex;
     }
+};
+
+function Result(succeeded, data = {}) {
+    return {
+        succeeded,
+        ...data
+    };
 };

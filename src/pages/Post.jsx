@@ -3,6 +3,7 @@ import { createInput, createInputTextArea } from '../components/Input';
 import { useFormInput } from '../hooks/InputHooks';
 import FancyButton from '../components/FancyButton';
 import { useBackgroundNavigator } from '../hooks/useBackgroundNavigator';
+import { convertFileToDataURL } from '../util/file-util';
 
 const Post = ({ id, isModal, onPost }) => {
     const Inputs = useInputs();
@@ -73,14 +74,25 @@ const Post = ({ id, isModal, onPost }) => {
 
         const response = await onPost(e);
 
-        responseHandler(e, response);
+        handleResponse(e, response);
     };
 
     const sendUpload = async (e) => {
         const { upload, title, description, tagItems } = Inputs;
 
+        const file = upload.getValue();
+        const { name, type, size } = file;
+        const encodedFile = await convertFileToDataURL(file);
+
+        const fileData = {
+            name,
+            type,
+            size,
+            data: encodedFile,
+        };
+
         const formData = new FormData();
-        formData.append('file', upload.getValue());
+        formData.append('file', JSON.stringify(fileData));
         formData.append('title', title.getValue());
         formData.append('description', description.getValue());
         formData.append('tags', tagItems.getValue());
@@ -89,14 +101,16 @@ const Post = ({ id, isModal, onPost }) => {
 
         const response = await onPost(e, true);
 
-        responseHandler(e, response);
+        handleResponse(e, response);
     };
 
-    const responseHandler = (e, response) => {
-        if (!response) return showError(new Error('Invalid response:', response));
-        else if (response.succeeded === false) return handleSubmitFailure(response.error);
-
-        handleClose(e);
+    const handleResponse = (e, response) => {
+        if (!response || !response.hasOwnProperty('succeeded')) {
+            return handleSubmitFailure(new Error('Invalid response:', response));
+        }
+        else if (!response.succeeded) {
+            return handleSubmitFailure(response.error);
+        }
     };
 
     const handleSubmit = async (e) => {

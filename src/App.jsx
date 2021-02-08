@@ -286,12 +286,8 @@ const createPost = async (user, posts, data, consumer, upload = false) => {
             endPoint = '/';
         }
 
-        console.log('data 1', data);
-
         data = new URLSearchParams(data).toString();
         headers['Content-Type'] = "application/x-www-form-urlencoded";
-
-        console.log('data 2', data);
 
         const response = await fetch(endPoint, {
             method: 'POST',
@@ -300,7 +296,7 @@ const createPost = async (user, posts, data, consumer, upload = false) => {
             body: data,
         });
 
-        const result = await response.json();
+        const result = await parseResponse(response);
 
         if (Number(response.status) !== 200) {
             if (result && result.error) return { succeeded: false, error: result.error };
@@ -315,6 +311,12 @@ const createPost = async (user, posts, data, consumer, upload = false) => {
         console.error(ex);
         throw ex;
     }
+};
+
+
+const parseResponse = async (response) => {
+    if (response.headers['Content-Type'] === 'application/json') return response.json();
+    else return { text: await response.text() };
 };
 
 const addPost = (posts, post, consumer) => {

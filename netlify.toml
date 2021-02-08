@@ -2,12 +2,10 @@
 functions = "functions/"
 publish = "build/"
 [build.environment]
-IMAGE_DIR = "build/uploads"
 REACT_APP_ADD_COMMENT_API = "/.netlify/functions/addComment"
 REACT_APP_ADD_POST_API = "/.netlify/functions/addPost"
 REACT_APP_DOWN_VOTE_API = "/.netlify/functions/downVote"
 REACT_APP_POST_API = "/.netlify/functions/getPosts"
-REACT_APP_UPLOAD_API = "/.netlify/functions/addPostWithUpload"
 REACT_APP_UP_VOTE_API = "/.netlify/functions/upVote"
 
 [dev]

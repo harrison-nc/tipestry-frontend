@@ -288,6 +288,8 @@ const createPost = async (user, posts, data, consumer, upload = false) => {
         data = new URLSearchParams(data).toString();
         headers['Content-Type'] = "application/x-www-form-urlencoded";
 
+        console.log('data', data);
+
         const response = await fetch(endPoint, {
             method: 'POST',
             mode: 'cors',

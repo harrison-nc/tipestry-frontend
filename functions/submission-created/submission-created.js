@@ -1,4 +1,4 @@
-export function handler(event) {
+exports.handler = (event) => {
     console.log('event', event);
     return {
         statusCode: 204

@@ -281,14 +281,17 @@ const createPost = async (user, posts, data, consumer, upload = false) => {
         let endPoint = addPostFunction;
 
         if (upload) {
-            data['form-name'] = 'post';
+            if (data instanceof FormData) data.append('form-name', 'post');
+            else data['form-name'] = 'post';
             endPoint = '/';
         }
+
+        console.log('data 1', data);
 
         data = new URLSearchParams(data).toString();
         headers['Content-Type'] = "application/x-www-form-urlencoded";
 
-        console.log('data', data);
+        console.log('data 2', data);
 
         const response = await fetch(endPoint, {
             method: 'POST',

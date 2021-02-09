@@ -24,12 +24,12 @@ const addCommentFunction = `${process.env.REACT_APP_ADD_COMMENT_API}`;
 const addPostFunction = `${process.env.REACT_APP_ADD_POST_API}`;
 const uploadFunction = `${process.env.REACT_APP_UPLOAD_API}`;
 
-console.log('get  post    api', getPostFunction);
-console.log('up   vote    api', upVoteFunction);
-console.log('down vote    api', downVoteFunction);
-console.log('add  comment api', addCommentFunction);
-console.log('add  post    api', addPostFunction);
-console.log('upload       api', uploadFunction);
+console.debug('get  post    api', getPostFunction);
+console.debug('up   vote    api', upVoteFunction);
+console.debug('down vote    api', downVoteFunction);
+console.debug('add  comment api', addCommentFunction);
+console.debug('add  post    api', addPostFunction);
+console.debug('upload       api', uploadFunction);
 
 if (!getPostFunction) {
     throw new Error('Post API URL not provided');

@@ -3,6 +3,7 @@ import { createInput, createInputTextArea } from '../components/Input';
 import { useFormInput } from '../hooks/InputHooks';
 import FancyButton from '../components/FancyButton';
 import { useBackgroundNavigator } from '../hooks/useBackgroundNavigator';
+import uploadImage from '../util/image-uploader.js';
 
 const Post = ({ id, isModal, onPost }) => {
     const Inputs = useInputs();
@@ -79,16 +80,18 @@ const Post = ({ id, isModal, onPost }) => {
     const sendUpload = async (e) => {
         const { upload, title, description, tagItems } = Inputs;
 
+        const file = upload.getValue();
+        const result = await uploadImage(file);
+        const { url } = result.file;
+
         const formData = new FormData();
-        formData.append('file', upload.getValue());
+        formData.append('resourceUrl', url);
         formData.append('title', title.getValue());
         formData.append('description', description.getValue());
         formData.append('tags', tagItems.getValue());
 
         e.target.data = formData;
-
-        const response = await onPost(e, true);
-
+        const response = await onPost(e);
         responseHandler(e, response);
     };
 

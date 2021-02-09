@@ -15,7 +15,6 @@ import Comment from './components/Comment';
 import Search from './pages/Search';
 import Detail from './pages/Detail';
 
-const serverAddress = '';
 const registerAddress = '';
 const loginAddress = '';
 const getPostFunction = `${process.env.REACT_APP_POST_API}`;
@@ -23,12 +22,14 @@ const upVoteFunction = `${process.env.REACT_APP_UP_VOTE_API}`;
 const downVoteFunction = `${process.env.REACT_APP_DOWN_VOTE_API}`;
 const addCommentFunction = `${process.env.REACT_APP_ADD_COMMENT_API}`;
 const addPostFunction = `${process.env.REACT_APP_ADD_POST_API}`;
+const uploadFunction = `${process.env.REACT_APP_UPLOAD_API}`;
 
 console.log('get  post    api', getPostFunction);
 console.log('up   vote    api', upVoteFunction);
 console.log('down vote    api', downVoteFunction);
 console.log('add  comment api', addCommentFunction);
 console.log('add  post    api', addPostFunction);
+console.log('upload       api', uploadFunction);
 
 if (!getPostFunction) {
     throw new Error('Post API URL not provided');
@@ -48,6 +49,10 @@ if (!addCommentFunction) {
 
 if (!addPostFunction) {
     throw new Error('Add Post API URL not provided');
+}
+
+if (!uploadFunction) {
+    throw new Error('Upload API URL not provided');
 }
 
 export default function App() {
@@ -272,51 +277,32 @@ const addComment = (posts, postId, comment, consumer) => {
     consumer(postArray);
 };
 
-const createPost = async (user, posts, data, consumer, upload = false) => {
+const createPost = async (user, posts, data, consumer) => {
     try {
-        const headers = {}
+        const encodedData = new URLSearchParams(data);
+        const encodedString = encodedData.toString();
 
-        if (user) headers['x-auth-token'] = user['access-token'];
-
-        let endPoint = addPostFunction;
-
-        if (upload) {
-            if (data instanceof FormData) data.append('form-name', 'post');
-            else data['form-name'] = 'post';
-            endPoint = '/';
-        }
-
-        data = new URLSearchParams(data).toString();
-        headers['Content-Type'] = "application/x-www-form-urlencoded";
-
-        const response = await fetch(endPoint, {
+        const response = await fetch(addPostFunction, {
             method: 'POST',
             mode: 'cors',
-            headers,
-            body: data,
+            headers: getPostHeaders(user),
+            body: encodedString,
         });
 
-        const result = await parseResponse(response);
+        const result = await parsePostResponse(response);
 
-        if (Number(response.status) !== 200) {
-            if (result && result.error) return { succeeded: false, error: result.error };
-            else return { succeeded: false, error: false };
-        }
+        parsePostResult(result, {
+            posts,
+            consumer,
+            data: encodedData
+        });
 
-        addPost(posts, result, consumer);
-
-        return { succeeded: true };
+        return result;
 
     } catch (ex) {
         console.error(ex);
         throw ex;
     }
-};
-
-
-const parseResponse = async (response) => {
-    if (response.headers['Content-Type'] === 'application/json') return response.json();
-    else return { text: await response.text() };
 };
 
 const addPost = (posts, post, consumer) => {
@@ -326,27 +312,51 @@ const addPost = (posts, post, consumer) => {
     consumer(array);
 };
 
-export const updatePostResourceUrl = (posts) => {
-    try {
-        const postBackup = [...posts];
-        // Match strings not beginning with http or ftp
-        const regex = /^(?!http|ftp)/;
+const getPostHeaders = (user) => {
+    const headers = {
+        Accept: 'application/json',
+        'Content-Type': "application/x-www-form-urlencoded"
+    };
 
-        const updateResourceUrl = (p) => {
-            p.resourceUrl = `${serverAddress}/${p.resourceUrl}`;
-            return p;
-        };
-        // Add the domain name of the backend server posts with a relative
-        // resource url.
-        return postBackup
-            .filter(p => regex.test(p.resourceUrl))
-            .map(updateResourceUrl);
+    if (user) headers['x-auth-token'] = user['access-token'];
+};
 
-    } catch (ex) {
-        console.error(ex);
+const parsePostResponse = async (response) => {
+    const data = await getPostResponseData(response);
+
+    if (response.ok) {
+        return { succeeded: true, data };
     }
+    else if (data && data.error) {
+        return { succeeded: false, error: data.error };
+    }
+    else {
+        console.error('error:', data);
+        throw new Error('Server response not supported:', response);
+    }
+};
 
-    return [];
+const parsePostResult = (result, value) => {
+    if (result.succeeded) {
+        const { data, posts, consumer } = value;
+        const post = Object.fromEntries(data);
+        let tags = post.tags || '';
+        tags = tags.split(',');
+        post.tags = tags;
+        addPost(posts, post, consumer);
+    }
+};
+
+const getPostResponseData = async (response) => {
+    const isJson = /application\/json/;
+    const contentType = response.headers['Content-Type'] || response.headers['content-type'];
+
+    if (isJson.test(contentType)) {
+        return response.json();
+    }
+    else {
+        return { text: await response.text() };
+    }
 };
 
 export const updateComment = async (user, posts, postId, comment, consumer) => {

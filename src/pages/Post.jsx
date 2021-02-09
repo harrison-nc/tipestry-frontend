@@ -1,11 +1,15 @@
-import { createRef, useState, useEffect } from 'react';
-import { createInput, createInputTextArea } from '../components/Input';
-import { useFormInput } from '../hooks/InputHooks';
-import FancyButton from '../components/FancyButton';
+import { useState, useEffect } from 'react';
 import { useBackgroundNavigator } from '../hooks/useBackgroundNavigator';
 import uploadImage from '../util/image-uploader.js';
+import { URL, Title, Description } from '../components/post/Validators';
+import { ErrorMessage } from "../components/post/ErrorMessage";
+import { Tags, TagInput } from "../components/post/Tags";
+import { useInputs } from "../components/post/hooks/useInputs";
+import { Control } from "../components/post/Control";
+import { Upload } from "../components/post/Upload";
+import { Header } from "../components/post/Header";
 
-const Post = ({ id, isModal, onPost }) => {
+export default function Post({ id, isModal, onPost }) {
     const Inputs = useInputs();
     const navigator = useBackgroundNavigator(isModal);
     const [serverError, setServerError] = useState('');
@@ -160,151 +164,3 @@ const Post = ({ id, isModal, onPost }) => {
         </div>
     );
 };
-
-const Header = ({ onClose }) => {
-    return (
-        <div className="header is-flex">
-            <p className="title has-text-link">
-                Add post
-            </p>
-            <button className="close btn" onClick={onClose}>X</button>
-        </div>
-    );
-};
-
-const Upload = ({ value, src, onRemove, onFileChange }) => {
-    return (
-        <div className="upload is-flex flex-column mt-4">
-            {value && <img className="upload-image" src={src} alt="file to upload" />}
-            <div className="buttons is-flex mt-5">
-                <label>
-                    <input hidden type="file" name="file" onChange={onFileChange} />
-                    <span className="btn px-3 py-4 is-block is-rounded is-outlined is-link">Upload</span>
-                </label>
-                <button className="btn px-3 py-4 is-rounded is-outlined is-danger" onClick={onRemove}>Remove</button>
-            </div>
-            <p className="has-text-grey">Your maximun upload size if 5MB</p>
-        </div>
-    );
-};
-
-const URL = createInput({
-    type: 'url',
-    name: 'resourceUrl',
-    label: 'Url*',
-    placeholder: 'Enter resource url',
-});
-
-const Title = createInput({
-    type: "text",
-    name: "title",
-    label: "Title*",
-    placeholder: "Enter post title",
-});
-
-const Description = createInputTextArea({
-    id: "description",
-    name: "description",
-    label: "Description",
-    placeholder: "Enter post details",
-});
-
-const Tags = (props) => {
-    const { values, onRemove } = props;
-
-    return (
-        <ul className="post__tags is-flex"> {values.map((item, i) =>
-            <li key={i} className="tag__item">
-                <span className="tag__item__hash">#</span><span className="tag__item__text">{item}</span><span className="tag__item__btn" onClick={() => onRemove(item)}>x</span>
-            </li>)}
-        </ul>
-    );
-};
-
-const TagInput = (props) => {
-    const { value, onAdd, onChange, hasError, ...rest } = props;
-
-    return (
-        <fieldset className="tag__control py-6 px-6 field">
-            <legend className="legend">Tags</legend>
-            <div className="is-flex mt-3">
-                <input className="tag__input input flex-grow py-4 px-4" type="text" name="tagName" placeholder="Enter tag name" {...rest} value={value} onChange={onChange} />
-                <button type="button" onClick={onAdd}>Add</button>
-            </div>
-        </fieldset>
-    );
-};
-
-const Control = ({ isModal, onClear, onSubmit }) => {
-    const ref = createRef();
-    const [isSending, setIsSending] = useState(false);
-    const navigator = useBackgroundNavigator(isModal);
-
-    const handleSubmit = async (e) => {
-        setIsSending(true);
-        await onSubmit(e);
-        setIsSending(false);
-        navigator.goBack();
-    };
-
-    return (
-        <div className="post__control is-flex right-control mt-2">
-            <button className="btn cancel is-white is-outlined" type="button" onClick={onClear}>
-                clear
-            </button>
-            <FancyButton className="btn is-primary py-4 px-3 is-bold"
-                text="Post"
-                ref={ref}
-                isSending={isSending}
-                onClick={handleSubmit} />
-        </div>
-    );
-};
-
-const ErrorMessage = ({ value }) => {
-    return <span className="error">{value}</span>
-};
-
-const useInputs = () => {
-    const url = useFormInput('', value => {
-        return !value ? 'Resource url is required' : '';
-    });
-
-    const title = useFormInput('', value => {
-        return !value ? 'Title is required' : '';
-    });
-
-    const tagItems = useFormInput(['tag'], () => '', []);
-    const tagName = useFormInput('');
-    const description = useFormInput('');
-    const upload = useFormInput();
-
-    return Object.freeze({
-        url,
-        title,
-        description,
-        tagItems,
-        tagName,
-        upload,
-
-        asArray() {
-            return [url, title, description, tagItems, tagName, upload];
-        },
-
-        validateAll() {
-            const validate = input => input.validate() === '';
-            const isValid = (a, b) => a && b;
-            return this.asArray().map(validate).reduce(isValid, true);
-        },
-
-        disableAll() {
-            this.asArray().forEach(i => i.disable());
-        },
-
-        enableAll() {
-            this.asArray().forEach(i => i.enable());
-        }
-    });
-};
-
-export default Post;

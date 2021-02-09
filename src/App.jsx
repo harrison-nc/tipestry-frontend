@@ -15,7 +15,6 @@ import Comment from './components/Comment';
 import Search from './pages/Search';
 import Detail from './pages/Detail';
 
-const registerAddress = '';
 const loginAddress = '';
 const getPostFunction = `${process.env.REACT_APP_POST_API}`;
 const upVoteFunction = `${process.env.REACT_APP_UP_VOTE_API}`;
@@ -109,8 +108,7 @@ export default function App() {
                             toptags={toptags}
                             onCardAction={handlePostVotes} />} />
 
-                    <Route path="/register"
-                        children={<Register onRegister={registerUser} />} />
+                    <Route path="/register" children={<Register />} />
 
                     <Route path="/login"
                         children={<Login onLogin={handleLogin} />} />
@@ -131,7 +129,6 @@ export default function App() {
                 </Switch>
 
                 {background && <ModalRouter
-                    onRegister={registerUser}
                     onLogin={handleLogin}
                     onPost={handlePost}
                     onComment={handleComment} />}
@@ -183,24 +180,6 @@ const usePostData = (consumer) => {
         fetchPostData();
 
     }, [consumer]);
-};
-
-export const registerUser = async (user) => {
-    try {
-        const response = await fetch(registerAddress, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user)
-        })
-
-        return response.json();
-    }
-    catch (ex) {
-        throw ex;
-    }
 };
 
 const loginUser = async (user, consumer) => {

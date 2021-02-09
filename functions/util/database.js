@@ -14,7 +14,13 @@ const connect = async () => {
     return mongoose.connect(DATABASE_URL, options);
 };
 
-const close = () => mongoose.connection.close();
+const close = async () => {
+    try {
+        await mongoose.connection.close();
+    } catch (ex) {
+        console.debug(ex);
+    }
+};
 
 module.exports = {
     connect,

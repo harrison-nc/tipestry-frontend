@@ -23,6 +23,7 @@ const downVoteFunction = `${process.env.REACT_APP_DOWN_VOTE_API}`;
 const addCommentFunction = `${process.env.REACT_APP_ADD_COMMENT_API}`;
 const addPostFunction = `${process.env.REACT_APP_ADD_POST_API}`;
 const uploadFunction = `${process.env.REACT_APP_UPLOAD_API}`;
+const registerUserFunction = `${process.env.REACT_APP_REGISTER_USER_API}`;
 
 console.debug('get  post    api', getPostFunction);
 console.debug('up   vote    api', upVoteFunction);
@@ -30,6 +31,7 @@ console.debug('down vote    api', downVoteFunction);
 console.debug('add  comment api', addCommentFunction);
 console.debug('add  post    api', addPostFunction);
 console.debug('upload       api', uploadFunction);
+console.debug('register     api', registerUserFunction);
 
 if (!getPostFunction) {
     throw new Error('Post API URL not provided');
@@ -53,6 +55,10 @@ if (!addPostFunction) {
 
 if (!uploadFunction) {
     throw new Error('Upload API URL not provided');
+}
+
+if (!registerUserFunction) {
+    throw new Error('Register User API URL not provided');
 }
 
 export default function App() {

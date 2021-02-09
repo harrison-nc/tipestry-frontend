@@ -8,6 +8,8 @@ export const getResponseData = async (response) => {
     catch (ex) {
         console.debug(ex);
 
+        if (response.bodyUsed) throw ex;
+
         const text = await response.text();
 
         try {

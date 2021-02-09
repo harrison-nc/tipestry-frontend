@@ -7,9 +7,6 @@ export default async function uploadImage(file) {
     form.append('name', file.name);
     const encodedData = new URLSearchParams(form).toString();
 
-    console.log('# upload data         =====>\n', data);
-    console.log('# upload encodedData  =====>\n', encodedData);
-
     const response = await fetch(uploadFunction, {
         method: 'POST',
         headers: {

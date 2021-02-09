@@ -14,6 +14,7 @@ import Navbar from './components/Navbar';
 import Comment from './components/Comment';
 import Search from './pages/Search';
 import Detail from './pages/Detail';
+import { getResponseData } from './util/response';
 
 const loginAddress = '';
 const getPostFunction = `${process.env.REACT_APP_POST_API}`;
@@ -292,7 +293,7 @@ const getPostHeaders = (user) => {
 
 const parsePostResponse = async (response) => {
     if (!response.ok) {
-        const data = await getPostResponseData(response);
+        const data = await getResponseData(response);
 
         if (data && data.error) {
             return { succeeded: false, error: data.error };
@@ -303,7 +304,7 @@ const parsePostResponse = async (response) => {
         throw new Error('Invalid server response', response);
     }
 
-    const data = await getPostResponseData(response);
+    const data = await getResponseData(response);
     return { succeeded: true, data };
 };
 
@@ -313,33 +314,6 @@ const parsePostResult = (result, props) => {
         const { posts, consumer } = props;
         addPost(posts, data, consumer);
     }
-};
-
-const getPostResponseData = async (response) => {
-    let data;
-
-    try {
-        data = await response.json();
-    }
-    catch (ex) {
-        console.debug(ex);
-
-        const text = await response.text();
-
-        try {
-            data = JSON.parse(text);
-        }
-        catch (ex) {
-            data = {};
-            console.error(ex);
-            console.debug('# status text', response.statusText);
-            console.debug('# response body text\n', text);
-        }
-    }
-
-    console.debug('# response data\n', data);
-
-    return data;
 };
 
 export const updateComment = async (user, posts, postId, comment, consumer) => {

@@ -19,4 +19,18 @@ const of = data => {
     }
 };
 
-module.exports = { of };
+const ofError = error => {
+    return {
+        statusCode: 400,
+        body: JSON.stringify(error)
+    }
+};
+
+const ofInternalError = error => {
+    return {
+        statusCode: 500,
+        body: JSON.stringify(error)
+    }
+};
+
+module.exports = { of, ofError, ofInternalError };

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const Response = require('../util/response');
 const { getImageData, parseResponse, parseResult } = require("./util/helper");
 
 const serverURL = process.env.IMAGE_SERVER_URL;
@@ -31,16 +32,10 @@ exports.handler = async (event) => {
         const result = parseResponse(response);
         const urls = parseResult(result);
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ file: urls })
-        }
+        return Response.of({ file: urls });
     }
     catch (ex) {
         console.error(ex);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ errorMessage: "Failed to upload file" })
-        }
+        return Response.ofInternalError({ errorMessage: "Failed to upload file" })
     }
 };

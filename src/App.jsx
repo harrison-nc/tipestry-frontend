@@ -175,12 +175,7 @@ const usePostData = (consumer) => {
             try {
                 const response = await fetch(getPostFunction);
                 let posts = await response.json();
-                const updatedPosts = updatePostResourceUrl(posts);
-                // Remove all the posts that have been updated from
-                posts = posts.filter(p1 => !updatedPosts.find(p2 => p1._id === p2._id));
-                // Pass to consumer all the posts and updated posts
-                consumer([...posts, ...updatedPosts]);
-
+                consumer(posts);
             } catch (ex) {
                 console.error(ex.message, ex);
             }
@@ -227,7 +222,6 @@ const loginUser = async (user, consumer) => {
 
         const { login } = result;
 
-        // setUser(login);
         consumer(login);
 
         return true;
@@ -273,7 +267,6 @@ const addComment = (posts, postId, comment, consumer) => {
     const index = postArray.indexOf(selectedPost);
     postArray[index] = selectedPost;
 
-    // setPosts(postArray);
     consumer(postArray);
 };
 
@@ -308,7 +301,6 @@ const createPost = async (user, posts, data, consumer) => {
 const addPost = (posts, post, consumer) => {
     const array = [...posts];
     array.push(post);
-    // setPosts(array);
     consumer(array);
 };
 

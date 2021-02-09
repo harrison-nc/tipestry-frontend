@@ -29,8 +29,6 @@ exports.handler = async function (event) {
     if (body.tags) body.tags = body.tags.split(',');
     else body.tags = []
 
-    console.log('body ==>', body);
-
     const result = await addPost(body);
 
     close();

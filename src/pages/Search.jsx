@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { updateVotes, updatePostResourceUrl } from '../App';
+import { updateVotes } from '../App';
 import banner from '../assets/images/potw-banner.png';
 import Cards from '../components/Cards';
 
@@ -13,16 +13,11 @@ export default function Search() {
 
     useEffect(() => {
         let posts = location.state && location.state.posts;
-
         posts = JSON.parse(posts);
 
         if (!posts || !Array.isArray(posts)) posts = [];
 
-        const updatedPosts = updatePostResourceUrl(posts);
-
-        posts = posts.filter(p1 => !updatedPosts.find(p2 => p1._id === p2._id));
-
-        setMatchingPosts([...posts, ...updatedPosts]);
+        setMatchingPosts(posts);
 
     }, [location.state]);
 

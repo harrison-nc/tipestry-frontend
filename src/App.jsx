@@ -272,8 +272,7 @@ const addComment = (posts, postId, comment, consumer) => {
 
 const createPost = async (user, posts, data, consumer) => {
     try {
-        const encodedData = new URLSearchParams(data);
-        const encodedString = encodedData.toString();
+        const encodedString = new URLSearchParams(data).toString();
 
         const response = await fetch(addPostFunction, {
             method: 'POST',
@@ -286,8 +285,7 @@ const createPost = async (user, posts, data, consumer) => {
 
         parsePostResult(result, {
             posts,
-            consumer,
-            data: encodedData
+            consumer
         });
 
         return result;
@@ -314,41 +312,55 @@ const getPostHeaders = (user) => {
 };
 
 const parsePostResponse = async (response) => {
-    const data = await getPostResponseData(response);
+    if (!response.ok) {
+        const data = await getPostResponseData(response);
 
-    if (response.ok) {
-        return { succeeded: true, data };
+        if (data && data.error) {
+            return { succeeded: false, error: data.error };
+        }
+
+        console.debug('# error:', data);
+        console.debug(response.statusText);
+        throw new Error('Invalid server response', response);
     }
-    else if (data && data.error) {
-        return { succeeded: false, error: data.error };
-    }
-    else {
-        console.error('error:', data);
-        throw new Error('Server response not supported:', response);
-    }
+
+    const data = await getPostResponseData(response);
+    return { succeeded: true, data };
 };
 
-const parsePostResult = (result, value) => {
+const parsePostResult = (result, props) => {
     if (result.succeeded) {
-        const { data, posts, consumer } = value;
-        const post = Object.fromEntries(data);
-        let tags = post.tags || '';
-        tags = tags.split(',');
-        post.tags = tags;
-        addPost(posts, post, consumer);
+        const { data } = result;
+        const { posts, consumer } = props;
+        addPost(posts, data, consumer);
     }
 };
 
 const getPostResponseData = async (response) => {
-    const isJson = /application\/json/;
-    const contentType = response.headers['Content-Type'] || response.headers['content-type'];
+    let data;
 
-    if (isJson.test(contentType)) {
-        return response.json();
+    try {
+        data = await response.json();
     }
-    else {
-        return { text: await response.text() };
+    catch (ex) {
+        console.debug(ex);
+
+        const text = await response.text();
+
+        try {
+            data = JSON.parse(text);
+        }
+        catch (ex) {
+            data = {};
+            console.error(ex);
+            console.debug('# status text', response.statusText);
+            console.debug('# response body text\n', text);
+        }
     }
+
+    console.debug('# response data\n', data);
+
+    return data;
 };
 
 export const updateComment = async (user, posts, postId, comment, consumer) => {

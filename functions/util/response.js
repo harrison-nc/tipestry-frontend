@@ -1,4 +1,4 @@
-const of = data => {
+const of = (data, headers = {}) => {
     if (data instanceof Error) {
         console.debug(data);
 
@@ -7,17 +7,18 @@ const of = data => {
             body: JSON.stringify({ error: data.message })
         }
     }
-    else {
-        return {
-            statusCode: 200,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type,Accept",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        }
+
+    return {
+        statusCode: 200,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type,Accept",
+            "Content-Type": "application/json",
+            ...headers
+        },
+        body: JSON.stringify(data)
     }
+
 };
 
 const ofError = error => {

@@ -16,7 +16,6 @@ import Search from './pages/Search';
 import Detail from './pages/Detail';
 import { getResponseData } from './util/response';
 
-const loginAddress = '';
 const getPostFunction = `${process.env.REACT_APP_POST_API}`;
 const upVoteFunction = `${process.env.REACT_APP_UP_VOTE_API}`;
 const downVoteFunction = `${process.env.REACT_APP_DOWN_VOTE_API}`;
@@ -24,6 +23,7 @@ const addCommentFunction = `${process.env.REACT_APP_ADD_COMMENT_API}`;
 const addPostFunction = `${process.env.REACT_APP_ADD_POST_API}`;
 const uploadFunction = `${process.env.REACT_APP_UPLOAD_API}`;
 const registerUserFunction = `${process.env.REACT_APP_REGISTER_USER_API}`;
+const loginUserFunction = `${process.env.REACT_APP_LOGIN_USER_API}`;
 
 console.debug('get  post    api', getPostFunction);
 console.debug('up   vote    api', upVoteFunction);
@@ -32,6 +32,7 @@ console.debug('add  comment api', addCommentFunction);
 console.debug('add  post    api', addPostFunction);
 console.debug('upload       api', uploadFunction);
 console.debug('register     api', registerUserFunction);
+console.debug('login        api', loginUserFunction);
 
 if (!getPostFunction) {
     throw new Error('Post API URL not provided');
@@ -59,6 +60,10 @@ if (!uploadFunction) {
 
 if (!registerUserFunction) {
     throw new Error('Register User API URL not provided');
+}
+
+if (!loginUserFunction) {
+    throw new Error('Login User API URL not provided');
 }
 
 export default function App() {
@@ -191,26 +196,23 @@ const usePostData = (consumer) => {
 
 const loginUser = async (user, consumer) => {
     try {
-        const response = await fetch(loginAddress, {
+        const response = await fetch(loginUserFunction, {
             method: 'POST',
-            mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify(user)
         });
 
         const result = await response.json();
-
-        if (result.error) return result;
-
-        result.loggedIn = true;
+        console.debug('# result ==> ', result);
+        if (result && result.error) return { succeeded: false, errors: result };
 
         const { login } = result;
-
         consumer(login);
 
-        return true;
+        return { succeeded: true, data: result };
 
     } catch (ex) {
         throw ex;

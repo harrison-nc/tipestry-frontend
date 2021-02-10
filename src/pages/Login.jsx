@@ -37,7 +37,7 @@ export default function Login({ isModal, onLogin }) {
 
         if (login) setServerError(login.message);
 
-        else if (error instanceof ErrorMessage) setServerError('Unable to login at this moment.');
+        else if (error instanceof Error) setServerError('Unable to login at this moment.');
 
         else if (error instanceof Array) error.forEach(err => showError(err));
 
@@ -56,12 +56,12 @@ export default function Login({ isModal, onLogin }) {
         Inputs.disableAll();
 
         try {
-            const { error } = await onLogin({
+            const result = await onLogin({
                 email: Inputs.email.getValue(),
                 password: Inputs.password.getValue(),
             });
 
-            if (error) handleSubmitFailure(error);
+            if (result && !result.succeeded) handleSubmitFailure(result.errors);
 
         } catch (ex) {
             handleSubmitFailure(ex);

@@ -296,7 +296,7 @@ const getPostHeaders = (user) => {
         'Content-Type': "application/x-www-form-urlencoded"
     };
 
-    if (user) headers['x-auth-token'] = user['access-token'];
+    if (user) headers['x-auth-token'] = user['token'];
 };
 
 const parsePostResponse = async (response) => {

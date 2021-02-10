@@ -4,9 +4,11 @@ import { Header } from '../components/login/Header';
 import { useInputs } from "../components/login/hooks/useInputs";
 import { Control } from "../components/login/Control";
 import { ErrorMessage } from "../components/login/ErrorMessage";
+import { useBackgroundNavigator } from '../hooks/useBackgroundNavigator';
 
 export default function Login({ isModal, onLogin }) {
     const Inputs = useInputs();
+    const navigator = useBackgroundNavigator(isModal);
     const [serverError, setServerError] = useState('');
 
     const showError = (error) => {
@@ -27,6 +29,7 @@ export default function Login({ isModal, onLogin }) {
 
     const handleClose = (e) => {
         handleClear(e);
+        navigator.goBack();
     }
 
     const handleSubmitFailure = (error) => {

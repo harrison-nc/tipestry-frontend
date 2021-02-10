@@ -42,7 +42,7 @@ exports.handler = async (event) => {
     }
 
     try {
-        await new User(user).save();
+        await User.newUser(user);
 
         close();
 

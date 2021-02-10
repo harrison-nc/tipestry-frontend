@@ -9,7 +9,7 @@ if (!secretKey) throw new Error('JWT Key not provided');
 
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const schema = new Schema({
     name: {
         type: String,
         minlength: 4,
@@ -76,19 +76,19 @@ function generateAuthToken() {
     return token;
 }
 
-userSchema.methods.verifyPassword = verifyPassword;
-userSchema.methods.generateAuthToken = generateAuthToken;
+schema.methods.verifyPassword = verifyPassword;
+schema.methods.generateAuthToken = generateAuthToken;
 
-userSchema.statics.login = login;
-userSchema.statics.create = createUser;
-userSchema.statics.findByEmail = findByEmail;
-userSchema.statics.validateModel = (user) => schema.validate(user, { abortEarly: false });
+schema.statics.login = login;
+schema.statics.newUser = createUser;
+schema.statics.findByEmail = findByEmail;
+schema.statics.validateModel = (user) => modelSchema.validate(user, { abortEarly: false });
 
-const schema = Joi.object({
+const modelSchema = Joi.object({
     email: Joi.string().required().email(),
     password: Joi.string().min(5).required(),
     name: Joi.string().min(4).max(15).required(),
 }).label('user').required();
 
-const User = mongoose.model('users', userSchema);
+const User = mongoose.model('users', schema);
 module.exports = User;

@@ -653,3 +653,9 @@ body {
 .is-block {
   display: block;
 }
+
+.not-found {
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - (48px + 16px));
+}

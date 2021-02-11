@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Action from './home/Action';
 import Content from './home/Content';
 import Suggestions from './home/Suggestions';
-import { Hashtags } from './home/Hashtags';
+import { Banner } from './home/Banner';
 import { Search } from './home/Search';
 import { useFilteringAction, useSortingAction } from '../util/post-util';
 
@@ -37,7 +37,7 @@ export default function Home(props) {
                     onChange={handleSortingAndFiltering} />
                 <Content posts={selectedPosts} onCardAction={onCardAction} />
             </section>
-            <Hashtags toptags={toptags} />
+            <Banner toptags={toptags} />
         </div>
     );
 }

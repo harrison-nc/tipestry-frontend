@@ -82,7 +82,11 @@ export default function App() {
                     <Route children={<NotFound />} />
                 </Switch>
                 {background &&
-                    <Modals onLogin={handleLogin} onPost={handlePost} onComment={handleComment} />}
+                    <Modals
+                        toptags={toptags}
+                        onLogin={handleLogin}
+                        onPost={handlePost}
+                        onComment={handleComment} />}
             </main>
         </>
     );

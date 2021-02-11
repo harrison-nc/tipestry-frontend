@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import banner from '../../assets/images/potw-banner.png';
+import { useNavigator } from '../../hooks/useNavigator';
 
-export const Hashtags = (props) => {
+export const Banner = (props) => {
     const { toptags } = props;
 
     return (
@@ -48,3 +49,25 @@ export const FollowLink = ({ children }) => {
 
     return (<p><Link className="link" to="/" onClick={handleClick}>{children}</Link></p>);
 }
+
+export const BannerModal = ({ toptags }) => {
+    const navigator = useNavigator();
+
+    function handleClose(event) {
+        navigator.goBack();
+    }
+
+    return (
+        <div className="home__modal is-flex flex-column has-background-white">
+            <div className="header is-flex px-3">
+                <h1 className="title">Side Bar</h1>
+            </div>
+            <div className="content is-flex flex-column px-2">
+                <Banner isModal={true} toptags={toptags} />
+                <div className="control is-flex">
+                    <button className="btn" onClick={handleClose}>Close</button>
+                </div>
+            </div>
+        </div>
+    );
+};

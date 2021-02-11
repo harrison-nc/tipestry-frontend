@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { NavItem } from "./NavItem";
 
 export const Brand = ({ children }) => {
@@ -13,8 +14,11 @@ export const Brand = ({ children }) => {
 };
 
 const LineMenu = () => {
-    function handleClick(event) {
+    const location = useLocation();
+    const history = useHistory();
 
+    function handleClick(event) {
+        history.push('/banner', { background: location });
     }
 
     return (

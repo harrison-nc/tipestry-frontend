@@ -5,8 +5,9 @@ import Login from '../pages/Login';
 import Post from '../pages/Post';
 import Comment from '../components/Comment';
 import { Switch, Route } from 'react-router-dom';
+import { BannerModal } from '../pages/home/Banner';
 
-export const Modals = ({ onLogin, onPost, onComment }) => {
+export const Modals = ({ onLogin, onPost, onComment, toptags }) => {
     return (
         <Switch>
             <Route path="/register">
@@ -24,6 +25,12 @@ export const Modals = ({ onLogin, onPost, onComment }) => {
             <Route path="/post">
                 <Modal>
                     <Post isModal={true} onPost={onPost} />
+                </Modal>
+            </Route>
+
+            <Route path="/banner">
+                <Modal>
+                    <BannerModal toptags={toptags} />
                 </Modal>
             </Route>
 

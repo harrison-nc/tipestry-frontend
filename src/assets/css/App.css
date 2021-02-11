@@ -695,6 +695,44 @@ body {
     display: none;
   }
 
+  .home__modal {
+    row-gap: var(--size-2);
+  }
+
+  .home__modal .header {
+    align-items: center;
+    border-bottom: 1px solid var(--color-grey-lighter);
+    height: 48px;
+  }
+
+  .home__modal .header .title {
+    font-weight: bold;
+  }
+
+  .home__modal .content {
+    row-gap: var(--size-2);
+  }
+
+  .home__modal .control {
+    align-items: center;
+    justify-content: flex-end;
+    height: 48px;
+  }
+
+  .home__modal .home__right {
+    display: flex;
+  }
+
+  .home__modal .control .btn {
+    background-color: unset;
+    color: var(--color-link);
+    text-transform: uppercase;
+  }
+
+  .home__modal .control .btn:hover {
+    cursor: pointer;
+  }
+
   .nav__items .nav__item:not(.nav__item__keep) {
     display: none;
   }

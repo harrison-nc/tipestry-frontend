@@ -39,4 +39,3 @@ function getSortingOptions() {
     </option>
     );
 }
-

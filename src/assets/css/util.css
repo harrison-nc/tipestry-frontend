@@ -5,14 +5,6 @@
   --gap-large: 0.8em;
   --gap-extra-large: 1em;
 
-  --size-extra-small: 2px;
-  --size-small: 4px;
-  --size-normal: 8px;
-  --size-medium: 16px;
-  --size-large: 24px;
-  --size-larger: 32px;
-  --size-extra-large: 64px;
-
   --gap-1: calc(0.2em + 0);
   --gap-2: calc(var(--gap-1) + 0.2);
   --gap-3: calc(var(--gap-2) + 0.2);
@@ -30,6 +22,14 @@
   --size-6: calc(var(--size-1) * 6);
   --size-7: calc(var(--size-1) * 7);
   --size-8: calc(var(--size-1) * 8);
+
+  --size-extra-small: calc(var(--size-1) / 2);
+  --size-small: calc(var(--size-1) / 4);
+  --size-normal: var(--size-1);
+  --size-medium: var(--size-2);
+  --size-large: var(--size-3);
+  --size-larger: var(--size-4);
+  --size-extra-large: var(--size-8);
 
   --color-link-dark: hsl(217, 71%, 33%);
   --color-link: hsl(217, 71%, 53%);
@@ -78,6 +78,54 @@
 
 .size-ex-large {
   font-size: var(--size-extra-large);
+}
+
+.mr-1 {
+  margin-right: var(--size-extra-large);
+}
+
+.mr-2 {
+  margin-right: var(--size-larger);
+}
+
+.mr-3 {
+  margin-right: var(--size-medium);
+}
+
+.mr-4 {
+  margin-right: var(--size-normal);
+}
+
+.mr-5 {
+  margin-right: var(--size-small);
+}
+
+.mr-6 {
+  margin-right: var(--size-extra-small);
+}
+
+.ml-1 {
+  margin-left: var(--size-extra-large);
+}
+
+.ml-2 {
+  margin-left: var(--size-larger);
+}
+
+.ml-3 {
+  margin-left: var(--size-medium);
+}
+
+.ml-4 {
+  margin-left: var(--size-normal);
+}
+
+.ml-5 {
+  margin-left: var(--size-small);
+}
+
+.ml-6 {
+  margin-left: var(--size-extra-small);
 }
 
 .mb-1 {

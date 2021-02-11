@@ -15,7 +15,7 @@ export const NavItems = ({ user }) => {
                 </>
             }
 
-            <NavItem link={links.post}>Post</NavItem>
+            <NavItem link={links.post} keep={true}>Post</NavItem>
 
             {!user &&
                 <>
@@ -24,8 +24,21 @@ export const NavItems = ({ user }) => {
                 </>
             }
 
-            <button className="nav__btn btn px-5 is-outlined is-white">en</button>
+            <div className="is-flex">
+                <button className="nav__btn btn px-5 is-outlined is-white">en</button>
+                <RoundMenu />
+            </div>
         </nav>
+    );
+};
+
+const RoundMenu = () => {
+    return (
+        <div className="round-menu ml-6">
+            <p className="menu__item"></p>
+            <p className="menu__item"></p>
+            <p className="menu__item"></p>
+        </div>
     );
 };
 

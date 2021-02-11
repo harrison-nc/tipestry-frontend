@@ -659,3 +659,17 @@ body {
   justify-content: center;
   height: calc(100vh - (48px + 16px));
 }
+
+@media screen and (max-width: 900px) {
+  .home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: var(--size-medium);
+  }
+
+  .home__left,
+  .home__right {
+    display: none;
+  }
+}

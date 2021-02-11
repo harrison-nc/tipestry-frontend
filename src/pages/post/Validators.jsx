@@ -1,4 +1,4 @@
-import { createInput, createInputTextArea } from '../Input';
+import { createInput, createInputTextArea } from '../../components/Input';
 
 export const URL = createInput({
     type: 'url',

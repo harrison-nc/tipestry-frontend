@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Action from '../components/home/Action';
-import Content from '../components/home/Content';
-import Suggestions from '../components/home/Suggestions';
-import { Hashtags } from '../components/home/Hashtags';
-import { Search } from '../components/home/Search';
+import Action from './home/Action';
+import Content from './home/Content';
+import Suggestions from './home/Suggestions';
+import { Hashtags } from './home/Hashtags';
+import { Search } from './home/Search';
 import { useFilteringAction, useSortingAction } from '../util/post-util';
 
 export default function Home(props) {

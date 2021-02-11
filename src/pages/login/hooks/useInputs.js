@@ -1,25 +1,21 @@
 import { validateEmail } from '../../../util/validators';
-import { useFormInput } from '../../../hooks/InputHooks';
+import { useFormInput } from '../../../hooks/useFormInput';
 
 export const useInputs = () => {
     const email = useFormInput('', value => {
         const validator = validateEmail;
 
-        if (!value)
-            return 'Please enter an email.';
-        else if (!validator(value))
-            return 'Please enter a valid email.';
+        if (!value) return 'Please enter an email.';
 
-        else
-            return '';
+        else if (!validator(value)) return 'Please enter a valid email.';
+
+        else return '';
     });
 
     const password = useFormInput('', value => {
-        if (!value)
-            return 'Please enter a password.';
+        if (!value) return 'Please enter a password.';
 
-        else
-            return '';
+        else return '';
     });
 
     return Object.freeze({

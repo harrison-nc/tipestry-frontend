@@ -1,4 +1,4 @@
-import { useFormInput } from '../../../hooks/InputHooks';
+import { useFormInput } from '../../../hooks/useFormInput';
 
 export const useInputs = () => {
     const url = useFormInput('', value => {

@@ -1,4 +1,4 @@
-import { useFormInput } from '../../../hooks/InputHooks';
+import { useFormInput } from '../../../hooks/useFormInput';
 import {
     NameValidator,
     EmailValidator,

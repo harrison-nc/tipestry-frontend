@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { updateVotes } from '../App';
+import { updateVotes } from "../util/votes";
 import banner from '../assets/images/potw-banner.png';
 import Cards from '../components/Cards';
 

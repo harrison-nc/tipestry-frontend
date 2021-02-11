@@ -1,5 +1,5 @@
 import React from 'react';
-import Cards from '../Cards';
+import Cards from '../../components/Cards';
 
 export default function Content({ posts, onCardAction }) {
     const className = "home__content is-flex flex-column flex-grow is-content-centered";

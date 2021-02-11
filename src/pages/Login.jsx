@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Email, Password } from '../components/Input';
-import { Header } from '../components/login/Header';
-import { useInputs } from "../components/login/hooks/useInputs";
-import { Control } from "../components/login/Control";
-import { ErrorMessage } from "../components/login/ErrorMessage";
-import { useBackgroundNavigator } from '../hooks/useBackgroundNavigator';
+import { Header } from './login/Header';
+import { useInputs } from "./login/hooks/useInputs";
+import { Control } from "./login/Control";
+import { ErrorMessage } from "./login/ErrorMessage";
+import { useNavigator } from '../hooks/useNavigator';
 
 export default function Login({ isModal, onLogin }) {
     const Inputs = useInputs();
-    const navigator = useBackgroundNavigator(isModal);
+    const navigator = useNavigator(isModal);
     const [serverError, setServerError] = useState('');
 
     const showError = (error) => {

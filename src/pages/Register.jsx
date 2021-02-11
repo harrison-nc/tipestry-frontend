@@ -1,16 +1,16 @@
 import React from 'react';
 import { Email, Password, ConfirmPassword, Name } from '../components/Input';
-import { useBackgroundNavigator } from '../hooks/useBackgroundNavigator';
-import { useInputs } from "../components/register/hooks/useInputs";
-import { Control } from "../components/register/Control";
-import { Header } from "../components/register/Header";
-import { getResponseData } from '../util/response';
+import { useNavigator } from '../hooks/useNavigator';
+import { useInputs } from "./register/hooks/useInputs";
+import { Control } from "./register/Control";
+import { Header } from "./register/Header";
+import { registerUser } from '../util/register';
 
-const registerFunction = process.env.REACT_APP_REGISTER_USER_API;
+export const registerFunction = process.env.REACT_APP_REGISTER_USER_API;
 
 export default function Register({ isModal }) {
     const Inputs = useInputs();
-    const navigator = useBackgroundNavigator(isModal);
+    const navigator = useNavigator(isModal);
 
     const showError = (error) => {
         const { key, value, message } = error;
@@ -63,43 +63,3 @@ export default function Register({ isModal }) {
         </div >
     );
 };
-
-async function registerUser(Inputs, errorHandler) {
-    try {
-        const form = new FormData();
-        form.append('name', Inputs.name.getValue());
-        form.append('email', Inputs.email.getValue());
-        form.append('password', Inputs.password.getValue());
-
-        const encoded = new URLSearchParams(form).toString();
-
-        const response = await fetch(registerFunction, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'application/json',
-            },
-            body: encoded
-        });
-
-        await parseResponse(response, errorHandler);
-    }
-    catch (ex) {
-        console.debug(ex);
-    }
-}
-
-function parseResponse(response, errorHandler) {
-    if (!response.ok) {
-        const data = getResponseData(response)
-        if (data && data.error) {
-            errorHandler(data.error);
-        }
-        else {
-            console.debug('# response\n', response);
-            throw new Error('Invalid server response');
-        }
-    }
-
-    return getResponseData(response);
-}

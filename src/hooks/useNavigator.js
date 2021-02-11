@@ -1,6 +1,6 @@
 import { useHistory, useLocation } from 'react-router-dom';
 
-export const useBackgroundNavigator = (isModal) => {
+export const useNavigator = (isModal) => {
     const history = useHistory();
     const location = useLocation();
     const background = location.state && location.state.background;

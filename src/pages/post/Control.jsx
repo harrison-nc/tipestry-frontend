@@ -1,11 +1,11 @@
 import { createRef, useState } from 'react';
-import FancyButton from '../FancyButton';
-import { useBackgroundNavigator } from '../../hooks/useBackgroundNavigator';
+import { useNavigator } from '../../hooks/useNavigator';
+import FancyButton from '../../components/FancyButton';
 
 export const Control = ({ isModal, onClear, onSubmit }) => {
     const ref = createRef();
     const [isSending, setIsSending] = useState(false);
-    const navigator = useBackgroundNavigator(isModal);
+    const navigator = useNavigator(isModal);
 
     const handleSubmit = async (e) => {
         setIsSending(true);

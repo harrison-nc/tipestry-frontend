@@ -1,7 +1,7 @@
-export default function Suggestions() {
+export default function Suggestions({ className }) {
     return (
-        <div className="home__left">
-            <p className="home__left__content has-background-white pt-4 px-3 box">Suggestions</p>
+        <div className={className}>
+            <p className="content has-background-white pt-4 px-3 box">Suggestions for you</p>
         </div>
     );
 }

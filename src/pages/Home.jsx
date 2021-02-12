@@ -34,7 +34,7 @@ export default function Home(props) {
 
     return (
         <div className="home is-flex">
-            <Suggestions />
+            <Suggestions className="home__left" />
             <section className="home__content is-flex flex-column flex-grow">
                 <Search />
                 <Action

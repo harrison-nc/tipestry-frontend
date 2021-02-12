@@ -165,7 +165,8 @@ body {
   row-gap: var(--size-medium);
 }
 
-.home__left p {
+.home__left .content,
+.filter__container .content {
   min-height: 80px;
 }
 
@@ -249,6 +250,17 @@ body {
 
 .home .filter__container .filter {
   border-radius: 5px 5px 0 0;
+}
+
+.home .filter__container .filter__aside {
+  border-top: 1px;
+  border-top-style: solid;
+  border-top-color: var(--color-grey-lighter);
+  display: none;
+}
+
+.home .filter__container .filter__aside .content {
+  border-radius: 0 0 5px 5px;
 }
 
 .filter {
@@ -870,6 +882,10 @@ body {
   .home__content,
   .detail__content {
     min-width: 700px;
+  }
+
+  .home .filter__container .filter__aside {
+    display: block;
   }
 }
 

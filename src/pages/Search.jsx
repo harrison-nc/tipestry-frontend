@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { updateVotes } from "../util/votes";
-import banner from '../assets/images/potw-banner.png';
 import Cards from '../components/Cards';
+import Banner from '../components/Banner';
 
 const upVoteFunction = `${process.env.REACT_APP_UP_VOTE_API}`;
 const downVoteFunction = `${process.env.REACT_APP_DOWN_VOTE_API}`;
@@ -70,9 +70,7 @@ export default function Search() {
             </div>
 
             <div className="search__right">
-                <div className="search__content is-sticky banner-container">
-                    <img width="100%" alt="Tipestry post of the week event" src={banner} />
-                </div>
+                <Banner className="search__content is-sticky banner__container" />
             </div>
         </div>
     );

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import banner from '../../assets/images/potw-banner.png';
+import Banner from '../../components/Banner';
 import { useNavigator } from '../../hooks/useNavigator';
 
-export const Banner = (props) => {
+export const Sidebar = (props) => {
     const { toptags } = props;
 
     return (
@@ -12,12 +12,11 @@ export const Banner = (props) => {
                 <div className="sidebar is-flex flex-column">
                     <div>
                         <p className="mb-5 title">Top Hashtags</p>
-                        <div className="has-background-white box banner-container is-flex flex-column">
+                        <div className="has-background-white box is-flex flex-column">
                             <p className="py-4 px-3 is-flex flex-wrap">
                                 {toptags.map((tag, id) => <a className="tag" href="/" key={id}>#{tag}</a>)}
                             </p>
-                            <img width="100%" alt="Tipestry post of the week event"
-                                src={banner} />
+                            <Banner className="banner__container" />
                         </div>
                     </div>
 
@@ -63,7 +62,7 @@ export const BannerModal = ({ toptags }) => {
                 <h1 className="title">Side Bar</h1>
             </div>
             <div className="content is-flex flex-column px-2">
-                <Banner isModal={true} toptags={toptags} />
+                <Sidebar isModal={true} toptags={toptags} />
                 <div className="control is-flex">
                     <button className="btn" onClick={handleClose}>Close</button>
                 </div>

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import banner from '../assets/images/potw-banner.png';
 import SocialLinks from '../components/card/SocialLink';
 import Comment from '../components/Comment';
 import { formatDate } from '../util/date-util';
+import Banner from '../components/Banner';
 
 export default function Detail({ posts, onAction, onComment }) {
     const location = useLocation();
@@ -72,6 +72,8 @@ export default function Detail({ posts, onAction, onComment }) {
                             id="comment"
                             onSend={onComment} />
 
+                        <Banner className="detail__banner__container" />
+
                         {currentPost && currentPost.comments &&
                             currentPost.comments.map((comment, i) => (
                                 <div className="comments has-background-white box px-3 py-4">
@@ -90,9 +92,7 @@ export default function Detail({ posts, onAction, onComment }) {
                             ))
                         }
                     </div>
-                    <div className="banner__container">
-                        <img alt="banner" src={banner} />
-                    </div>
+                    <Banner className="banner__container" />
                 </div>
             </div>
         </div>

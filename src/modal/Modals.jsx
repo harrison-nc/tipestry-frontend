@@ -5,7 +5,7 @@ import Login from '../pages/Login';
 import Post from '../pages/Post';
 import Comment from '../components/Comment';
 import { Switch, Route } from 'react-router-dom';
-import { BannerModal } from '../pages/home/Banner';
+import { BannerModal } from '../pages/home/Sidebar';
 
 export const Modals = ({ onLogin, onPost, onComment, toptags }) => {
     return (

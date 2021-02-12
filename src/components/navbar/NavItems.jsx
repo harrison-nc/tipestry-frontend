@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { NavItem } from './NavItem';
 import { User } from './User';
 import { useLinks } from "./hooks/useLinks";
@@ -33,11 +34,35 @@ export const NavItems = ({ user }) => {
 };
 
 const RoundMenu = () => {
+    const links = useLinks();
+    const [style, setStyle] = useState({ display: 'none' });
+    const root = document.querySelector('body');
+
+    const showPopup = (event) => setStyle({ display: 'flex' });
+    const hidePopup = (event) => {
+        root.classList.remove('overflow-hidden');
+        root.removeEventListener('click', hidePopup);
+        setStyle({ display: 'none' });
+    }
+
+    function handleClick(event) {
+        showPopup();
+        root.classList.add('overflow-hidden');
+        root.addEventListener('click', hidePopup, true);
+        showPopup();
+    }
+
     return (
-        <div className="round-menu ml-6">
+        <div className="round-menu ml-6" onClick={handleClick} >
             <p className="menu__item"></p>
             <p className="menu__item"></p>
             <p className="menu__item"></p>
+            <div className="popup-container" style={style}>
+                <div className="popup-menu box has-background-white">
+                    <Link className="popup__item" to={links.login}>Login</Link>
+                    <Link className="popup__item" to={links.register}>Join Us</Link>
+                </div>
+            </div>
         </div>
     );
 };

@@ -770,4 +770,29 @@ body {
     height: calc(var(--size-1) * 0.2);
     width: calc(var(--size-2) * 1.2);
   }
+
+  .popup-container {
+    top: 20px;
+    position: fixed;
+    z-index: 1000;
+  }
+
+  .popup-menu {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0.2rem 0.2rem rgba(0, 0, 0, 0.2);
+  }
+
+  .popup-menu .popup__item {
+    color: var(--color-black);
+    width: calc(var(--size-8) * 1.5);
+    height: var(--size-6);
+    text-decoration: none;
+    text-align: center;
+    line-height: var(--size-6);
+  }
+
+  .popup-menu .popup__item:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
 }

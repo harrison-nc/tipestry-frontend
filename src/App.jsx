@@ -12,8 +12,8 @@ import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
 import Search from './pages/Search';
 import Detail from './pages/Detail';
+import usePosts from './hooks/usePosts.js';
 import { Modals } from './modal/Modals';
-import { usePostData } from './hooks/usePostData.js';
 import { upVoteFunction, downVoteFunction } from './startup/startup';
 import { createPost } from './util/post';
 import { defaultTags } from "./util/tags";
@@ -24,9 +24,8 @@ import { loginUser } from "./util/login";
 export default function App() {
     const location = useLocation();
     const [user, setUser] = useState('');
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = usePosts(this);
     const [toptags] = useState(defaultTags);
-    usePostData(setPosts);
 
     const background = location.state && location.state.background;
 

@@ -654,8 +654,12 @@ body {
   row-gap: var(--size-medium);
 }
 
+.detail .detail__container .tag__container {
+  min-height: 70px;
+  row-gap: var(--size-1);
+}
+
 .detail .detail__container .tags-social-comment .tags {
-  height: 70px;
   column-gap: var(--size-normal);
 }
 

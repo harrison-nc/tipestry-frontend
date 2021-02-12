@@ -52,7 +52,7 @@ export default function Detail({ posts, onAction, onComment }) {
 
                 <div className="detail__container is-flex">
                     <div className="tags-social-comment is-flex flex-column">
-                        <div className="box has-background-white is-flex flex-column px-4 py-4">
+                        <div className="tag__container box has-background-white is-flex flex-column px-4 py-4">
                             <div className="tags is-flex">
                                 {tags && tags.map((tag, key) =>
                                     <span key={key} className="tag has-text-link-dark">

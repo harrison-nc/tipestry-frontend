@@ -1,15 +1,10 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useCommentLink } from '../../hooks/useCommentLink';
 
 export default function SocialLinks(props) {
-    const location = useLocation();
     const { post, onAction, ...rest } = props;
-    const { _id, upVotes, downVotes, comments, shares } = post;
-    const postId = _id;
-
-    const commentLink = {
-        pathname: `/comment/${postId}`,
-        state: { background: location }
-    };
+    const { _id: postId, upVotes, downVotes, comments, shares } = post;
+    const commentLink = useCommentLink(postId);
 
     return (
         <div {...rest} >

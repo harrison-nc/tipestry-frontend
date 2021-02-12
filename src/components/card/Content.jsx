@@ -1,8 +1,8 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigator } from '../../hooks/useNavigator';
 
 export default function Content(props) {
-    const history = useHistory();
+    const navigator = useNavigator();
     const { post } = props;
     const { resourceUrl } = post;
 
@@ -11,7 +11,7 @@ export default function Content(props) {
 
         const { _id: postId, title } = post;
 
-        history.push(`/detail/${postId}/${title}`, { postId });
+        navigator.gotoPostDetail(postId, title);
     }
 
     return (

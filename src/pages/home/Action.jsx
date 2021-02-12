@@ -1,12 +1,16 @@
 import { actions } from '../../util/post-util';
 
-export default function Action({ filter, sort, onChange }) {
+export default function Action({ filter, sort, onChange, onViewChange }) {
     return (
         <div className="filter has-background-white box py-4 px-3">
             <div className="filter__control">
                 <label>View</label>
-                <button className="btn py-5 px-5">List</button>
-                <button className="btn py-5 px-5">Preview</button>
+                <button name="list" className="btn py-5 px-5" onClick={onViewChange}>
+                    List
+                </button>
+                <button name="detail" className="btn py-5 px-5" onClick={onViewChange}>
+                    Detail
+                </button>
             </div>
 
             <div className="filter__control">

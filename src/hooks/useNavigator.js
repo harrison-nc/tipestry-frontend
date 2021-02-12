@@ -16,8 +16,13 @@ export const useNavigator = (isModal) => {
         history.push(path, state);
     };
 
+    const gotoPostDetail = (postId, title) => {
+        history.push(`/detail/${postId}/${title}`, { postId });
+    };
+
     return {
         goBack,
-        navigateTo
+        navigateTo,
+        gotoPostDetail,
     };
 };

@@ -46,7 +46,6 @@ const RoundMenu = () => {
     }
 
     function handleClick(event) {
-        showPopup();
         root.classList.add('overflow-hidden');
         root.addEventListener('click', hidePopup, true);
         showPopup();

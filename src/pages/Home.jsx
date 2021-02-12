@@ -9,6 +9,7 @@ import { useFilteringAction, useSortingAction } from '../util/post-util';
 export default function Home(props) {
     const { posts, toptags, onCardAction } = props;
     const [selectedPosts, setSelectedPosts] = useState(posts);
+    const [listView, setListView] = useState(true);
     const [filter, selectFilter] = useFilteringAction();
     const [sort, selectSort] = useSortingAction();
 
@@ -26,6 +27,11 @@ export default function Home(props) {
         else console.log('invalid action', name, value);
     };
 
+    const handleViewChange = (e) => {
+        if (e.target.name === 'list') setListView(true);
+        else setListView(false);
+    };
+
     return (
         <div className="home is-flex">
             <Suggestions />
@@ -34,8 +40,9 @@ export default function Home(props) {
                 <Action
                     filter={filter && filter.name}
                     sort={sort && sort.name}
+                    onViewChange={handleViewChange}
                     onChange={handleSortingAndFiltering} />
-                <Content posts={selectedPosts} onCardAction={onCardAction} />
+                <Content posts={selectedPosts} onCardAction={onCardAction} listView={listView} />
             </section>
             <Banner toptags={toptags} />
         </div>

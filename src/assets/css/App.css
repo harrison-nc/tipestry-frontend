@@ -682,6 +682,11 @@ body {
   height: calc(100vh - (64px + 16px));
 }
 
+.overflow-hidden {
+  overflow: hidden;
+  padding-right: 16px;
+}
+
 @media screen and (max-width: 900px) {
   .home {
     display: flex;

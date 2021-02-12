@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 export default function Content(props) {
     const history = useHistory();
     const { post } = props;
-    const { resourceUrl, description } = post;
+    const { resourceUrl } = post;
 
     function handleClick(e) {
         if (!post) return;
@@ -19,7 +19,6 @@ export default function Content(props) {
             <img
                 onClick={handleClick} alt="Resource"
                 src={resourceUrl} />
-            <figcaption className="px-5">{description}</figcaption>
         </figure>
     );
 };

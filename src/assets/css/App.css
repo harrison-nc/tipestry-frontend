@@ -717,6 +717,25 @@ body {
   max-height: calc(var(--size-8) * 1.15);
 }
 
+.detail__container .comments {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--size-1);
+}
+
+.detail__container .comments .action {
+  align-items: center;
+  column-gap: var(--size-1);
+  display: flex;
+  justify-content: flex-start;
+}
+
+.detail__container .comments .links {
+  display: flex;
+  column-gap: var(--size-1);
+  flex-grow: 1;
+}
+
 @media screen and (max-width: 900px) {
   .home {
     display: flex;

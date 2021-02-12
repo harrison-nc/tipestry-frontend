@@ -71,6 +71,24 @@ export default function Detail({ posts, onAction, onComment }) {
                             className="comment box is-flex flex-column has-background-white py-3 px-2"
                             id="comment"
                             onSend={onComment} />
+
+                        {currentPost && currentPost.comments &&
+                            currentPost.comments.map((comment, i) => (
+                                <div className="comments has-background-white box px-3 py-4">
+                                    <p className="user has-text-link">@{comment.user.name}</p>
+                                    <p className="comment-text">{comment.text}</p>
+                                    <p className="action">
+                                        <p className="links">
+                                            <a href="/">like</a>
+                                            <a href="/">dislike</a>
+                                        </p>
+                                        <p className="date-created has-text-grey">
+                                            {formatDate(comment.createdAt)}
+                                        </p>
+                                    </p>
+                                </div>
+                            ))
+                        }
                     </div>
                     <div className="banner__container">
                         <img alt="banner" src={banner} />

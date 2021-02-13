@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useNavigator } from '../hooks/useNavigator';
 
 const Comment = (props) => {
-    const location = useLocation();
-    const history = useHistory();
+    const navigator = useNavigator();
     const { postId } = useParams();
     const [value, setValue] = useState('');
-
     const { id, isModal, onSend, ...passThrough } = props;
-    const background = location.state && location.state.background;
 
     function handleCancel(e) {
         setValue('');
-        if (isModal && background) history.replace(background.pathname, location.state);
-        // else history.goBack();
+        navigator.goBack();
     }
 
     async function handleSend(e) {

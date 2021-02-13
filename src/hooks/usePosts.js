@@ -8,13 +8,14 @@ export default function usePosts(owner) {
         async function fetchPostData() {
             try {
                 const response = await fetch(getPostFunction);
-                let posts = await response.json();
+                let result = await response.json();
 
-                if (response.ok) setPosts(posts);
-                else console.debug('Failed to get posts');
+                if (response.ok) setPosts(result.data);
+
+                else console.debug('Failed to get posts', result, response);
 
             } catch (ex) {
-                console.error(ex.message, ex);
+                console.debug(ex.message, ex);
             }
         }
 

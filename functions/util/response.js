@@ -47,17 +47,13 @@ const createError = (message) => {
 const getResponse = (data) => {
     let response;
 
-    if (typeof data === 'string') {
-
-        response = createResponse(data);
-
-    } else if (data instanceof Error) {
+    if (data instanceof Error) {
 
         response = createError(data);
 
     } else {
 
-        response = data;
+        response = createResponse(data);
 
     }
 

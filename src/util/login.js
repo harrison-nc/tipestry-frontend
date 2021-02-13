@@ -1,6 +1,6 @@
 import { loginUserFunction } from '../startup/startup';
 
-export const loginUser = async (user, consumer) => {
+export const loginUser = async (user) => {
     try {
         const response = await fetch(loginUserFunction, {
             method: 'POST',
@@ -13,13 +13,12 @@ export const loginUser = async (user, consumer) => {
 
         const result = await response.json();
 
-        if (result && result.error)
-            return { succeeded: false, errors: result };
+        if (result.errors || result.errorMessage)
+            return result;
 
-        const { login } = result;
-        consumer(login);
+        const { data } = result;
 
-        return { succeeded: true, data: result };
+        return data;
 
     } catch (ex) {
         throw ex;

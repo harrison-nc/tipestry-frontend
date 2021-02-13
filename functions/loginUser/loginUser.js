@@ -41,7 +41,7 @@ exports.handler = async (event) => {
         const { name } = user;
         const login = { name, email, token };
 
-        return Response.of({ login }, { headers: { 'x-auth-token': token } });
+        return Response.of(login, { headers: { 'x-auth-token': token } });
     }
     catch (ex) {
         close();

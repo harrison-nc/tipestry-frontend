@@ -30,7 +30,13 @@ export default function App() {
     const background = location.state && location.state.background;
 
     const handleLogin = async (user) => {
-        await loginUser(user, setUser);
+        const result = await loginUser(user);
+
+        if (result && (result.errors || result.errorMessage)) {
+            return result;
+        }
+
+        setUser(result);
     };
 
     const handlePost = async (e,) => {

@@ -6,7 +6,7 @@ const of = (data, options = _options) => {
     const { status, headers } = options;
 
     return {
-        statusCode: status,
+        statusCode: status || _options.status,
         headers: {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type,Accept",

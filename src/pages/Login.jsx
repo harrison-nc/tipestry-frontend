@@ -19,7 +19,7 @@ export default function Login({ isModal, onLogin }) {
 
         else console.error(`Server Error: ${message}`);
 
-        console.log(`Error: '${key}' - '${value}`);
+        console.debug(`Error: '${key}' - '${value}`);
     };
 
     const handleClear = (e) => {
@@ -32,18 +32,16 @@ export default function Login({ isModal, onLogin }) {
         navigator.goBack();
     }
 
-    const handleSubmitFailure = (error) => {
-        const { login } = error;
+    const handleResponse = (response) => {
+        if (response.errorMessage) setServerError(response.errorMessage);
 
-        if (login) setServerError(login.message);
+        else if (response.errors instanceof Array) response.errors.forEach(err => showError(err));
 
-        else if (error instanceof Error) setServerError('Unable to login at this moment.');
+        else if (response instanceof Error) setServerError('Unable to login at this moment.');
 
-        else if (error instanceof Array) error.forEach(err => showError(err));
+        else if (response instanceof Object) showError(response);
 
-        else if (error instanceof Object) showError(error);
-
-        console.error(error);
+        console.debug(response);
     };
 
     const handleSubmit = async (e) => {
@@ -61,10 +59,10 @@ export default function Login({ isModal, onLogin }) {
                 password: Inputs.password.getValue(),
             });
 
-            if (result && !result.succeeded) handleSubmitFailure(result.errors);
+            if (result) handleResponse(result.errors);
 
         } catch (ex) {
-            handleSubmitFailure(ex);
+            handleResponse(ex);
         }
 
         Inputs.enableAll();

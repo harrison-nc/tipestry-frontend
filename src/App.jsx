@@ -33,12 +33,18 @@ export default function App() {
         await loginUser(user, setUser);
     };
 
-    const handlePost = async (e, upload = false) => {
+    const handlePost = async (e,) => {
         const { data } = e.target;
 
         if (!data) throw new Error('Invalid post form data');
 
-        return createPost(user, posts, data, setPosts, upload);
+        const result = await createPost(user, posts, data);
+
+        if (result.errors || result.errorMessage) {
+            return result;
+        }
+
+        setPosts(result);
     };
 
     const handleComment = async (e) => {

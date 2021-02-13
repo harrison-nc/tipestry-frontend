@@ -57,12 +57,12 @@ export default function Post({ id, isModal, onPost }) {
         navigator.goBack();
     }
 
-    const handleSubmitFailure = (error) => {
-        if (!error) return console.error('An error occured while creating post:', error);
-        else if (error instanceof Error) console.error(error);
-        else if (error.auth) setServerError(error.auth.message);
-        else if (error instanceof Array) error.forEach(showError);
-        else showError(error);
+    const handleResponse = (event, response) => {
+        if (response instanceof Error) console.debug(response);
+        else if (response.errorMessage) setServerError(response.errorMessage);
+        else if (response.errors instanceof Array) response.errors.forEach(showError);
+        else showError(response);
+        handleClose(event);
     };
 
     const sendFormDate = async (e) => {
@@ -75,10 +75,8 @@ export default function Post({ id, isModal, onPost }) {
         formData.append('tags', tagItems.getValue());
 
         e.target.data = formData;
-
         const response = await onPost(e);
-
-        responseHandler(e, response);
+        handleResponse(e, response);
     };
 
     const sendUpload = async (e) => {
@@ -86,7 +84,7 @@ export default function Post({ id, isModal, onPost }) {
 
         const file = upload.getValue();
         const result = await uploadImage(file);
-        const { url } = result.file;
+        const { url } = result.data.file;
 
         const formData = new FormData();
         formData.append('resourceUrl', url);
@@ -96,14 +94,7 @@ export default function Post({ id, isModal, onPost }) {
 
         e.target.data = formData;
         const response = await onPost(e);
-        responseHandler(e, response);
-    };
-
-    const responseHandler = (e, response) => {
-        if (!response) return showError(new Error('Invalid response:', response));
-        else if (response.succeeded === false) return handleSubmitFailure(response.error);
-
-        handleClose(e);
+        handleResponse(e, response);
     };
 
     const handleSubmit = async (e) => {
@@ -122,7 +113,7 @@ export default function Post({ id, isModal, onPost }) {
             else await sendFormDate(e);
 
         } catch (ex) {
-            handleSubmitFailure(ex);
+            handleResponse(e, ex);
         }
 
         Inputs.enableAll();

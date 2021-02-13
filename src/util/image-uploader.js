@@ -29,8 +29,7 @@ const getImageData = (file) => {
 };
 
 const parseResponse = (response) => {
-    if (!response.ok)
-        throw new Error('File upload failed');
+    if (!response.ok) throw new Error('File upload failed');
 
     return response.json();
 };

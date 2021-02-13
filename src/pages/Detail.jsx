@@ -22,7 +22,7 @@ export default function Detail({ posts, onAction, onComment }) {
     }, [location.state, postId, posts]);
 
     if (!currentPost) return (
-        <div className="detail">
+        <div className="detail detail__empty is-flex">
             <div className="detail__content">
                 <span>No was post selected</span>
             </div>

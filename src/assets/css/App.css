@@ -756,6 +756,10 @@ body {
   flex-grow: 1;
 }
 
+.detail__empty {
+  justify-content: center;
+}
+
 @media screen and (max-width: 900px) {
   .home {
     display: flex;

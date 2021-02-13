@@ -23,7 +23,5 @@ export const getResponseData = async (response) => {
         }
     }
 
-    console.debug('# response data\n', data);
-
     return data;
 };

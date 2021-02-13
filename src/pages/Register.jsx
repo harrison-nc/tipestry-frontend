@@ -29,11 +29,10 @@ export default function Register({ isModal }) {
         navigator.goBack();
     };
 
-    const handleSubmitFailure = (error) => {
-        if (error instanceof Array) error.forEach(err => showError(err));
-        else if (error instanceof Object) showError(error);
-
-        console.error(error);
+    const handleResponse = (response) => {
+        if (response.errors instanceof Array) response.forEach(err => showError(err));
+        else if (response instanceof Object) showError(response);
+        else console.debug(response);
     };
 
     const handleSubmit = async (e) => {
@@ -45,7 +44,11 @@ export default function Register({ isModal }) {
 
         Inputs.disableAll();
 
-        await registerUser(Inputs, handleSubmitFailure);
+        const result = await registerUser(Inputs);
+
+        if (result && (result.errors || result.errorMessage)) {
+            handleResponse(result);
+        }
 
         Inputs.enableAll();
     };

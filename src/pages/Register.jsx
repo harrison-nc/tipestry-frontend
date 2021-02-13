@@ -55,14 +55,14 @@ export default function Register({ isModal }) {
 
     return (
         <div className="register is-flex">
-            <div className="is-flex flex-column register__content has-background-white box py-4 px-3" >
+            <form className="is-flex flex-column register__content has-background-white box py-4 px-3" >
                 <Header onClose={handleClose} />
                 <Name {...Inputs.name.props} />
                 <Email {...Inputs.email.props} />
                 <Password {...Inputs.password.props} />
                 <ConfirmPassword {...Inputs.cpassword.props} />
                 <Control isModal={isModal} onClear={handleClear} onSubmit={handleSubmit} />
-            </div>
+            </form>
         </div >
     );
 };

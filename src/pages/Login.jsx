@@ -70,13 +70,14 @@ export default function Login({ isModal, onLogin }) {
 
     return (
         <div className="login is-flex">
-            <div className="login__content is-flex flex-column has-background-white box py-4 px-3" >
+            <form
+                className="login__content is-flex flex-column has-background-white box py-4 px-3" >
                 <Header onClose={handleClose} />
                 <Email {...Inputs.email.props} />
                 <Password {...Inputs.password.props} />
                 {serverError && <ErrorMessage value={serverError} />}
                 <Control isModal={isModal} onClear={handleClear} onSubmit={handleSubmit} />
-            </div >
+            </form>
         </div>
     );
 }

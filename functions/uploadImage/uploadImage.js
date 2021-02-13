@@ -35,7 +35,6 @@ exports.handler = async (event) => {
         return Response.of({ file: urls });
     }
     catch (ex) {
-        console.error(ex);
-        return Response.ofInternalError({ errorMessage: "Failed to upload file" })
+        return Response.ofError({ errorMessage: "Failed to upload file" }, { status: 500 });
     }
 };

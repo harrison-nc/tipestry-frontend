@@ -7,11 +7,11 @@ const upVote = async (postId, voteCount) => {
 
 exports.handler = async function (event) {
     if (event.httpMethod !== 'POST') {
-        return Response.of(new Error(`Request method ${event.httpMethod} not supported!`));
+        return Response.ofError(`Request method ${event.httpMethod} not supported!`);
     }
 
     const body = JSON.parse(event.body);
     const { postId, count } = body;
     const result = upVote(postId, count);
-    return Response.of(result);
+    return Response.ofAny(result);
 }

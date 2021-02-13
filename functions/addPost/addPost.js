@@ -10,8 +10,8 @@ const addPost = async (post) => {
 
     try {
         await connect();
-    } catch (ex) {
-        console.debug(ex);
+    }
+    catch (ex) {
         return new Error('Unable to connect to database');
     }
 
@@ -20,7 +20,7 @@ const addPost = async (post) => {
 
 exports.handler = async function (event) {
     if (event.httpMethod !== 'POST') {
-        return Response.of(new Error(`Request method ${event.httpMethod} not supported`));
+        return Response.ofError(`Request method ${event.httpMethod} not supported`);
     }
 
     const bodyURLParams = new URLSearchParams(event.body);
@@ -33,5 +33,5 @@ exports.handler = async function (event) {
 
     close();
 
-    return Response.of(result);
+    return Response.ofAny(result);
 }

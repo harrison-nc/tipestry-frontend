@@ -12,5 +12,5 @@ exports.parseJoiError = (error) => {
         }
     });
 
-    return JSON.stringify({ error: errors });
+    return JSON.stringify({ errors });
 };

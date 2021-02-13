@@ -5,7 +5,7 @@ const { connect, close } = require('../util/database');
 
 exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
-        return Response.of(new Error(`Request method ${event.httpMethod} not supported`));
+        return Response.ofError(new Error(`Request method ${event.httpMethod} not supported`));
     }
 
     const bodyParams = new URLSearchParams(event.body);
@@ -13,7 +13,8 @@ exports.handler = async (event) => {
 
     try {
         connect();
-    } catch (ex) {
+    }
+    catch (ex) {
         throw ex;
     }
 
@@ -22,8 +23,7 @@ exports.handler = async (event) => {
     }
     catch (ex) {
         close();
-        console.debug(ex);
-        return Response.of(ex);
+        return Response.ofError(ex);
     }
 
     const { name, email, password } = body;
@@ -33,12 +33,11 @@ exports.handler = async (event) => {
         const { validationError } = await User.validateModel(user);
 
         if (validationError) {
-            return Response.of(new Error(parseJoiError(validationError)));
+            return Response.ofError(parseJoiError(validationError));
         }
     }
     catch (ex) {
-        console.debug(ex);
-        return Response.of(new Error({ errorMessage: 'User validation failed' }));
+        return Response.ofError({ errorMessage: 'User validation failed' });
     }
 
     try {
@@ -50,8 +49,7 @@ exports.handler = async (event) => {
     }
     catch (ex) {
         close();
-        console.debug(ex);
-        return Response.of(new Error({ errorMessage: "Failed to create user account." }));
+        return Response.ofError({ errorMessage: "Failed to create user account." });
     }
 };
 

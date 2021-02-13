@@ -9,7 +9,6 @@ const addComment = async (postId, comment) => {
         await connect();
     }
     catch (ex) {
-        console.debug(ex);
         return new Error('Unable to connect to database');
     }
 
@@ -28,7 +27,7 @@ const addComment = async (postId, comment) => {
 
 exports.handler = async function (event) {
     if (event.httpMethod !== 'POST') {
-        return Response.of(new Error(`Request method ${event.httpMethod} not supported`));
+        return Response.ofError(`Request method ${event.httpMethod} not supported`);
     }
 
     const body = JSON.parse(event.body);
@@ -44,5 +43,5 @@ exports.handler = async function (event) {
 
     close();
 
-    return Response.of(result);
+    return Response.ofAny(result);
 }

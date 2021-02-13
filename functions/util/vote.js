@@ -4,9 +4,9 @@ const { connect, close } = require('../util/database');
 module.exports = async (postId, voteType, voteCount) => {
     try {
         await connect();
-    } catch (ex) {
+    }
+    catch (ex) {
         close();
-        console.error(ex);
         return new Error("Unable connect to database");
     }
 
@@ -14,7 +14,6 @@ module.exports = async (postId, voteType, voteCount) => {
 
     if (!type || !(type === 'upvotes' || type === 'downvotes')) {
         close();
-        console.debug('vote type is invalid =>', voteType);
         return new Error("Invalid vote type: " + voteType);
     }
 
@@ -28,11 +27,11 @@ module.exports = async (postId, voteType, voteCount) => {
         await post.save();
 
         close();
+
         return post;
     }
     catch (ex) {
         close();
-        console.error(ex);
         return new Error("Unable to fetch data from database");
     }
 };

@@ -1,38 +1,67 @@
-const of = (data, headers = {}) => {
-    if (data instanceof Error) {
-        console.debug(data);
+const _options = { status: 200, headers: {} };
+const _errorOptions = { status: 400 };
 
-        return {
-            statusCode: 400,
-            body: JSON.stringify({ error: data.message })
-        }
-    }
+const of = (data, options = _options) => {
+    const response = getResponse(data);
+    const { status, headers } = options;
 
     return {
-        statusCode: 200,
+        statusCode: status,
         headers: {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type,Accept",
             "Content-Type": "application/json",
             ...headers
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(response)
     }
 
 };
 
-const ofError = error => {
+const ofError = (error, options = _errorOptions) => {
+    console.debug(error);
+
+    const { status } = options;
+    let response = getResponse(error);
+
     return {
-        statusCode: 400,
-        body: JSON.stringify(error)
+        statusCode: status,
+        body: JSON.stringify(response)
     }
 };
 
-const ofInternalError = error => {
-    return {
-        statusCode: 500,
-        body: JSON.stringify(error)
-    }
+const ofAny = (data, options = _options) => {
+    if (data instanceof Error) return ofError(data);
+
+    return of(data, options);
 };
 
-module.exports = { of, ofError, ofInternalError };
+const createResponse = (data) => {
+    return { data };
+};
+
+const createError = (message) => {
+    return { errorMessage: message };
+}
+
+const getResponse = (data) => {
+    let response;
+
+    if (typeof data === 'string') {
+
+        response = createResponse(data);
+
+    } else if (data instanceof Error) {
+
+        response = createError(data);
+
+    } else {
+
+        response = data;
+
+    }
+
+    return response;
+};
+
+module.exports = { of, ofAny, ofError };

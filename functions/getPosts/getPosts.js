@@ -13,8 +13,8 @@ const findPosts = async (query) => {
 
     try {
         await connect();
-    } catch (ex) {
-        console.debug(ex);
+    }
+    catch (ex) {
         return new Error('Unable to connect to database');
     }
 
@@ -32,7 +32,6 @@ const findPosts = async (query) => {
         return limit10;
     }
     catch (ex) {
-        console.error(ex);
         return new Error("Unable to retrieve data from database");
     }
 };
@@ -42,7 +41,6 @@ const getPost = async () => {
         await connect();
     }
     catch (ex) {
-        console.error(ex);
         return new Error("Unable connect to database");
     }
 
@@ -51,14 +49,13 @@ const getPost = async () => {
         return data;
     }
     catch (ex) {
-        console.error(ex);
         return new Error("Unable to fetch data from database");
     }
 };
 
 exports.handler = async function (event) {
     if (event.httpMethod !== 'GET') {
-        return Response.of(new Error(`Request method ${event.httpMethod} not supported!`));
+        return Response.ofError(`Request method ${event.httpMethod} not supported!`);
     }
 
     const queryParams = event.queryStringParameters;
@@ -70,13 +67,13 @@ exports.handler = async function (event) {
 
         close();
 
-        return Response.of(result);
+        return Response.ofAny(result);
     }
     else {
         const result = await getPost();
 
         close();
 
-        return Response.of(result);
+        return Response.ofAny(result);
     }
 }

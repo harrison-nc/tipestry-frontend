@@ -52,20 +52,26 @@ export default function App() {
         setPosts(result);
     };
 
-    const handleUpVotes = async (postId, votes, headers) => {
+    const handleUpVotes = async (postId, votes) => {
         const name = 'upVotes';
         const endPoint = upVoteFunction;
-        await updateVotes(posts, postId, name, votes, headers, endPoint, setPosts);
+        return updateVotes(user, posts, postId, name, votes, endPoint);
     };
 
-    const handleDownVotes = async (postId, votes, headers) => {
+    const handleDownVotes = async (postId, votes) => {
         const name = 'downVotes'
         const endPoint = downVoteFunction;
-        await updateVotes(posts, postId, name, votes, headers, endPoint, setPosts);
+        return updateVotes(user, posts, postId, name, votes, endPoint);
     };
 
     const handlePostVotes = async (e) => {
-        await postVotes(e, user, handleUpVotes, handleDownVotes);
+        const result = await postVotes(e, user, handleUpVotes, handleDownVotes);
+
+        if (result.errors || result.errorMessage) {
+            return result;
+        }
+
+        setPosts(result);
     };
 
     return (

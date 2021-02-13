@@ -1,37 +1,33 @@
 export const postVotes = async (event, user, upCallback, downCallback) => {
-    const headers = { 'Content-Type': 'application/json' };
-
-    if (user) headers['x-auth-token'] = user['token'];
-
     const { name, value, postId } = event.target;
 
     switch (name.toLowerCase()) {
         case 'like':
-            await upCallback(postId, value, headers);
-            break;
+            return upCallback(postId, value);
 
         case 'dislike':
-            await downCallback(postId, value, headers);
-            break;
+            return downCallback(postId, value);
 
         default:
-            console.error('invalid action', name, value);
-            break;
+            throw new Error(`invalid action: ${name}, ${value}`);
     }
 };
 
-export const updateVotes = async (posts, postId, name, votes, headers, endPoint, consumer) => {
+export const updateVotes = async (user, posts, postId, name, votes, endPoint) => {
     const selectedPost = posts.filter(p => p._id === postId);
 
     if (!selectedPost || selectedPost.length === 0) {
-        console.log('error post not found');
-        return false;
+        throw new Error('selected post not found')
     }
 
     const post = selectedPost[0];
     const index = posts.indexOf(post);
 
     try {
+        const headers = { 'Content-Type': 'application/json' };
+
+        if (user) headers['x-auth-token'] = user['token'];
+
         const response = await fetch(endPoint, {
             method: 'POST',
             mode: 'cors',
@@ -39,16 +35,16 @@ export const updateVotes = async (posts, postId, name, votes, headers, endPoint,
             body: JSON.stringify({ count: votes, postId }),
         });
 
-        if (Number(response.status) !== 200) {
-            console.error(await response.text(), response);
-            return false;
+        if (!response.ok) {
+            const result = await response.json();
+            return result;
         }
 
         post[name] = votes;
-        posts[index] = post;
+        const update = [...posts];
+        update[index] = post;
 
-        consumer([...posts]);
-        return votes;
+        return update;
     }
     catch (ex) {
         throw ex;

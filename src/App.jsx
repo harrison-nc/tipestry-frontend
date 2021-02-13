@@ -39,7 +39,7 @@ export default function App() {
         setUser(result);
     };
 
-    const handlePost = async (e,) => {
+    const handlePost = async (e) => {
         const { data } = e.target;
 
         if (!data) throw new Error('Invalid post form data');

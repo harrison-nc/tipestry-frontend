@@ -62,7 +62,6 @@ export default function Post({ id, isModal, onPost }) {
         else if (response.errorMessage) setServerError(response.errorMessage);
         else if (response.errors instanceof Array) response.errors.forEach(showError);
         else showError(response);
-        handleClose(event);
     };
 
     const sendFormDate = async (e) => {
@@ -76,7 +75,12 @@ export default function Post({ id, isModal, onPost }) {
 
         e.target.data = formData;
         const response = await onPost(e);
-        handleResponse(e, response);
+
+        if (response) {
+            handleResponse(e, response);
+        } else {
+            navigator.goBack();
+        }
     };
 
     const sendUpload = async (e) => {
@@ -94,7 +98,12 @@ export default function Post({ id, isModal, onPost }) {
 
         e.target.data = formData;
         const response = await onPost(e);
-        handleResponse(e, response);
+
+        if (response) {
+            handleResponse(e, response);
+        } else {
+            navigator.goBack();
+        }
     };
 
     const handleSubmit = async (e) => {

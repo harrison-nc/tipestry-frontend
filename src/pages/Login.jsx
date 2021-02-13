@@ -59,7 +59,9 @@ export default function Login({ isModal, onLogin }) {
                 password: Inputs.password.getValue(),
             });
 
-            if (result) handleResponse(result.errors);
+            if (result) handleResponse(result);
+
+            else navigator.goBack();
 
         } catch (ex) {
             handleResponse(ex);

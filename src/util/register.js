@@ -1,7 +1,6 @@
-import { getResponseData } from './response';
-import { registerFunction } from '../pages/Register';
+const registerFunction = process.env.REACT_APP_REGISTER_USER_API;
 
-export async function registerUser(Inputs, errorHandler) {
+export async function registerUser(Inputs) {
     try {
         const form = new FormData();
         form.append('name', Inputs.name.getValue());
@@ -19,23 +18,13 @@ export async function registerUser(Inputs, errorHandler) {
             body: encoded
         });
 
-        await parseResponse(response, errorHandler);
+        const result = await response.json();
+
+        if (result.errors || result.errorMessage) {
+            return result;
+        }
     }
     catch (ex) {
         console.debug(ex);
     }
-}
-function parseResponse(response, errorHandler) {
-    if (!response.ok) {
-        const data = getResponseData(response);
-        if (data && data.error) {
-            errorHandler(data.error);
-        }
-        else {
-            console.debug('# response\n', response);
-            throw new Error('Invalid server response');
-        }
-    }
-
-    return getResponseData(response);
 }

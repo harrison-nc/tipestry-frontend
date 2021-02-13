@@ -22,10 +22,11 @@ const ofError = (error, options = _errorOptions) => {
     console.debug(error);
 
     const { status } = options;
+
     let response = getResponse(error);
 
     return {
-        statusCode: status,
+        statusCode: status || _errorOptions.status,
         body: JSON.stringify(response)
     }
 };
@@ -49,7 +50,7 @@ const getResponse = (data) => {
 
     if (data instanceof Error) {
 
-        response = createError(data);
+        response = createError(data.message);
 
     } else {
 

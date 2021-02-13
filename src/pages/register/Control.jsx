@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import FancyButton from '../../components/FancyButton';
-import { useNavigator } from '../../hooks/useNavigator';
 
 export const Control = (props) => {
-    const { isModal, onClear, onSubmit } = props;
+    const { onClear, onSubmit } = props;
     const [isSending, setIsSending] = useState(false);
-    const navigator = useNavigator(isModal);
 
     const ref = React.createRef();
 
@@ -13,7 +11,6 @@ export const Control = (props) => {
         setIsSending(true);
         await onSubmit(e);
         setIsSending(false);
-        navigator.goBack();
     };
 
     return (

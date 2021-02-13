@@ -57,7 +57,7 @@ async function verifyEmail(email) {
     const exists = await User.findByEmail(email);
 
     if (exists) {
-        throw new Error({ key: 'email', email, message: 'Email already exist.' });
+        throw new Error('Email already exist.');
     }
 
     return true;

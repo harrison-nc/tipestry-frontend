@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Email, Password, ConfirmPassword, Name } from '../components/Input';
 import { useNavigator } from '../hooks/useNavigator';
 import { useInputs } from "./register/hooks/useInputs";
@@ -6,18 +6,17 @@ import { Control } from "./register/Control";
 import { Header } from "./register/Header";
 import { registerUser } from '../util/register';
 
-export const registerFunction = process.env.REACT_APP_REGISTER_USER_API;
-
 export default function Register({ isModal }) {
     const Inputs = useInputs();
     const navigator = useNavigator(isModal);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const showError = (error) => {
         const { key, value, message } = error;
         const input = Inputs[key];
         if (input) input.setError(message);
         else console.error(`Server Error: ${message}`);
-        console.log(`Error: '${key}' - '${value}`);
+        console.debug(`Error: '${key}' - '${value}`);
     };
 
     const handleClear = (e) => {
@@ -30,9 +29,9 @@ export default function Register({ isModal }) {
     };
 
     const handleResponse = (response) => {
-        if (response.errors instanceof Array) response.forEach(err => showError(err));
-        else if (response instanceof Object) showError(response);
-        else console.debug(response);
+        if (response.errors instanceof Array) response.errors.forEach(err => showError(err));
+        else if (response.errorMessage) setErrorMessage(response.errorMessage);
+        else showError(response);
     };
 
     const handleSubmit = async (e) => {
@@ -46,8 +45,10 @@ export default function Register({ isModal }) {
 
         const result = await registerUser(Inputs);
 
-        if (result && (result.errors || result.errorMessage)) {
+        if (result) {
             handleResponse(result);
+        } else {
+            navigator.goBack();
         }
 
         Inputs.enableAll();
@@ -61,6 +62,7 @@ export default function Register({ isModal }) {
                 <Email {...Inputs.email.props} />
                 <Password {...Inputs.password.props} />
                 <ConfirmPassword {...Inputs.cpassword.props} />
+                {errorMessage && <span className="error">{errorMessage}</span>}
                 <Control isModal={isModal} onClear={handleClear} onSubmit={handleSubmit} />
             </form>
         </div >

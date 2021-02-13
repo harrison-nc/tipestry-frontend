@@ -1,6 +1,6 @@
 import { addCommentFunction } from '../startup/startup';
 
-const addComment = (posts, postId, comment, consumer) => {
+const addComment = (posts, postId, comment) => {
     const postArray = [...posts];
     const selectedPostArray = postArray.filter(p => p._id === postId);
 
@@ -15,10 +15,10 @@ const addComment = (posts, postId, comment, consumer) => {
     const index = postArray.indexOf(selectedPost);
     postArray[index] = selectedPost;
 
-    consumer(postArray);
+    return postArray;
 };
 
-export const updateComment = async (user, posts, postId, comment, consumer) => {
+export const updateComment = async (user, posts, postId, comment) => {
     try {
         const headers = { 'Content-Type': 'application/json' };
 
@@ -32,15 +32,12 @@ export const updateComment = async (user, posts, postId, comment, consumer) => {
         });
 
         const result = await response.json();
-        const status = Number(response.status);
 
-        if (status === 200)
-            addComment(posts, postId, result, consumer);
+        if (Number(response.status) === 200) {
+            return addComment(posts, postId, result.data);
+        }
 
-        else
-            console.log('response', response);
-
-        return status;
+        return result;
     }
     catch (ex) {
         throw ex;

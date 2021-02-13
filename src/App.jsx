@@ -43,7 +43,13 @@ export default function App() {
 
     const handleComment = async (e) => {
         const { postId, value } = e.target;
-        await updateComment(user, posts, postId, value, setPosts);
+        const result = await updateComment(user, posts, postId, value);
+
+        if (result.errors || result.errorMessage) {
+            return result;
+        }
+
+        setPosts(result);
     };
 
     const handleUpVotes = async (postId, votes, headers) => {

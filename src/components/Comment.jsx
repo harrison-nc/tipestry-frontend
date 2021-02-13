@@ -16,7 +16,13 @@ const Comment = (props) => {
     async function handleSend(e) {
         e.target.value = value;
         e.target.postId = postId;
-        onSend(e);
+
+        const result = await onSend(e);
+
+        if (result) {
+            console.debug(result);
+        }
+
         handleCancel(e);
     }
 

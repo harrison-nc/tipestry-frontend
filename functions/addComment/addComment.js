@@ -3,6 +3,7 @@ const { validator: validate } = require('../util/model/comment');
 const { connect, close } = require('../util/database');
 const { parseJoiError } = require('../util/error');
 const Response = require('../util/response');
+const verifyToken = require('../util/verifyToken');
 
 const addComment = async (postId, comment) => {
     try {
@@ -30,13 +31,23 @@ exports.handler = async function (event) {
         return Response.ofError(`Request method ${event.httpMethod} not supported`);
     }
 
+    let user;
+
+    try {
+        user = verifyToken(event.headers['x-auth-token']);
+    }
+    catch (ex) {
+        return Response.ofError(ex);
+    }
+
     const body = JSON.parse(event.body);
     const { postId, text } = body;
+    const { name, email } = user;
 
     const comment = {
         postId,
         text,
-        // todo: add valid user
+        user: { name, email }
     };
 
     const result = await addComment(postId, comment);

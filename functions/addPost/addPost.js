@@ -2,8 +2,9 @@ const { Post, validate } = require('../util/model/post');
 const { connect, close } = require('../util/database');
 const Response = require('../util/response');
 const { parseJoiError } = require('../util/error');
+const verifyToken = require('../util/verifyToken');
 
-const addPost = async (post) => {
+const addPost = async (post, user) => {
     const { error } = validate(post);
 
     if (error) return new Error(parseJoiError(error));
@@ -15,7 +16,7 @@ const addPost = async (post) => {
         return new Error('Unable to connect to database');
     }
 
-    return Post.newPost(post);
+    return Post.newPost(post, user);
 };
 
 exports.handler = async function (event) {
@@ -29,7 +30,17 @@ exports.handler = async function (event) {
     if (body.tags) body.tags = body.tags.split(',');
     else body.tags = []
 
-    const result = await addPost(body);
+
+    let user;
+
+    try {
+        user = verifyToken(event.headers['x-auth-token']);
+    }
+    catch (ex) {
+        return Response.ofError(ex);
+    }
+
+    const result = await addPost(body, user);
 
     close();
 

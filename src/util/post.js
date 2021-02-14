@@ -1,6 +1,6 @@
 import { addPostFunction } from '../startup/startup';
 
-export const createPost = async (user, posts, data) => {
+export const createPost = async (user, data) => {
     try {
         const encodedString = new URLSearchParams(data).toString();
 
@@ -11,17 +11,11 @@ export const createPost = async (user, posts, data) => {
             body: encodedString,
         });
 
-        const result = await response.json();
-
-        if (!response.ok) return result;
-
-        const update = [...posts];
-        update.push(result.data);
-        return update;
+        return response.json();
 
     } catch (ex) {
         console.error(ex);
-        throw ex;
+        return ex;
     }
 };
 

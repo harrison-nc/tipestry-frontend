@@ -44,13 +44,13 @@ export default function App() {
 
         if (!data) throw new Error('Invalid post form data');
 
-        const result = await createPost(user, posts, data);
+        const result = await createPost(user, data);
 
         if (result.errors || result.errorMessage) {
             return result;
         }
 
-        dispatch({ type: "ADD_POST", state: result });
+        dispatch({ type: "ADD_POST", post: result.data });
     };
 
     const handleComment = async (e) => {

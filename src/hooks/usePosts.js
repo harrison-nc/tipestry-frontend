@@ -36,7 +36,10 @@ const postReducer = (state, action) => {
         case 'INIT': {
             return [...action.posts];
         }
+        case 'ADD_POST': {
+            return [...state, action.post];
+        }
         case "INIT_FAILURE": throw new Error('Failed to get posts from the server');
-        default: throw new Error('Invalid action on post');
+        default: throw new Error('Invalid action on post:', action.type);
     }
 };

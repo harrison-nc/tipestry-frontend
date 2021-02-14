@@ -44,7 +44,7 @@ const Likes = ({ post, onAction }) => {
         <div className="likes is-flex flex-column">
             <a href="/" name="like" onClick={handleClick}>Like</a>
             <span>
-                {Math.abs(Number(downVotes) - Number(upVotes))}
+                {Math.abs((Number(downVotes) || 0) - (Number(upVotes) || 0))}
             </span>
             <a href="/" name="dislike" onClick={handleClick}>dislike</a>
         </div>

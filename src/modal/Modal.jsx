@@ -4,12 +4,12 @@ import { createPortal } from 'react-dom';
 export default function Modal(props) {
     const { id, children, className } = props;
     const addClassName = className ? className : '';
-    const root = document.querySelector('body');
 
     useEffect(() => {
+        const root = document.querySelector('body');
         root.classList.add('overflow-hidden');
         return () => root.classList.remove('overflow-hidden');
-    });
+    }, []);
 
     return createPortal(
         <div id={id} className={"modal " + addClassName}>

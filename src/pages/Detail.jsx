@@ -83,6 +83,13 @@ export default function Detail({ posts, onAction, onComment }) {
                                     <div className="action">
                                         <p className="links">
                                             <a href="/">like</a>
+                                            <span>
+                                                {Math.abs(
+                                                    (Number(comment.upVotes) || 0)
+                                                    -
+                                                    (Number(comment.downVotes) || 0)
+                                                )}
+                                            </span>
                                             <a href="/">dislike</a>
                                         </p>
                                         <p className="date-created has-text-grey">

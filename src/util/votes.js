@@ -1,4 +1,4 @@
-export const postVotes = async (event, user, upCallback, downCallback) => {
+export const postVotes = async (event, upCallback, downCallback) => {
     const { name, value, postId } = event.target;
 
     switch (name.toLowerCase()) {
@@ -13,15 +13,12 @@ export const postVotes = async (event, user, upCallback, downCallback) => {
     }
 };
 
-export const updateVotes = async (user, posts, postId, name, votes, endPoint) => {
+export const updateVotes = async (user, posts, postId, votes, endPoint) => {
     const selectedPost = posts.filter(p => p._id === postId);
 
     if (!selectedPost || selectedPost.length === 0) {
         throw new Error('selected post not found')
     }
-
-    const post = selectedPost[0];
-    const index = posts.indexOf(post);
 
     try {
         const headers = { 'Content-Type': 'application/json' };
@@ -35,16 +32,7 @@ export const updateVotes = async (user, posts, postId, name, votes, endPoint) =>
             body: JSON.stringify({ count: votes, postId }),
         });
 
-        if (!response.ok) {
-            const result = await response.json();
-            return result;
-        }
-
-        post[name] = votes;
-        const update = [...posts];
-        update[index] = post;
-
-        return update;
+        return response.json();
     }
     catch (ex) {
         throw ex;

@@ -12,6 +12,6 @@ exports.handler = async function (event) {
 
     const body = JSON.parse(event.body);
     const { postId, count } = body;
-    const result = upVote(postId, count);
+    const result = await upVote(postId, count);
     return Response.ofAny(result);
 }

@@ -65,25 +65,23 @@ export default function App() {
     };
 
     const handleUpVotes = async (postId, votes) => {
-        const name = 'upVotes';
         const endPoint = upVoteFunction;
-        return updateVotes(user, posts, postId, name, votes, endPoint);
+        return updateVotes(user, posts, postId, votes, endPoint);
     };
 
     const handleDownVotes = async (postId, votes) => {
-        const name = 'downVotes'
         const endPoint = downVoteFunction;
-        return updateVotes(user, posts, postId, name, votes, endPoint);
+        return updateVotes(user, posts, postId, votes, endPoint);
     };
 
-    const handlePostVotes = async (e) => {
-        const result = await postVotes(e, user, handleUpVotes, handleDownVotes);
+    const handlePostVotes = async (event) => {
+        const result = await postVotes(event, handleUpVotes, handleDownVotes);
 
         if (result.errors || result.errorMessage) {
             return result;
         }
 
-        dispatch({ type: "UPDATE_VOTE", state: result });
+        dispatch({ type: "UPDATE_POST", post: result.data });
     };
 
     return (

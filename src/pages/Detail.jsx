@@ -76,10 +76,11 @@ export default function Detail({ posts, onAction, onComment }) {
 
                         {currentPost && currentPost.comments &&
                             currentPost.comments.map((comment, i) => (
-                                <div className="comments has-background-white box px-3 py-4">
+                                <div key={i}
+                                    className="comments has-background-white box px-3 py-4">
                                     <p className="user has-text-link">@{comment.user.name}</p>
                                     <p className="comment-text">{comment.text}</p>
-                                    <p className="action">
+                                    <div className="action">
                                         <p className="links">
                                             <a href="/">like</a>
                                             <a href="/">dislike</a>
@@ -87,7 +88,7 @@ export default function Detail({ posts, onAction, onComment }) {
                                         <p className="date-created has-text-grey">
                                             {formatDate(comment.createdAt)}
                                         </p>
-                                    </p>
+                                    </div>
                                 </div>
                             ))
                         }

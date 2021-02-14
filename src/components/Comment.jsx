@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigator } from '../hooks/useNavigator';
 
-const Comment = (props) => {
+export default function Comment(props) {
+    const ref = useRef();
     const navigator = useNavigator();
     const { postId } = useParams();
     const [value, setValue] = useState('');
     const { id, isModal, onSend, ...passThrough } = props;
+
+    useEffect(() => {
+        const { current } = ref;
+        if (current) {
+            current.focus();
+        }
+    });
 
     function handleCancel(e) {
         setValue('');
@@ -39,7 +47,7 @@ const Comment = (props) => {
         <div id={id} {...passThrough}>
             <h1>Comment</h1>
 
-            <textarea className="size-medium px-5 py-5"
+            <textarea ref={ref} className="size-medium px-5 py-5"
                 placeholder="Enter comment"
                 name="comment"
                 cols='30'
@@ -60,6 +68,3 @@ const Comment = (props) => {
         </div>
     );
 }
-
-
-export default Comment;

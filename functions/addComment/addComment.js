@@ -21,9 +21,7 @@ const addComment = async (postId, comment) => {
 
     if (!post) return new Error('Post not found');
 
-    await post.addComment(comment);
-
-    return post;
+    return post.addComment(comment);
 };
 
 exports.handler = async function (event) {

@@ -39,7 +39,21 @@ const postReducer = (state, action) => {
         case 'ADD_POST': {
             return [...state, action.post];
         }
+        case 'UPDATE_POST': {
+            const { post } = action;
+
+            if (!post || !post._id) {
+                console.debug('new post is invalid', post);
+                return state;
+            }
+
+            const remaining = state.filter(p => p._id !== post._id);
+
+            return [...remaining, post];
+        }
+
         case "INIT_FAILURE": throw new Error('Failed to get posts from the server');
-        default: throw new Error('Invalid action on post:', action.type);
+
+        default: throw new Error(`Invalid action on post: ${action.type}`);
     }
 };

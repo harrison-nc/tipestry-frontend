@@ -94,9 +94,7 @@ schema.methods.addComment = async function (comment) {
 
     this.comments.push(newComment);
 
-    await this.save();
-
-    return newComment;
+    return this.save();
 }
 
 const Post = mongoose.model('posts', schema);

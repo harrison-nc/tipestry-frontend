@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import FancyButton from '../../components/FancyButton';
 
-export const Control = ({ isModal, onClear, onSubmit }) => {
+export const Control = ({ onClear, onSubmit }) => {
     const ref = React.createRef();
     const [isSending, setIsSending] = useState(false);
 

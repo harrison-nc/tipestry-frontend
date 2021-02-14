@@ -18,7 +18,7 @@ export default function Comment(props) {
 
     function handleCancel(e) {
         setValue('');
-        navigator.goBack();
+        if (isModal) navigator.goBack();
     }
 
     async function handleSend(e) {

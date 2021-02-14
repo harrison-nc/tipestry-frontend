@@ -10,7 +10,7 @@ const addComment = async (postId, comment) => {
         await connect();
     }
     catch (ex) {
-        return new Error('Unable to connect to database');
+        throw new Error('Unable to connect to database');
     }
 
     const { error } = validate(comment);

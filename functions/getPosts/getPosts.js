@@ -9,13 +9,13 @@ const findPostMatchingQuery = async (query) => {
 }
 
 const findPosts = async (query) => {
-    if (!query && query.trim() === '') return [];
+    if (!query || query.trim() === '') return [];
 
     try {
         await connect();
     }
     catch (ex) {
-        return new Error('Unable to connect to database');
+        throw new Error('Unable to connect to database');
     }
 
     try {
@@ -32,7 +32,7 @@ const findPosts = async (query) => {
         return limit10;
     }
     catch (ex) {
-        return new Error("Unable to retrieve data from database");
+        throw new Error("Unable to retrieve data from database");
     }
 };
 
@@ -41,7 +41,7 @@ const getPost = async () => {
         await connect();
     }
     catch (ex) {
-        return new Error("Unable connect to database");
+        throw new Error("Unable connect to database");
     }
 
     try {
@@ -49,7 +49,7 @@ const getPost = async () => {
         return data;
     }
     catch (ex) {
-        return new Error("Unable to fetch data from database");
+        throw new Error("Unable to fetch data from database");
     }
 };
 
@@ -60,20 +60,20 @@ exports.handler = async function (event) {
 
     const queryParams = event.queryStringParameters;
 
-    if (Object.values(queryParams).length !== 0 && queryParams.q) {
+    if (Object.values(queryParams).length > 0 && queryParams.q) {
         const query = queryParams.q;
 
         const result = await findPosts(query);
 
         close();
 
-        return Response.ofAny(result);
+        return Response.of(result);
     }
     else {
         const result = await getPost();
 
         close();
 
-        return Response.ofAny(result);
+        return Response.of(result);
     }
 }

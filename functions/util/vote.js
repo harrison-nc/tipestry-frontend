@@ -7,7 +7,7 @@ module.exports = async (postId, voteType, voteCount) => {
     }
     catch (ex) {
         close();
-        return new Error("Unable connect to database");
+        throw new Error("Unable connect to database");
     }
 
     const type = voteType && voteType.toLowerCase();
@@ -32,6 +32,6 @@ module.exports = async (postId, voteType, voteCount) => {
     }
     catch (ex) {
         close();
-        return new Error("Unable to fetch data from database");
+        throw new Error("Unable to fetch data from database");
     }
 };

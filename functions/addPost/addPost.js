@@ -13,7 +13,7 @@ const addPost = async (post, user) => {
         await connect();
     }
     catch (ex) {
-        return new Error('Unable to connect to database');
+        throw new Error('Unable to connect to database');
     }
 
     return Post.newPost(post, user);

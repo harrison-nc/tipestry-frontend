@@ -4,7 +4,9 @@ const Response = require('../util/response');
 
 const findPostMatchingQuery = async (query) => {
     const regex = new RegExp(query, 'i');
-    const post = await Post.find({ title: { $regex: regex } });
+    const post = await Post
+        .find({ title: { $regex: regex } })
+        .limit(10);
     return post;
 }
 

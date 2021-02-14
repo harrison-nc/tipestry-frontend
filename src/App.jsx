@@ -24,7 +24,7 @@ import { loginUser } from "./util/login";
 export default function App() {
     const location = useLocation();
     const [user, setUser] = useState('');
-    const [posts, setPosts] = usePosts(this);
+    const [posts, dispatch] = usePosts();
     const [toptags] = useState(defaultTags);
 
     const background = location.state && location.state.background;
@@ -50,7 +50,7 @@ export default function App() {
             return result;
         }
 
-        setPosts(result);
+        dispatch({ type: "ADD_POST", state: result });
     };
 
     const handleComment = async (e) => {
@@ -61,7 +61,7 @@ export default function App() {
             return result;
         }
 
-        setPosts(result);
+        dispatch({ type: "ADD_COMMENT", state: result });
     };
 
     const handleUpVotes = async (postId, votes) => {
@@ -83,7 +83,7 @@ export default function App() {
             return result;
         }
 
-        setPosts(result);
+        dispatch({ type: "UPDATE_VOTE", state: result });
     };
 
     return (

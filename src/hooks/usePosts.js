@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
-import { getPostFunction } from "../startup/startup";
+import { useEffect, useReducer } from 'react';
 
-export default function usePosts(owner) {
-    const [posts, setPosts] = useState([]);
+const getPostFunction = `${process.env.REACT_APP_POST_API}`;
+
+export default function Post() {
+    const [state, dispatch] = useReducer(postReducer, []);
 
     useEffect(() => {
         async function fetchPostData() {
@@ -10,9 +11,13 @@ export default function usePosts(owner) {
                 const response = await fetch(getPostFunction);
                 let result = await response.json();
 
-                if (response.ok) setPosts(result.data);
-
-                else console.debug('Failed to get posts', result, response);
+                if (response.ok) {
+                    dispatch({ type: "INIT", posts: result.data });
+                }
+                else {
+                    dispatch({ type: "INIT_FAILURE" });
+                    console.debug('Failed to get posts', result, response);
+                }
 
             } catch (ex) {
                 console.debug(ex.message, ex);
@@ -21,7 +26,17 @@ export default function usePosts(owner) {
 
         fetchPostData();
 
-    }, [owner]);
+    }, []);
 
-    return [posts, setPosts];
+    return [state, dispatch];
+};
+
+const postReducer = (state, action) => {
+    switch (action.type) {
+        case 'INIT': {
+            return [...action.posts];
+        }
+        case "INIT_FAILURE": throw new Error('Failed to get posts from the server');
+        default: throw new Error('Invalid action on post');
+    }
 };

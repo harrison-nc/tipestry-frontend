@@ -1,13 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigator } from '../hooks/useNavigator';
+import { usePost } from '../hooks/usePosts';
+import { UserData } from '../hooks/useUser';
 
 export default function Comment(props) {
-    const ref = useRef();
-    const navigator = useNavigator();
+    const { isModal, ...rest } = props;
     const { postId } = useParams();
     const [value, setValue] = useState('');
-    const { id, isModal, onSend, ...passThrough } = props;
+    const navigator = useNavigator();
+    const dispatch = usePost(postId)[1];
+    const user = useContext(UserData);
+    const ref = useRef();
 
     useEffect(() => {
         const { current } = ref;
@@ -22,15 +26,7 @@ export default function Comment(props) {
     }
 
     async function handleSend(e) {
-        e.target.value = value;
-        e.target.postId = postId;
-
-        const result = await onSend(e);
-
-        if (result) {
-            console.debug(result);
-        }
-
+        dispatch({ type: "ADD_COMMENT", comment: value, user })
         handleCancel(e);
     }
 
@@ -44,7 +40,7 @@ export default function Comment(props) {
     }
 
     return (
-        <div id={id} {...passThrough}>
+        <div {...rest}>
             <h1>Comment</h1>
 
             <textarea ref={ref} className="size-medium px-5 py-5"

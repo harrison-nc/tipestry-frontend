@@ -7,12 +7,13 @@ export const useUser = () => {
     return useReducer(userReducer, {});
 };
 
-const userReducer = (state, action) => {
+const userReducer = async (state, action) => {
     switch (action.type) {
         case "LOGIN": {
-            const [name, email, token] = action;
+            const { user } = action;
+            const { name, email, token } = user;
 
-            if (!name || !email || !token) {
+            if (!user || !name || !email || !token) {
                 console.debug('Invalid user', action);
                 return state;
             }

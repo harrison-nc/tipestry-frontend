@@ -40,14 +40,7 @@ export const loginUser = async (user) => {
             body: JSON.stringify(user)
         });
 
-        const result = await response.json();
-
-        if (result.errors || result.errorMessage)
-            return result;
-
-        const { data } = result;
-
-        return data;
+        return response.json();
 
     } catch (ex) {
         throw ex;

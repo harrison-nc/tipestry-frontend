@@ -1,22 +1,34 @@
 import { Link } from 'react-router-dom';
-import { useCommentLink } from '../../hooks/useCommentLink';
+import { useCommentLink } from '../../hooks/useCommentLink.js';
+import { usePost } from '../../hooks/usePosts';
+import { useUser } from '../../hooks/useUser.js';
 
-export default function SocialLinks(props) {
-    const { post, onAction, ...rest } = props;
-    const { _id: postId, upVotes, downVotes, comments, shares } = post;
+export default function SocialLinks({ post, className }) {
+    const { upVotes, downVotes, comments, shares, _id: postId } = post;
     const commentLink = useCommentLink(postId);
+    const dispatch = usePost(postId)[1];
+    const [user] = useUser();
+    const inc = (value) => Number(value) + 1;
 
     return (
-        <div {...rest} >
-            <Button postId={postId}
+        <div className={className} >
+            <Button
                 name="Like"
                 value={upVotes}
-                onClick={onAction} />
+                onClick={(e) => dispatch({
+                    user: user,
+                    type: "UP_VOTE",
+                    votes: inc(upVotes)
+                })} />
 
-            <Button postId={postId}
+            <Button
                 name="Dislike"
                 value={downVotes}
-                onClick={onAction} />
+                onClick={e => dispatch({
+                    user: user,
+                    type: "DOWN_VOTE",
+                    votes: inc(downVotes)
+                })} />
 
             <div>
                 <Link className="btn comment py-5 px-5" to={commentLink}>
@@ -27,34 +39,15 @@ export default function SocialLinks(props) {
 
             <Button postId={postId}
                 name="Share"
-                value={shares && shares.length}
-                onClick={onAction} />
+                value={shares && shares.length} />
         </div>
     );
 }
 
-export const Button = (props) => {
-    const { postId, name, value, onClick } = props;
-
-    function handleClick(e) {
-        e.preventDefault();
-
-        try {
-            let newValue = Number(value);
-            newValue++;
-            e.target.name = name;
-            e.target.value = newValue;
-            e.target.postId = postId;
-            onClick(e)
-        }
-        catch (ex) {
-            console.error(ex);
-        }
-    }
-
+export const Button = ({ onClick, name, value }) => {
     return (
         <div>
-            <Link to="/" className="btn action py-5 px-5" onClick={handleClick}>
+            <Link to="/" className="btn action py-5 px-5" onClick={onClick}>
                 {name}
             </Link>
             <span>{value}</span>

@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useState } from "react";
 
 const FancyButton = forwardRef((props, ref) => {
-    const { isSending, onClick, text, ...rest } = props;
+    const { isSending, text, ...rest } = props;
     const [value, setValue] = useState(text);
 
     useEffect(() => {
@@ -28,7 +28,7 @@ const FancyButton = forwardRef((props, ref) => {
     }, [isSending, ref, text]);
 
     return (
-        <button ref={ref} {...rest} onClick={onClick}>
+        <button ref={ref} {...rest}>
             {value}
         </button>
     );

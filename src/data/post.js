@@ -57,11 +57,10 @@ export const postVotes = async (event, upCallback, downCallback) => {
     }
 };
 
-export const addVotes = async (user, posts, postId, votes, endPoint) => {
-    const selectedPost = posts.filter(p => p._id === postId);
-
-    if (!selectedPost || selectedPost.length === 0) {
-        throw new Error('selected post not found')
+export const addVotes = async (user, post, votes, endPoint) => {
+    if (!post || !post._id) {
+        console.debug('# post', post);
+        throw new Error('Invalid post');
     }
 
     try {
@@ -69,7 +68,7 @@ export const addVotes = async (user, posts, postId, votes, endPoint) => {
             method: 'POST',
             mode: 'cors',
             headers: getRequestHeaders(user),
-            body: JSON.stringify({ count: votes, postId }),
+            body: JSON.stringify({ count: votes, postId: post._id }),
         });
 
         return response.json();
@@ -79,7 +78,7 @@ export const addVotes = async (user, posts, postId, votes, endPoint) => {
     }
 };
 
-export default async function uploadImage(file) {
+export async function uploadImage(file) {
     const data = await getImageData(file);
     const form = new FormData();
     form.append('image', data);
@@ -112,7 +111,7 @@ const getRequestHeaders = (user) => {
         'Content-Type': "application/x-www-form-urlencoded"
     };
 
-    if (user) headers['x-auth-token'] = user['token'];
+    if (user && user.token) headers['x-auth-token'] = user['token'];
 
     return headers;
 };

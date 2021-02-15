@@ -1,8 +1,12 @@
-import { useEffect, useReducer } from 'react';
-import { getPostFunction } from '../startup/startup';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
+import { addComment, addVotes } from '../data/post';
+import { downVoteFunction, getPostFunction, upVoteFunction } from '../startup/startup';
 
-export default function Post() {
-    const [state, dispatch] = useReducer(postReducer, []);
+export const PostData = React.createContext([]);
+export const PostDispatch = React.createContext(null);
+
+export const usePosts = () => {
+    const [state, dispatch] = useReducer(postsReducer, []);
 
     useEffect(() => {
         async function fetchPostData() {
@@ -30,7 +34,20 @@ export default function Post() {
     return [state, dispatch];
 };
 
-const postReducer = (state, action) => {
+export const usePost = (postId) => {
+    const posts = useContext(PostData);
+    const dispatch = useContext(PostDispatch);
+    const [post, setPost] = useState({});
+
+    useEffect(() => {
+        const post = posts.find(p => p._id === postId);
+        setPost(post);
+    }, [posts, postId]);
+
+    return [post, (action) => postReducer(post, action, postId, dispatch)];
+};
+
+const postsReducer = (state, action) => {
     switch (action.type) {
         case 'INIT': {
             return [...action.posts];
@@ -46,9 +63,18 @@ const postReducer = (state, action) => {
                 return state;
             }
 
-            const remaining = state.filter(p => p._id !== post._id);
+            const selectedPost = state.find(p => p._id === post._id)
 
-            return [...remaining, post];
+            if (!selectedPost) {
+                console.debug('post not found', post, selectedPost);
+                return state;
+            }
+
+            const index = state.indexOf(selectedPost);
+            const updated = [...state];
+            updated[index] = post;
+
+            return updated;
         }
 
         case "INIT_FAILURE": throw new Error('Failed to get posts from the server');
@@ -56,3 +82,79 @@ const postReducer = (state, action) => {
         default: throw new Error(`Invalid action on post: ${action.type}`);
     }
 };
+
+const postReducer = async (state, action, postId, dispatch) => {
+    switch (action.type) {
+        case "INIT": {
+            return action.post;
+        }
+        case "ADD_COMMENT": {
+            return handleComment(state, action, postId, dispatch);
+        }
+        case "UP_VOTE": {
+            return handleVote(state, action, upVoteFunction, dispatch);
+        }
+        case "DOWN_VOTE": {
+            return handleVote(state, action, downVoteFunction, dispatch);
+        }
+        default: {
+            console.debug(`Invalid post command: ${action}`);
+            return state;
+        }
+    }
+};
+
+const handleComment = async (state, action, postId, dispatch) => {
+    const { comment, user } = action;
+
+    if (!comment) {
+        console.debug('comment is required:', action);
+        return state;
+    }
+
+    const result = await addComment(user, postId, comment);
+
+    try {
+        verify(result);
+    } catch (ex) {
+        console.error(ex);
+        return state;
+    }
+    const post = result.data;
+
+    dispatch({ type: "UPDATE_POST", post });
+
+    return post;
+};
+
+const handleVote = async (state, action, url, dispatch) => {
+    const { votes, user } = action;
+
+    if (!votes) {
+        console.debug('vote is required', action);
+        return state;
+    }
+
+    const result = await addVotes(user, state, votes, url);
+
+    try {
+        verify(result);
+    } catch (ex) {
+        console.error(ex);
+        return state;
+    }
+
+    const post = result.data;
+
+    dispatch({ type: "UPDATE_POST", post });
+
+    return upVoteFunction;
+}
+
+
+const verify = (result) => {
+    if (result.errors || result.errorMessage) {
+        console.debug('Failed to add post:', result);
+        throw new Error();
+    }
+}

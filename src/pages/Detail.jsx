@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import SocialLinks from '../components/card/SocialLink';
 import Comment from '../components/Comment';
 import { formatDate } from '../util/date-util';
 import Banner from '../components/Banner';
+import { PostData } from '../App';
 
-export default function Detail({ posts, onAction, onComment }) {
+export default function Detail({ onAction }) {
+    const posts = useContext(PostData);
     const location = useLocation();
     const [currentPost, setCurrentPost] = useState([]);
 
@@ -68,9 +70,7 @@ export default function Detail({ posts, onAction, onComment }) {
                             onAction={onAction} />
 
                         <Comment
-                            className="comment box is-flex flex-column has-background-white py-3 px-2"
-                            id="comment"
-                            onSend={onComment} />
+                            className="comment box is-flex flex-column has-background-white py-3 px-2" />
 
                         <Banner className="detail__banner__container" />
 

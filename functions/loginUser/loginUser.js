@@ -18,14 +18,14 @@ exports.handler = async (event) => {
         if (error) return Response.ofError(parseJoiError(error));
 
     } catch (ex) {
-        return Response.ofError({ errorMessage: 'login validation failed' });
+        return Response.ofError('login validation failed');
     }
 
     try {
         connect();
     }
     catch (ex) {
-        return Response.ofError({ errorMessage: "Internal server error" });
+        return Response.ofError("Internal server error");
     }
 
     try {
@@ -34,7 +34,7 @@ exports.handler = async (event) => {
         close();
 
         if (!result.succeeded) {
-            return Response.ofError({ errorMessage: "Invalid username or password" });
+            return Response.ofError("Invalid username or password");
         }
 
         const { token, user } = result;
@@ -45,6 +45,6 @@ exports.handler = async (event) => {
     }
     catch (ex) {
         close();
-        return Response.ofError({ errorMessage: "Failed to login user account." });
+        return Response.ofError("Failed to login user account.");
     }
 };

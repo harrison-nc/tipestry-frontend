@@ -23,7 +23,7 @@ const ofError = (error, options = _errorOptions) => {
 
     const { status } = options;
 
-    let response = getResponse(error);
+    let response = getResponse(error, true);
 
     return {
         statusCode: status || _errorOptions.status,
@@ -45,12 +45,16 @@ const createError = (message) => {
     return { errorMessage: message };
 }
 
-const getResponse = (data) => {
+const getResponse = (data, error = false) => {
     let response;
 
     if (data instanceof Error) {
 
         response = createError(data.message);
+
+    } else if (error) {
+
+        response = createError(data);
 
     } else {
 

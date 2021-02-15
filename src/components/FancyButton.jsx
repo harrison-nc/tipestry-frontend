@@ -1,14 +1,12 @@
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { forwardRef, useEffect } from "react";
 
 const FancyButton = forwardRef((props, ref) => {
     const { isSending, text, ...rest } = props;
-    const [value, setValue] = useState(text);
 
     useEffect(() => {
         if (isSending && ref.current) {
             const node = ref.current;
             let newText = text;
-            setValue('');
 
             const id = setInterval(() => {
                 if (newText === text) newText = '.';
@@ -21,7 +19,7 @@ const FancyButton = forwardRef((props, ref) => {
 
             return () => {
                 clearInterval(id);
-                setValue(text);
+                node.innerHTML = text;
             };
         }
 
@@ -29,7 +27,7 @@ const FancyButton = forwardRef((props, ref) => {
 
     return (
         <button ref={ref} {...rest}>
-            {value}
+            {text}
         </button>
     );
 });

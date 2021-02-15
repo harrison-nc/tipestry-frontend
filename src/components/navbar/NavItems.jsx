@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { NavItem } from './NavItem';
 import { User } from './User';
 import { useLinks } from "./hooks/useLinks";
+import { UserData } from '../../hooks/useUser';
 
-export const NavItems = ({ user }) => {
+export const NavItems = () => {
     const links = useLinks();
+    const user = useContext(UserData);
 
     return (
         <nav className="nav__items is-flex">
-            {user &&
+            {user && user.loggedIn &&
                 <>
                     <User user={user} />
                     <Line />
@@ -18,7 +20,7 @@ export const NavItems = ({ user }) => {
 
             <NavItem link={links.post} keep={true}>Post</NavItem>
 
-            {!user &&
+            {(!user || !user.loggedIn) &&
                 <>
                     <NavItem link={links.login}>Login</NavItem>
                     <NavItem link={links.register} rounded={true}>Join Us</NavItem>

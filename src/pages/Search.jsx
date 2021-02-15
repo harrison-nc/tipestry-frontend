@@ -2,8 +2,7 @@ import Cards from '../components/Cards';
 import Banner from '../components/Banner';
 import { useSearchData } from '../hooks/useSearchData';
 
-export default function Search(props) {
-    const { posts, onVote } = props;
+export default function Search({ posts }) {
     const [match] = useSearchData(posts);
 
     return (
@@ -17,7 +16,7 @@ export default function Search(props) {
                     <h1 className="title is-bold">({match ? match.length : 0}) Search Results</h1>
                     <p>Top posts that matches your search</p>
                 </header>
-                <Cards posts={match} onAction={onVote} />
+                <Cards posts={match} />
             </div>
 
             <div className="search__right">

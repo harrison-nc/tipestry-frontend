@@ -9,9 +9,9 @@ export default function Card(props) {
     return (
         <div className="card has-background-white box pb-3">
             <div className="card__content pt-3">
-                <Header  {...props} />
-                <Content {...props} />
-                <Footer  {...props} />
+                <Header post={post} />
+                <Content post={post} />
+                <Footer post={post} />
             </div>
             {post && post.views && <Views value={post.views} />}
         </div>

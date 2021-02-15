@@ -5,10 +5,9 @@ import Suggestions from './home/Suggestions';
 import { Sidebar } from './home/Sidebar';
 import { Search } from './home/Search';
 import { useFilteringAction, useSortingAction } from '../util/post-util';
-import { PostData } from '../App';
+import { PostData } from '../hooks/usePosts';
 
-export default function Home(props) {
-    const { toptags, onCardAction } = props;
+export default function Home({ toptags }) {
     const posts = useContext(PostData);
     const [filteredPosts, setFilterPosts] = useState(posts);
     const [listView, setListView] = useState(true);
@@ -44,7 +43,7 @@ export default function Home(props) {
                     sort={sort && sort.name}
                     onViewChange={handleViewChange}
                     onChange={handleSortingAndFiltering} />
-                <Content posts={filteredPosts} onCardAction={onCardAction} listView={listView} />
+                <Content posts={filteredPosts} listView={listView} />
             </section>
             <Sidebar toptags={toptags} />
         </div>

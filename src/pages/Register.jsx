@@ -4,7 +4,7 @@ import { useNavigator } from '../hooks/useNavigator';
 import { useInputs } from "./register/hooks/useInputs";
 import { Control } from "./register/Control";
 import { Header } from "./register/Header";
-import { registerUser } from '../data/register';
+import { registerUser } from '../data/user';
 
 export default function Register({ isModal }) {
     const Inputs = useInputs();

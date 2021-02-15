@@ -7,7 +7,7 @@ import { Tags, TagInput } from "./post/Tags";
 import { Control } from "./post/Control";
 import { Upload } from "./post/Upload";
 import { Header } from "./post/Header";
-import uploadImage from '../util/image-uploader.js';
+import { uploadImage } from '../data/post';
 
 export default function Post({ id, isModal, onPost }) {
     const Inputs = useInputs();

@@ -4,9 +4,9 @@ import SocialLinks from '../components/card/SocialLink';
 import Comment from '../components/Comment';
 import { formatDate } from '../util/date-util';
 import Banner from '../components/Banner';
-import { PostData } from '../App';
+import { PostData } from '../hooks/usePosts';
 
-export default function Detail({ onAction }) {
+export default function Detail() {
     const posts = useContext(PostData);
     const location = useLocation();
     const [currentPost, setCurrentPost] = useState([]);
@@ -66,8 +66,7 @@ export default function Detail({ onAction }) {
 
                         <SocialLinks
                             className="social box is-flex has-background-white px-4"
-                            post={currentPost}
-                            onAction={onAction} />
+                            post={currentPost} />
 
                         <Comment
                             className="comment box is-flex flex-column has-background-white py-3 px-2" />

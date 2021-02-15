@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { getPostFunction } from '../startup/startup';
 import { useQuery } from './useQuery';
-
-const getPostFunction = `${process.env.REACT_APP_POST_API}`;
 
 export const useSearchData = (posts) => {
     const query = useQuery();

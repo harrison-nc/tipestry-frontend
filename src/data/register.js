@@ -1,4 +1,4 @@
-const registerFunction = process.env.REACT_APP_REGISTER_USER_API;
+import { registerUserFunction } from "../startup/startup";
 
 export async function registerUser(Inputs) {
     try {
@@ -9,7 +9,7 @@ export async function registerUser(Inputs) {
 
         const encoded = new URLSearchParams(form).toString();
 
-        const response = await fetch(registerFunction, {
+        const response = await fetch(registerUserFunction, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

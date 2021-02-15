@@ -1,6 +1,5 @@
 import { useEffect, useReducer } from 'react';
-
-const getPostFunction = `${process.env.REACT_APP_POST_API}`;
+import { getPostFunction } from '../startup/startup';
 
 export default function Post() {
     const [state, dispatch] = useReducer(postReducer, []);

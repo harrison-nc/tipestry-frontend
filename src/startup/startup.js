@@ -4,8 +4,8 @@ export const downVoteFunction = `${process.env.REACT_APP_DOWN_VOTE_API}`;
 export const addCommentFunction = `${process.env.REACT_APP_ADD_COMMENT_API}`;
 export const addPostFunction = `${process.env.REACT_APP_ADD_POST_API}`;
 export const loginUserFunction = `${process.env.REACT_APP_LOGIN_USER_API}`;
-const uploadFunction = `${process.env.REACT_APP_UPLOAD_API}`;
-const registerUserFunction = `${process.env.REACT_APP_REGISTER_USER_API}`;
+export const uploadFunction = `${process.env.REACT_APP_UPLOAD_API}`;
+export const registerUserFunction = `${process.env.REACT_APP_REGISTER_USER_API}`;
 
 console.debug('get  post    api', getPostFunction);
 console.debug('up   vote    api', upVoteFunction);

@@ -7,7 +7,7 @@ import Comment from '../components/Comment';
 import { Switch, Route } from 'react-router-dom';
 import { BannerModal } from '../pages/home/Sidebar';
 
-export const Modals = ({ onLogin, onPost, onComment, toptags }) => {
+export const Modals = ({ onLogin, toptags }) => {
     return (
         <Switch>
             <Route path="/register">
@@ -24,7 +24,7 @@ export const Modals = ({ onLogin, onPost, onComment, toptags }) => {
 
             <Route path="/post">
                 <Modal>
-                    <Post isModal={true} onPost={onPost} />
+                    <Post isModal={true} />
                 </Modal>
             </Route>
 
@@ -39,8 +39,7 @@ export const Modals = ({ onLogin, onPost, onComment, toptags }) => {
                     <Comment
                         className="comment box is-flex flex-column has-background-white py-3 px-2"
                         id="comment"
-                        isModal={true}
-                        onSend={onComment} />
+                        isModal={true} />
                 </Modal>
             </Route>
         </Switch>

@@ -12,19 +12,16 @@ import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
 import Search from './pages/Search';
 import Detail from './pages/Detail';
-import usePosts from './hooks/usePosts.js';
 import { Modals } from './modal/Modals';
-import { upVoteFunction, downVoteFunction } from './startup/startup';
-import { createPost } from './util/post';
-import { defaultTags } from "./util/tags";
-import { updateVotes, postVotes } from "./util/votes";
-import { updateComment } from "./util/comment";
-import { loginUser } from "./util/login";
+import { usePosts, PostData, PostDispatch } from './hooks/usePosts.js';
+import { defaultTags } from './data/post';
+import { UserData, useUser } from './hooks/useUser';
+import { loginUser } from './data/user';
 
 export default function App() {
     const location = useLocation();
-    const [user, setUser] = useState('');
     const [posts, dispatch] = usePosts();
+    const [user, userDispatch] = useUser();
     const [toptags] = useState(defaultTags);
 
     const background = location.state && location.state.background;
@@ -36,79 +33,30 @@ export default function App() {
             return result;
         }
 
-        setUser(result);
-    };
-
-    const handlePost = async (e) => {
-        const { data } = e.target;
-
-        if (!data) throw new Error('Invalid post form data');
-
-        const result = await createPost(user, data);
-
-        if (result.errors || result.errorMessage) {
-            return result;
-        }
-
-        dispatch({ type: "ADD_POST", post: result.data });
-    };
-
-    const handleComment = async (e) => {
-        const { postId, value } = e.target;
-        const result = await updateComment(user, postId, value);
-
-        if (result.errors || result.errorMessage) {
-            return result;
-        }
-
-        dispatch({ type: "UPDATE_POST", post: result.data });
-    };
-
-    const handleUpVotes = async (postId, votes) => {
-        const endPoint = upVoteFunction;
-        return updateVotes(user, posts, postId, votes, endPoint);
-    };
-
-    const handleDownVotes = async (postId, votes) => {
-        const endPoint = downVoteFunction;
-        return updateVotes(user, posts, postId, votes, endPoint);
-    };
-
-    const handlePostVotes = async (event) => {
-        const result = await postVotes(event, handleUpVotes, handleDownVotes);
-
-        if (result.errors || result.errorMessage) {
-            return result;
-        }
-
-        dispatch({ type: "UPDATE_POST", post: result.data });
+        userDispatch({ type: "LOGIN", user: result.data });
     };
 
     return (
-        <>
-            <Navbar loggedInUser={user} />
-            <main className="main is-flex flex-column pt-3 px-4">
-                <Switch location={background || location}>
-                    <Route exact path="/">
-                        <Home posts={posts} toptags={toptags} onCardAction={handlePostVotes} />
-                    </Route>
-                    <Route path="/register" children={<Register />} />
-                    <Route path="/login" children={<Login onLogin={handleLogin} />} />
-                    <Route path="/post" children={<Post onPost={handlePost} />} />
-                    <Route path="/search" children={<Search onCardAction={handlePostVotes} />} />
-                    <Route path="/detail/:postId/:title">
-                        <Detail posts={posts} onAction={handlePostVotes}
-                            onComment={handleComment} />
-                    </Route>
-                    <Route children={<NotFound />} />
-                </Switch>
-                {background &&
-                    <Modals
-                        toptags={toptags}
-                        onLogin={handleLogin}
-                        onPost={handlePost}
-                        onComment={handleComment} />}
-            </main>
-        </>
+        <PostData.Provider value={posts}>
+            <PostDispatch.Provider value={dispatch}>
+                <UserData.Provider value={user}>
+                    <Navbar />
+                    <main className="main is-flex flex-column pt-3 px-4">
+                        <Switch location={background || location}>
+                            <Route exact path="/" children={<Home toptags={toptags} />} />
+                            <Route path="/register" children={<Register />} />
+                            <Route path="/login" children={<Login onLogin={handleLogin} />} />
+                            <Route path="/post" children={<Post />} />
+                            <Route path="/search" children={<Search />} />
+                            <Route path="/detail/:postId/:title" children={<Detail />} />
+                            <Route children={<NotFound />} />
+                        </Switch>
+                        {background &&
+                            <Modals toptags={toptags} onLogin={handleLogin} />
+                        }
+                    </main>
+                </UserData.Provider>
+            </PostDispatch.Provider>
+        </PostData.Provider>
     );
 }

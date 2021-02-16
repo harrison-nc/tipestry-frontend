@@ -6,8 +6,6 @@ export const useQuery = () => {
     const [query, setQuery] = useState('');
 
     useEffect(() => {
-        console.debug('# getting query...');
-
         const search = new URLSearchParams(location.search);
         setQuery(search.get('q'));
 

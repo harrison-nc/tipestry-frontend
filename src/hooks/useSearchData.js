@@ -4,8 +4,8 @@ import { useQuery } from './useQuery';
 
 export const useSearchData = (posts) => {
     const query = useQuery();
-    const [match, setMatch] = useState([]);
     const matchRef = useRef();
+    const [match, setMatch] = useState([]);
 
     useEffect(() => {
         matchRef.current = match;
@@ -13,8 +13,6 @@ export const useSearchData = (posts) => {
 
     useEffect(() => {
         async function findPost() {
-            console.debug(`# find post with query ${query}...`);
-
             const match = await findPostsMatchingQuery(query);
             setMatch(match);
         }

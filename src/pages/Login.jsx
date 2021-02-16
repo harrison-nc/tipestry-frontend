@@ -9,7 +9,8 @@ import { useNavigator } from '../hooks/useNavigator';
 export default function Login({ isModal, onLogin }) {
     const Inputs = useInputs();
     const navigator = useNavigator(isModal);
-    const [serverError, setServerError] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isSending, setIsSending] = useState(false);
 
     const showError = (error) => {
         const { key, value, message } = error;
@@ -24,7 +25,7 @@ export default function Login({ isModal, onLogin }) {
 
     const handleClear = (e) => {
         Inputs.asArray().forEach(input => input.reset());
-        setServerError('');
+        setErrorMessage('');
     };
 
     const handleClose = (e) => {
@@ -33,11 +34,11 @@ export default function Login({ isModal, onLogin }) {
     }
 
     const handleResponse = (response) => {
-        if (response.errorMessage) setServerError(response.errorMessage);
+        if (response.errorMessage) setErrorMessage(response.errorMessage);
 
         else if (response.errors instanceof Array) response.errors.forEach(err => showError(err));
 
-        else if (response instanceof Error) setServerError('Unable to login at this moment.');
+        else if (response instanceof Error) setErrorMessage('Unable to login at this moment.');
 
         else if (response instanceof Object) showError(response);
 
@@ -51,6 +52,7 @@ export default function Login({ isModal, onLogin }) {
 
         if (!isValid) return;
 
+        setIsSending(true);
         Inputs.disableAll();
 
         try {
@@ -67,18 +69,21 @@ export default function Login({ isModal, onLogin }) {
             handleResponse(ex);
         }
 
+        setIsSending(false);
         Inputs.enableAll();
     }
 
     return (
         <div className="login is-flex">
             <form
-                className="login__content is-flex flex-column has-background-white box py-4 px-3" >
+                className="login__content is-flex flex-column has-background-white box py-4 px-3"
+                method="post"
+                onSubmit={handleSubmit}>
                 <Header onClose={handleClose} />
-                <Email {...Inputs.email.props} />
-                <Password {...Inputs.password.props} />
-                {serverError && <ErrorMessage value={serverError} />}
-                <Control isModal={isModal} onClear={handleClear} onSubmit={handleSubmit} />
+                <Email {...Inputs.email.props} autoComplete="email" />
+                <Password {...Inputs.password.props} autoComplete="current-password" />
+                {errorMessage && <ErrorMessage value={errorMessage} />}
+                <Control isSending={isSending} isModal={isModal} onClear={handleClear} />
             </form>
         </div>
     );

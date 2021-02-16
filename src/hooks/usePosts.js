@@ -12,14 +12,14 @@ export const usePosts = () => {
         async function fetchPostData() {
             try {
                 const response = await fetch(getPostFunction);
-                let result = await response.json();
 
                 if (response.ok) {
+                    let result = await response.json();
                     dispatch({ type: "INIT", posts: result.data });
                 }
                 else {
                     dispatch({ type: "INIT_FAILURE" });
-                    console.debug('Failed to get posts', result, response);
+                    console.debug('Failed to get posts', await response.text());
                 }
 
             } catch (ex) {
@@ -77,9 +77,14 @@ const postsReducer = (state, action) => {
             return updated;
         }
 
-        case "INIT_FAILURE": throw new Error('Failed to get posts from the server');
+        case "INIT_FAILURE": {
+            console.error('Failed to get posts from the server');
+            return state;
+        }
 
-        default: throw new Error(`Invalid action on post: ${action.type}`);
+        default:
+            console.error(`Invalid action on post: ${action.type}`);
+            return state;
     }
 };
 

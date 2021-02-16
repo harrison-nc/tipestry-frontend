@@ -1,5 +1,5 @@
 import React from 'react';
-import Cards from '../../components/Cards';
+import Cards from '../../components/card/Cards';
 
 export default function Content({ posts, listView }) {
     const className = "home__content is-flex flex-column flex-grow is-content-centered";

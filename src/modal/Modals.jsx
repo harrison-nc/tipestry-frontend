@@ -1,8 +1,8 @@
 import React from 'react';
 import Modal from './Modal';
-import Register from '../pages/Register';
-import Login from '../pages/Login';
-import Post from '../pages/Post';
+import Register from '../pages/register/Register';
+import Login from '../pages/login/Login';
+import Post from '../pages/post/Post';
 import Comment from '../components/Comment';
 import { Switch, Route } from 'react-router-dom';
 import { BannerModal } from '../pages/home/Sidebar';

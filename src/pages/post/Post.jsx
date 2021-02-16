@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
-import { URL, Title, Description } from './post/Validators';
-import { useNavigator } from '../hooks/useNavigator';
-import { ErrorMessage } from "./post/ErrorMessage";
-import { usePostInputs } from "../hooks/usePostInputs";
-import { Tags, TagInput } from "./post/Tags";
-import { Control } from "./post/Control";
-import { Upload } from "./post/Upload";
-import { Header } from "./post/Header";
-import { uploadImage } from '../data/post';
+import { URL, Title, Description } from './Validators';
+import { useNavigator } from '../../hooks/useNavigator';
+import { usePostInputs } from "../../hooks/usePostInputs";
+import { Tags, TagInput } from "./Tags";
+import { Control } from "./Control";
+import { Upload } from "./Upload";
+import { Header } from "./Header";
+import { uploadImage } from '../../data/post';
 
 export default function Post({ id, isModal, onPost }) {
     const Inputs = usePostInputs();
     const navigator = useNavigator(isModal);
-    const [serverError, setServerError] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const [uploadImageURL, setUploadImageURL] = useState('');
+    const [isSending, setIsSending] = useState(false);
 
     useEffect(() => {
         Inputs.url.isRequired(Inputs.upload.props.value ? false : true);
@@ -28,7 +28,7 @@ export default function Post({ id, isModal, onPost }) {
 
     const handleClear = (e) => {
         Inputs.asArray().forEach(input => input.reset());
-        setServerError('');
+        setErrorMessage('');
     };
 
     const handleRemoveTag = (item) => {
@@ -59,7 +59,7 @@ export default function Post({ id, isModal, onPost }) {
 
     const handleResponse = (event, response) => {
         if (response instanceof Error) console.debug(response);
-        else if (response.errorMessage) setServerError(response.errorMessage);
+        else if (response.errorMessage) setErrorMessage(response.errorMessage);
         else if (response.errors instanceof Array) response.errors.forEach(showError);
         else showError(response);
     };
@@ -113,6 +113,7 @@ export default function Post({ id, isModal, onPost }) {
 
         if (!isValid) return;
 
+        setIsSending(true);
         Inputs.disableAll();
 
         try {
@@ -125,6 +126,7 @@ export default function Post({ id, isModal, onPost }) {
             handleResponse(e, ex);
         }
 
+        setIsSending(false);
         Inputs.enableAll();
     }
 
@@ -142,25 +144,27 @@ export default function Post({ id, isModal, onPost }) {
 
     return (
         <div className="post is-flex">
-            <div className="post__content is-flex flex-column has-background-white box py-4 px-3"
-                id={id}>
+            <form
+                onSubmit={handleSubmit}
+                className="post__content is-flex flex-column has-background-white box py-4 px-3">
                 <Header onClose={handleClose} />
 
-                {serverError && <ErrorMessage value={serverError} />}
+                {errorMessage && <span className="error">{errorMessage}</span>}
 
-                <Upload value={Inputs.upload.props.value}
+                <Upload
+                    value={Inputs.upload.props.value}
                     src={uploadImageURL}
                     onRemove={handleRemoveFile}
                     onFileChange={handleFileChange} />
 
-                {!Inputs.upload.props.value && <URL {...Inputs.url.props} />}
+                {!Inputs.upload.props.value && <URL {...Inputs.url.props} autoComplete="photo" />}
 
                 <Title {...Inputs.title.props} />
                 <Description {...Inputs.description.props} />
                 <Tags values={Inputs.tagItems.props.value} onRemove={handleRemoveTag} />
                 <TagInput onAdd={handleAddTag} {...Inputs.tagName.props} />
-                <Control isModal={isModal} onClear={handleClear} onSubmit={handleSubmit} />
-            </div>
+                <Control isSending={isSending} onClear={handleClear} />
+            </form>
         </div>
     );
 };

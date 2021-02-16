@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import Action from './home/Action';
-import Content from './home/Content';
-import Suggestions from './home/Suggestions';
-import { Sidebar } from './home/Sidebar';
-import { Search } from './home/Search';
-import { useFilteringAction, useSortingAction } from '../util/post-util';
-import { PostData } from '../hooks/usePosts';
+import Action from './Action';
+import Content from './Content';
+import Suggestions from './Suggestions';
+import { Sidebar } from './Sidebar';
+import { Search } from './Search';
+import { useFilteringAction, useSortingAction } from '../../util/post-util';
+import { PostData } from '../../hooks/usePosts';
 
 export default function Home({ toptags }) {
     const posts = useContext(PostData);

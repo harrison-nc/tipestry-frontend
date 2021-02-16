@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Header } from './login/Header';
-import { Control } from "./login/Control";
-import { ErrorMessage } from "./login/ErrorMessage";
-import { useNavigator } from '../hooks/useNavigator';
-import { Email, Password } from '../components/Input';
-import { useLoginInputs } from "../hooks/useLoginInputs";
+import { Header } from './Header';
+import { Control } from "./Control";
+import { useNavigator } from '../../hooks/useNavigator';
+import { Email, Password } from '../../components/Input';
+import { useLoginInputs } from "../../hooks/useLoginInputs";
 
 export default function Login({ isModal, onLogin }) {
     const Inputs = useLoginInputs();
@@ -82,7 +81,7 @@ export default function Login({ isModal, onLogin }) {
                 <Header onClose={handleClose} />
                 <Email {...Inputs.email.props} autoComplete="email" />
                 <Password {...Inputs.password.props} autoComplete="current-password" />
-                {errorMessage && <ErrorMessage value={errorMessage} />}
+                {errorMessage && <span className="error">{errorMessage}</span>}
                 <Control isSending={isSending} isModal={isModal} onClear={handleClear} />
             </form>
         </div>

@@ -1,4 +1,4 @@
-import Cards from '../components/Cards';
+import Cards from '../components/card/Cards';
 import Banner from '../components/Banner';
 import { useSearchData } from '../hooks/useSearchData';
 

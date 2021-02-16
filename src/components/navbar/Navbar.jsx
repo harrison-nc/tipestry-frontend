@@ -1,6 +1,6 @@
 import React from 'react';
-import { NavItems } from "./navbar/NavItems";
-import { Brand } from './navbar/Brand';
+import { NavItems } from "./NavItems";
+import { Brand } from './Brand';
 
 export default function Navbar() {
     return (

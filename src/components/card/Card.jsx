@@ -1,7 +1,7 @@
 import React from 'react';
-import Footer from './card/Footer';
-import Header from './card/Header';
-import Content from './card/Content';
+import Footer from './Footer';
+import Header from './Header';
+import Content from './Content';
 
 export default function Card(props) {
     const { post } = props;

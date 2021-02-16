@@ -1,7 +1,8 @@
-import React, { forwardRef, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
-const FancyButton = forwardRef((props, ref) => {
+const FancyButton = (props) => {
     const { isSending, text, ...rest } = props;
+    const ref = useRef();
 
     useEffect(() => {
         if (isSending && ref.current) {
@@ -23,13 +24,13 @@ const FancyButton = forwardRef((props, ref) => {
             };
         }
 
-    }, [isSending, ref, text]);
+    }, [isSending, text]);
 
     return (
         <button ref={ref} {...rest}>
             {text}
         </button>
     );
-});
+};
 
 export default FancyButton;

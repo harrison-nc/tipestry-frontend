@@ -1,13 +1,12 @@
 import React, { useReducer } from "react";
 
 export const UserData = React.createContext({});
-export const UserDispatch = React.createContext(null);
 
 export const useUser = () => {
     return useReducer(userReducer, {});
 };
 
-const userReducer = async (state, action) => {
+const userReducer = (state, action) => {
     switch (action.type) {
         case "LOGIN": {
             const { user } = action;

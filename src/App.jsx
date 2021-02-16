@@ -29,7 +29,7 @@ export default function App() {
     const handleLogin = async (user) => {
         const result = await loginUser(user);
 
-        if (result && (result.errors || result.errorMessage)) {
+        if (result.errors || result.errorMessage) {
             return result;
         }
 

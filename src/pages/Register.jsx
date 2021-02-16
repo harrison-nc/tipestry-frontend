@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Email, Password, ConfirmPassword, Name } from '../components/Input';
 import { useNavigator } from '../hooks/useNavigator';
-import { useInputs } from "./register/hooks/useInputs";
+import { useRegisterInputs } from "../hooks/useRegisterInputs";
 import { Control } from "./register/Control";
 import { Header } from "./register/Header";
 import { registerUser } from '../data/user';
 
 export default function Register({ isModal }) {
-    const Inputs = useInputs();
+    const Inputs = useRegisterInputs();
     const navigator = useNavigator(isModal);
     const [errorMessage, setErrorMessage] = useState('');
 

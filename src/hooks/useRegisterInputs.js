@@ -1,12 +1,12 @@
-import { useFormInput } from '../../../hooks/useFormInput';
+import { useFormInput } from './useFormInput';
 import {
     NameValidator,
     EmailValidator,
     PasswordValidator,
     ConfirmPaswordValidator
-} from '../Validators';
+} from '../pages/register/Validators';
 
-export const useInputs = () => {
+export const useRegisterInputs = () => {
     const name = useFormInput('', NameValidator);
     const email = useFormInput('', EmailValidator);
     const password = useFormInput('', PasswordValidator);

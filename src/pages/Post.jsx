@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { URL, Title, Description } from './post/Validators';
 import { useNavigator } from '../hooks/useNavigator';
 import { ErrorMessage } from "./post/ErrorMessage";
-import { useInputs } from "./post/hooks/useInputs";
+import { usePostInputs } from "../hooks/usePostInputs";
 import { Tags, TagInput } from "./post/Tags";
 import { Control } from "./post/Control";
 import { Upload } from "./post/Upload";
@@ -10,7 +10,7 @@ import { Header } from "./post/Header";
 import { uploadImage } from '../data/post';
 
 export default function Post({ id, isModal, onPost }) {
-    const Inputs = useInputs();
+    const Inputs = usePostInputs();
     const navigator = useNavigator(isModal);
     const [serverError, setServerError] = useState('');
     const [uploadImageURL, setUploadImageURL] = useState('');

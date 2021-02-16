@@ -1,6 +1,6 @@
-import { useFormInput } from '../../../hooks/useFormInput';
+import { useFormInput } from './useFormInput';
 
-export const useInputs = () => {
+export const usePostInputs = () => {
     const url = useFormInput('', value => {
         return !value ? 'Resource url is required' : '';
     });

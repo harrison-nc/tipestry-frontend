@@ -1,7 +1,7 @@
-import { validateEmail } from '../../../util/validators';
-import { useFormInput } from '../../../hooks/useFormInput';
+import { validateEmail } from '../util/validators';
+import { useFormInput } from './useFormInput';
 
-export const useInputs = () => {
+export const useLoginInputs = () => {
     const email = useFormInput('', value => {
         const validator = validateEmail;
 

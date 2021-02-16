@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 
-export const useLinks = () => {
+export const useNavbarLinks = () => {
     const location = useLocation();
     const state = { background: location };
     return {

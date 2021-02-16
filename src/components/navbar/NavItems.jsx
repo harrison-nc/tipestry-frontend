@@ -2,11 +2,11 @@ import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { NavItem } from './NavItem';
 import { User } from './User';
-import { useLinks } from "./hooks/useLinks";
 import { UserData } from '../../hooks/useUser';
+import { useNavbarLinks } from '../../hooks/useNavbarLinks';
 
 export const NavItems = () => {
-    const links = useLinks();
+    const links = useNavbarLinks();
     const user = useContext(UserData);
 
     return (
@@ -36,7 +36,7 @@ export const NavItems = () => {
 };
 
 const RoundMenu = () => {
-    const links = useLinks();
+    const links = useNavbarLinks();
     const [style, setStyle] = useState({ display: 'none' });
     const root = document.querySelector('body');
 

@@ -1,14 +1,14 @@
 import React from 'react';
 
 export const InputContainer = (props) => {
-    const { children, label, hasError, ...rest } = props;
+    const { children, label, errorMessage, ...rest } = props;
 
     const errorClasses = "error";
 
     return (
         <div className="input-container control" {...rest}>
             <fieldset className="is-flex flex-column field py-5 px-5">
-                <span className={errorClasses}>{hasError}</span>
+                <span className={errorClasses}>{errorMessage}</span>
                 <legend className="legend">{label}</legend>
                 {children}
             </fieldset>
@@ -17,10 +17,10 @@ export const InputContainer = (props) => {
 };
 
 export default function Input(props) {
-    const { id, name, label, hasError, ...rest } = props;
+    const { id, name, label, errorMessage, ...rest } = props;
 
     return (
-        <InputContainer label={label} hasError={hasError}>
+        <InputContainer label={label} errorMessage={errorMessage}>
             <input className="input py-4 px-4"
                 id={id ? id : name}
                 name={name}
@@ -31,8 +31,7 @@ export default function Input(props) {
 };
 
 export const createInput = (attrs) => {
-    const { name, type, label, placeholder, id } = attrs;
-    const defaultId = id;
+    const { name, type, label, placeholder, id: defaultId } = attrs;
 
     return (props) => {
         const { id, ...rest } = props;
@@ -54,11 +53,11 @@ export const createInputTextArea = (attrs) => {
     const defaultId = id;
 
     return (props) => {
-        const { id, hasError, ...rest } = props;
+        const { id, errorMessage, ...rest } = props;
         const currentId = id ? id : defaultId;
 
         return (
-            <InputContainer label={label} hasError={hasError}>
+            <InputContainer label={label} errorMessage={errorMessage}>
                 <textarea className="input py-4 px-4"
                     id={currentId ? currentId : name}
                     name={name}

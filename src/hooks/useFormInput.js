@@ -55,7 +55,7 @@ export const useFormInput = (initialState, getErrorMessage, emptyValue) => {
         isRequired: setIsRequired,
         props: {
             value,
-            hasError: error,
+            errorMessage: error,
             disabled: isDisabled,
             onChange: handleChange,
             onBlur: handleBlur,

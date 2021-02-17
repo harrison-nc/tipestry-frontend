@@ -400,6 +400,31 @@
   background-color: var(--color-link-dark);
 }
 
+.is-primary:disabled,
+.is-primary:disabled:hover,
+.is-white:disabled,
+.is-white:disabled:hover,
+.is-link:disabled,
+.is-link:disabled:hover {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.is-primary:disabled,
+.is-primary:disabled:hover {
+  background-color: var(--color-primary);
+}
+
+.is-white:disabled,
+.is-white:disabled:hover {
+  background-color: var(--color-light);
+}
+
+.is-link:disabled,
+.is-link:disabled:hover {
+  background-color: var(--color-link);
+}
+
 .is-white.is-outlined {
   border: 1px solid var(--color-black);
   border-radius: 5px;

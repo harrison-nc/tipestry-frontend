@@ -44,5 +44,5 @@ exports.handler = async function (event) {
 
     close();
 
-    return Response.ofAny(result);
+    return Response.of(result);
 }

@@ -2,7 +2,6 @@ const _options = { status: 200, headers: {} };
 const _errorOptions = { status: 400 };
 
 const of = (data, options = _options) => {
-    const response = getResponse(data);
     const { status, headers } = options;
 
     return {
@@ -31,12 +30,6 @@ const ofError = (error, options = _errorOptions) => {
     }
 };
 
-const ofAny = (data, options = _options) => {
-    if (data instanceof Error) return ofError(data);
-
-    return of(data, options);
-};
-
 const createResponse = (data) => {
     return { data };
 };
@@ -45,24 +38,4 @@ const createError = (message) => {
     return { errorMessage: message };
 }
 
-const getResponse = (data, error = false) => {
-    let response;
-
-    if (data instanceof Error) {
-
-        response = createError(data.message);
-
-    } else if (error) {
-
-        response = createError(data);
-
-    } else {
-
-        response = createResponse(data);
-
-    }
-
-    return response;
-};
-
-module.exports = { of, ofAny, ofError };
+module.exports = { of, ofError };

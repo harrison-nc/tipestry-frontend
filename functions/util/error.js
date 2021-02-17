@@ -8,9 +8,9 @@ exports.parseJoiError = (error) => {
         return {
             key,
             [key]: value,
-            message,
+            errorMessage: message,
         }
     });
 
-    return JSON.stringify({ errors });
+    return { errors };
 };

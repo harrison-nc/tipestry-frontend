@@ -30,10 +30,10 @@ exports.handler = async (event) => {
     const user = { name, email, password };
 
     try {
-        const { validationError } = await User.validateModel(user);
+        const { error } = User.validateModel(user);
 
-        if (validationError) {
-            return Response.ofError(parseJoiError(validationError));
+        if (error) {
+            return Response.ofError(parseJoiError(error));
         }
     }
     catch (ex) {

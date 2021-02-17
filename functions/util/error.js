@@ -3,11 +3,10 @@ exports.parseJoiError = (error) => {
 
     const errors = details.map((d) => {
         const { context, message } = d;
-        const { key, value } = context;
+        const { key } = context;
 
         return {
             key,
-            [key]: value,
             errorMessage: message,
         }
     });

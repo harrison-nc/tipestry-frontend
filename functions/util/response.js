@@ -3,6 +3,15 @@ const _errorOptions = { status: 400 };
 
 const of = (data, options = _options) => {
     const { status, headers } = options;
+    let response;
+
+    if (typeof data === 'string' || typeof data === 'number' || data instanceof Date) {
+        response = createResponse(data);
+    } else if (data instanceof Error) {
+        return ofError(data);
+    } else {
+        response = data;
+    }
 
     return {
         statusCode: status || _options.status,
@@ -22,7 +31,15 @@ const ofError = (error, options = _errorOptions) => {
 
     const { status } = options;
 
-    let response = getResponse(error, true);
+    let response;
+
+    if (typeof error === 'string') {
+        response = createError(error);
+    } else if (error instanceof Error) {
+        response = createError(error.message);
+    } else {
+        response = error;
+    }
 
     return {
         statusCode: status || _errorOptions.status,

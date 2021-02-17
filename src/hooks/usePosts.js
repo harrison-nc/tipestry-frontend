@@ -50,7 +50,8 @@ export const usePost = (postId) => {
 const postsReducer = (state, action) => {
     switch (action.type) {
         case 'INIT': {
-            return [...action.posts];
+            const posts = action.posts || [];
+            return [...posts];
         }
         case 'ADD_POST': {
             return [...state, action.post];

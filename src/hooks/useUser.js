@@ -10,7 +10,7 @@ const userReducer = (state, action) => {
     switch (action.type) {
         case "LOGIN": {
             const { user } = action;
-            const { name, email, token } = user;
+            const { name, email, token } = user || {};
 
             if (!user || !name || !email || !token) {
                 console.debug('Invalid user', action);

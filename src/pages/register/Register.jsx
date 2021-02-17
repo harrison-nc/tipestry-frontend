@@ -1,75 +1,287 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import { Email, Password, ConfirmPassword, Name } from '../../components/Input';
 import { useNavigator } from '../../hooks/useNavigator';
-import { useRegisterInputs } from "../../hooks/useRegisterInputs";
 import { Control } from "./Control";
 import { Header } from "./Header";
 import { registerUser } from '../../data/user';
+import { isEmail } from '../../util/validators';
 
 export default function Register({ isModal }) {
-    const Inputs = useRegisterInputs();
     const navigator = useNavigator(isModal);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [isSending, setIsSending] = useState('');
+    const [state, dispatch, validateState, isValid] = useState();
 
-    const showError = (error) => {
-        const { key, value, message } = error;
-        const input = Inputs[key];
-        if (input) input.setError(message);
-        else console.error(`Server Error: ${message}`);
-        console.debug(`Error: '${key}' - '${value}`);
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        dispatch({ type: name.toUpperCase(), value });
+    }
+
+    const handleBlur = (event) => {
+        validateState(state, event.target.name);
+    }
+
+    const handleFocus = (event) => {
+        const { name } = event.target;
+        dispatch({ type: `${name.toUpperCase()}_ERROR`, value: '' });
+    }
+
+    const handleClear = () => {
+        dispatch({ type: "CLEAR" });
     };
 
-    const handleClear = (e) => {
-        Inputs.asArray().forEach(input => input.reset());
-    };
-
-    const handleClose = (e) => {
-        handleClear(e);
+    const handleClose = (event) => {
+        handleClear(event);
         navigator.goBack();
-    };
-
-    const handleResponse = (response) => {
-        if (response.errors instanceof Array) response.errors.forEach(err => showError(err));
-        else if (response.errorMessage) setErrorMessage(response.errorMessage);
-        else showError(response);
-    };
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const isValid = Inputs.validateAll();
+        if (!isValid()) return console.debug('# invalid input');
 
-        if (!isValid) return;
+        dispatch({ type: 'SENDING', value: true });
 
-        setIsSending(true);
-        Inputs.disableAll();
+        const result = await registerUser({
+            name: state.name,
+            email: state.email,
+            password: state.password,
+        });
 
-        const result = await registerUser(Inputs);
+        dispatch({ type: 'SENDING', value: false });
 
-        if (result) {
-            handleResponse(result);
+        const { errors, errorMessage } = result;
+
+        if (errors) {
+
+            errors.forEach((error) => {
+                const { key, errorMessage } = error;
+                dispatch({
+                    type: `${key.toUpperCase()}_ERROR`, value: errorMessage
+                });
+            });
+
+        } else if (errorMessage) {
+
+            dispatch({
+                type: "ERROR", value: errorMessage
+            });
+
         } else {
             navigator.goBack();
         }
-
-        setIsSending(false);
-        Inputs.enableAll();
     };
 
     return (
         <div className="register is-flex">
             <form
+                className="is-flex flex-column register__content has-background-white box py-4 px-3"
+                method="post"
                 onSubmit={handleSubmit}
-                className="is-flex flex-column register__content has-background-white box py-4 px-3" >
+                noValidate>
+
                 <Header onClose={handleClose} />
-                <Name {...Inputs.name.props} autoComplete="username" />
-                <Email {...Inputs.email.props} autoComplete="email" />
-                <Password {...Inputs.password.props} autoComplete="new-password" />
-                <ConfirmPassword {...Inputs.cpassword.props} autoComplete="new-password" />
-                {errorMessage && <span className="error">{errorMessage}</span>}
-                <Control isSending={isSending} onClear={handleClear} />
+
+                <Name
+                    autoComplete="name"
+                    value={state.name}
+                    errorMessage={state.nameErrorMessage}
+                    disabled={state.isSending}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    onFocus={handleFocus} />
+
+                <Email
+                    autoComplete="email"
+                    value={state.email}
+                    errorMessage={state.emailErrorMessage}
+                    disabled={state.isSending}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    onFocus={handleFocus} />
+
+                <Password
+                    autoComplete="new-password"
+                    value={state.password}
+                    errorMessage={state.passwordErrorMessage}
+                    disabled={state.isSending}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    onFocus={handleFocus} />
+
+                <ConfirmPassword
+                    autoComplete="new-password"
+                    value={state.cpassword}
+                    errorMessage={state.cpasswordErrorMessage}
+                    disabled={state.isSending}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    onFocus={handleFocus} />
+
+                <span className="error">{state.errorMessage}</span>
+
+                <Control
+                    isSending={state.isSending}
+                    isDisabled={!isValid()}
+                    onClear={handleClear} />
             </form>
         </div >
     );
+};
+
+const useState = () => {
+    const [state, dispatch] = useReducer(reducer, {
+        name: '',
+        email: '',
+        password: '',
+        cpassword: '',
+        isSending: false,
+    });
+
+    const validateName = (name) => {
+        let errorMessage = '';
+        if (!name) errorMessage = "Please enter a valid name";
+        else if (name.length < 4) errorMessage = "Name must have at least 4 letters";
+        else if (name.length > 15) errorMessage = "Name must have less than 15 letters";
+        dispatch({ type: "NAME_ERROR", value: errorMessage });
+    };
+
+    const validateEmail = (email) => {
+        let errorMessage = '';
+        if (!email) errorMessage = "Please enter a valid email";
+        else if (!isEmail(email)) errorMessage = "Email is not valid";
+        dispatch({ type: "EMAIL_ERROR", value: errorMessage });
+    };
+
+    const validatePassword = (password, cpassword) => {
+        let errorMessage = '';
+        if (!password) errorMessage = "Please enter a valid password";
+        else if (password.length < 5) errorMessage = "Password must have at least 5 letters";
+        else if (cpassword && password !== cpassword) errorMessage = "Passwords do not match";
+        dispatch({ type: !cpassword ? "PASSWORD_ERROR" : "CPASSWORD_ERROR", value: errorMessage });
+    }
+
+    const validate = (state, name) => {
+        name = name || '';
+
+        switch (name.toUpperCase()) {
+            case "NAME": {
+                validateName(state.name);
+                break;
+            }
+            case "EMAIL": {
+                validateEmail(state.email);
+                break;
+            }
+            case "PASSWORD": {
+                const { password, cpassword } = state;
+                validatePassword(password);
+                if (password && cpassword) validatePassword(password, cpassword);
+                break;
+            }
+            case "CPASSWORD": {
+                validatePassword(state.password, state.cpassword);
+                break;
+            }
+            default:
+                validateName(state.name);
+                validateEmail(state.email);
+                validatePassword(state.password);
+                validatePassword(state.password, state.cpassword);
+                break;
+        }
+    };
+
+    const isValid = () => {
+        return !(state.name === '' || state.email === '') &&
+            !(state.password === '' || state.cpassword === '') &&
+            (!state.nameErrorMessage || state.nameErrorMessage === '') &&
+            (!state.emailErrorMessage || state.emailErrorMessage === '') &&
+            (!state.passwordErrorMessage || state.passwordErrorMessage === '') &&
+            (!state.cpasswordErrorMessage || state.cpasswordErrorMessage === '') &&
+            (!state.errorMessage || state.errorMessage === '');
+    };
+
+    return [state, dispatch, validate, isValid];
+};
+
+const reducer = (state, action) => {
+    const { value } = action;
+
+    switch (action.type) {
+        case "NAME": {
+            return {
+                ...state,
+                name: value,
+                nameErrorMessage: '',
+            }
+        }
+        case "EMAIL": {
+            return {
+                ...state,
+                email: value,
+                emailErrorMessage: '',
+            }
+        }
+        case "PASSWORD": {
+            return {
+                ...state,
+                password: value,
+                passwordErrorMessage: '',
+            }
+        }
+        case "CPASSWORD": {
+            return {
+                ...state,
+                cpassword: value,
+                cpasswordErrorMessage: '',
+            }
+        }
+        case "SENDING": {
+            return {
+                ...state,
+                isSending: value,
+            }
+        }
+        case "CLEAR": {
+            return {
+                name: '',
+                email: '',
+                password: '',
+                cpassword: '',
+                isSending: false,
+            }
+        }
+        case "NAME_ERROR": {
+            return {
+                ...state,
+                nameErrorMessage: value,
+            }
+        }
+        case "EMAIL_ERROR": {
+            return {
+                ...state,
+                emailErrorMessage: value,
+            }
+        }
+        case "PASSWORD_ERROR": {
+            return {
+                ...state,
+                passwordErrorMessage: value,
+            }
+        }
+        case "CPASSWORD_ERROR": {
+            return {
+                ...state,
+                cpasswordErrorMessage: value,
+            }
+        }
+        case "ERROR": {
+            return {
+                ...state,
+                errorMessage: value,
+            }
+        }
+        default:
+            console.debug('invalid action', action);
+            return state;
+    }
 };

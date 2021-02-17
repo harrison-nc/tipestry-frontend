@@ -1,11 +1,11 @@
 import { registerUserFunction, loginUserFunction } from "../startup/startup";
 
-export async function registerUser(Inputs) {
+export async function registerUser({ name, email, password }) {
     try {
         const form = new FormData();
-        form.append('name', Inputs.name.getValue());
-        form.append('email', Inputs.email.getValue());
-        form.append('password', Inputs.password.getValue());
+        form.append('name', name);
+        form.append('email', email);
+        form.append('password', password);
 
         const encoded = new URLSearchParams(form).toString();
 
@@ -18,11 +18,7 @@ export async function registerUser(Inputs) {
             body: encoded
         });
 
-        const result = await response.json();
-
-        if (result.errors || result.errorMessage) {
-            return result;
-        }
+        return response.json();
     }
     catch (ex) {
         console.debug(ex);

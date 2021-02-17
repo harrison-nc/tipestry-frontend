@@ -1,7 +1,7 @@
 import React from 'react';
 import FancyButton from '../../components/FancyButton';
 
-export const Control = ({ onClear, isSending }) => {
+export const Control = ({ onClear, isSending, isDisabled }) => {
     return (
         <div className="register__control is-flex mt-3">
             <input
@@ -15,7 +15,8 @@ export const Control = ({ onClear, isSending }) => {
                 className="is-primary btn is-bold"
                 text="Register"
                 type="submit"
-                isSending={isSending} />
+                isSending={isSending}
+                isDisabled={isDisabled} />
         </div>
     );
 };

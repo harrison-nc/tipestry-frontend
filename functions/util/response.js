@@ -5,12 +5,10 @@ const of = (data, options = _options) => {
     const { status, headers } = options;
     let response;
 
-    if (typeof data === 'string' || typeof data === 'number' || data instanceof Date) {
-        response = createResponse(data);
-    } else if (data instanceof Error) {
+    if (data instanceof Error) {
         return ofError(data);
     } else {
-        response = data;
+        response = createResponse(data);
     }
 
     return {

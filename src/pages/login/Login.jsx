@@ -124,7 +124,7 @@ const useLoginState = () => {
     const validatePassword = (password) => {
         let errorMessage;
         if (!password) errorMessage = "Please enter a valid password";
-        else if (password.length < 4) errorMessage = "Password must have at least 5 letters";
+        else if (password.length < 5) errorMessage = "Password must have at least 5 letters";
         else errorMessage = '';
         dispatch({ type: "PASSWORD_ERROR", value: errorMessage });
     }

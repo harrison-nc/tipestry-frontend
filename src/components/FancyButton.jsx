@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 const FancyButton = (props) => {
-    const { isSending, text, ...rest } = props;
+    const { isSending, isDisabled, text, ...rest } = props;
     const ref = useRef();
 
     useEffect(() => {
@@ -27,7 +27,7 @@ const FancyButton = (props) => {
     }, [isSending, text]);
 
     return (
-        <button ref={ref} {...rest}>
+        <button ref={ref} {...rest} disabled={isSending || isDisabled}>
             {text}
         </button>
     );

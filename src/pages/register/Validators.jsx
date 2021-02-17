@@ -1,4 +1,4 @@
-import { validateEmail } from '../../util/validators';
+import { isEmail } from '../../util/validators';
 
 export const NameValidator = value => {
     if (!value)
@@ -14,7 +14,7 @@ export const NameValidator = value => {
 export const EmailValidator = value => {
     if (!value)
         return 'email is required';
-    else if (!validateEmail(value))
+    else if (!isEmail(value))
         return 'please enter a valid email';
     else
         return '';

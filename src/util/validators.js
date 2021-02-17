@@ -16,7 +16,7 @@ export const createValidator = (fun) => {
     }
 };
 
-export const validateEmail = (value) => {
+export const isEmail = (value) => {
     const emailPattern = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
 
     if (emailPattern.test(value)) return true;

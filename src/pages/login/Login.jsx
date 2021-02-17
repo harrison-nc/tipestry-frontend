@@ -3,6 +3,7 @@ import { Header } from './Header';
 import { Control } from "./Control";
 import { useNavigator } from '../../hooks/useNavigator';
 import { Email, Password } from '../../components/Input';
+import { isEmail } from '../../util/validators';
 
 export default function Login({ isModal, onLogin }) {
     const navigator = useNavigator(isModal);
@@ -111,14 +112,6 @@ const useLoginState = () => {
         password: '',
         isSending: false,
     });
-
-    const isEmail = (value) => {
-        const emailPattern = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
-
-        if (emailPattern.test(value)) return true;
-
-        else return false;
-    }
 
     const validateEmail = (email) => {
         let errorMessage;

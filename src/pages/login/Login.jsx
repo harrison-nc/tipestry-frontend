@@ -40,10 +40,10 @@ export default function Login({ isModal, onLogin }) {
             return;
         }
 
-        dispatch({ type: 'SENDING' });
+        dispatch({ type: 'SENDING', value: true });
         const { email, password } = state;
         const result = await onLogin({ email, password });
-        dispatch({ type: 'SENDING' });
+        dispatch({ type: 'SENDING', value: false });
 
         if (!result) {
             navigator.goBack();
@@ -164,27 +164,22 @@ const reducer = (state, action) => {
     switch (action.type) {
         case "EMAIL": {
             return {
+                ...state,
                 email: value,
-                isSending: false,
                 emailErrorMessage: '',
-                password: state.password,
-                passwordErrorMessage: state.passwordErrorMessage,
             }
         }
         case "PASSWORD": {
             return {
+                ...state,
                 password: value,
-                isSending: false,
-                email: state.email,
                 passwordErrorMessage: '',
-                emailErrorMessage: state.emailErrorMessage,
             }
         }
         case "SENDING": {
             return {
-                email: state.email,
-                password: state.password,
-                isSending: !state.isSending,
+                ...state,
+                isSending: value,
             }
         }
         case "CLEAR": {
@@ -196,20 +191,20 @@ const reducer = (state, action) => {
         }
         case "EMAIL_ERROR": {
             return {
-                isSending: false,
-                email: state.email,
-                password: state.password,
+                ...state,
                 emailErrorMessage: value,
-                passwordErrorMessage: state.passwordErrorMessage,
             }
         }
         case "PASSWORD_ERROR": {
             return {
-                isSending: false,
-                email: state.email,
-                password: state.password,
+                ...state,
                 passwordErrorMessage: value,
-                emailErrorMessage: state.emailErrorMessage,
+            }
+        }
+        case "ERROR": {
+            return {
+                ...state,
+                errorMessage: value
             }
         }
         default:

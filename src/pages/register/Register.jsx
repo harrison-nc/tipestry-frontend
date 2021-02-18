@@ -3,7 +3,7 @@ import { Email, Password, ConfirmPassword, Name } from '../../components/Input';
 import { useNavigator } from '../../hooks/useNavigator';
 import { Control } from "./Control";
 import { Header } from "./Header";
-import { registerUser } from '../../data/user';
+import { RegisterError, registerUser } from '../../data/user';
 import { isEmail } from '../../util/validators';
 
 export default function Register({ isModal }) {
@@ -36,37 +36,28 @@ export default function Register({ isModal }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!isValid()) return console.debug('# invalid input');
+        if (!isValid()) {
+            return console.debug('# invalid input');
+        }
 
         dispatch({ type: 'SENDING', value: true });
 
-        const result = await registerUser({
-            name: state.name,
-            email: state.email,
-            password: state.password,
-        });
+        try {
+            const { name, email, password } = state;
 
-        dispatch({ type: 'SENDING', value: false });
+            const data = new FormData();
+            data.append('name', name);
+            data.append('email', email);
+            data.append('password', password);
 
-        const { errors, errorMessage } = result;
+            await registerUser(data);
 
-        if (errors) {
-
-            errors.forEach((error) => {
-                const { key, errorMessage } = error;
-                dispatch({
-                    type: `${key.toUpperCase()}_ERROR`, value: errorMessage
-                });
-            });
-
-        } else if (errorMessage) {
-
-            dispatch({
-                type: "ERROR", value: errorMessage
-            });
-
-        } else {
+            dispatch({ type: 'SENDING', value: false });
             navigator.goBack();
+
+        } catch (error) {
+            dispatch({ type: 'SENDING', value: false });
+            parseError(error, dispatch);
         }
     };
 
@@ -206,6 +197,8 @@ const useState = () => {
 const reducer = (state, action) => {
     const { value } = action;
 
+    delete state.errorMessage;
+
     switch (action.type) {
         case "NAME": {
             return {
@@ -283,5 +276,26 @@ const reducer = (state, action) => {
         default:
             console.debug('invalid action', action);
             return state;
+    }
+};
+
+const parseError = (error, dispatch) => {
+    if (error instanceof RegisterError) {
+        const { errors, errorMessage } = error.data;
+
+        if (errors) {
+            function dispatchError(error) {
+                const { key, errorMessage } = error;
+                dispatch({ type: `${key.toUpperCase()}_ERROR`, value: errorMessage });
+            }
+            errors.forEach(dispatchError);
+
+        } else if (errorMessage) {
+            dispatch({ type: "ERROR", value: errorMessage });
+        } else {
+            console.error(error);
+        }
+    } else {
+        console.error(error);
     }
 };

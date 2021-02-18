@@ -1,28 +1,25 @@
 import { registerUserFunction, loginUserFunction } from "../startup/startup";
 
-export async function registerUser({ name, email, password }) {
-    try {
-        const form = new FormData();
-        form.append('name', name);
-        form.append('email', email);
-        form.append('password', password);
+export async function registerUser(data) {
+    const encoded = new URLSearchParams(data).toString();
 
-        const encoded = new URLSearchParams(form).toString();
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+    };
 
-        const response = await fetch(registerUserFunction, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'application/json',
-            },
-            body: encoded
-        });
+    const response = await fetch(registerUserFunction, {
+        method: 'POST',
+        headers,
+        body: encoded
+    });
 
-        return response.json();
+    if (!response.ok) {
+        const data = await response.json();
+        throw new RegisterError('Registration failed', data);
     }
-    catch (ex) {
-        console.debug(ex);
-    }
+
+    return response.json();
 }
 
 export const loginUser = async (user) => {
@@ -46,6 +43,13 @@ export const loginUser = async (user) => {
 };
 
 export class LoginError extends Error {
+    constructor(message, data) {
+        super(message);
+        this.data = data;
+    }
+}
+
+export class RegisterError extends Error {
     constructor(message, data) {
         super(message);
         this.data = data;

@@ -732,30 +732,48 @@ body {
   overflow: hidden;
   padding-right: 16px;
 }
-.small-card {
-  column-gap: var(--size-2);
+.list-view {
+  column-gap: var(--size-1);
 }
 
-.small-card .title {
+.list-view .title {
   font-size: calc(var(--size-2) * 1.2);
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
-.small-card .action {
+.list-view .action {
   column-gap: var(--size-1);
 }
 
-.small-card .content {
+.list-view .content {
   column-gap: var(--size-1);
 }
 
-.small-card .likes {
+.list-view .likes {
   row-gap: calc(var(--size-1) / 4);
 }
 
-.small-card .resource img {
+.list-view .resource img {
   max-width: calc(var(--size-8) * 1.15);
   max-height: calc(var(--size-8) * 1.15);
+}
+
+.list-view .tags {
+  display: inline-flex;
+  column-gap: var(--size-1);
+}
+
+.list-view .content,
+.home__search,
+.filter,
+.social {
+  flex-wrap: wrap;
+  row-gap: var(--size-1);
+}
+
+.tags {
+  flex-wrap: wrap;
+  row-gap: var(--size-1);
 }
 
 .detail__container .comments {

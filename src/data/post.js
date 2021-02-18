@@ -18,11 +18,15 @@ export const createPost = async (user, data) => {
             body: encodedString,
         });
 
+        if (!response.ok) {
+            let data = await response.json();
+            throw new RequestError('Failed create post.', data);
+        }
+
         return response.json();
 
-    } catch (ex) {
-        console.error(ex);
-        return ex;
+    } catch (error) {
+        throw error;
     }
 };
 
@@ -115,3 +119,10 @@ const getRequestHeaders = (user) => {
 
     return headers;
 };
+
+export class RequestError extends Error {
+    constructor(message, data) {
+        super(message);
+        this.data = data;
+    }
+}

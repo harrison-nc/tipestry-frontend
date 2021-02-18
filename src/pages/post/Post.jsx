@@ -1,170 +1,360 @@
-import { useState, useEffect } from 'react';
-import { URL, Title, Description } from './Validators';
+import { useContext, useReducer } from 'react';
+import { URL, Title, Description } from './Inputs';
 import { useNavigator } from '../../hooks/useNavigator';
-import { usePostInputs } from "../../hooks/usePostInputs";
 import { Tags, TagInput } from "./Tags";
 import { Control } from "./Control";
 import { Upload } from "./Upload";
 import { Header } from "./Header";
-import { uploadImage } from '../../data/post';
+import { createPost, RequestError, uploadImage } from '../../data/post';
+import { PostDispatch } from '../../hooks/usePosts';
+import { UserData } from '../../hooks/useUser';
 
-export default function Post({ id, isModal, onPost }) {
-    const Inputs = usePostInputs();
+export default function Post({ isModal }) {
+    const user = useContext(UserData);
+    const postDispatch = useContext(PostDispatch)
     const navigator = useNavigator(isModal);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [uploadImageURL, setUploadImageURL] = useState('');
-    const [isSending, setIsSending] = useState(false);
+    const [state, dispatch, validateState, isValid] = useState();
 
-    useEffect(() => {
-        Inputs.url.isRequired(Inputs.upload.props.value ? false : true);
-    }, [Inputs.url, Inputs.upload.props.value]);
+    const handleBlur = (event) => {
+        validateState(state, event.target.name);
+    }
 
-    const showError = (error) => {
-        const { key, value, message } = error;
-        const input = Inputs[key];
-        if (input) input.setError(message);
-        else console.error(`${message}: '${key}', '${value}`, error);
+    const handleFocus = (event) => {
+        const { name } = event.target;
+        dispatch({ type: `${name.toUpperCase()}_ERROR`, value: '' });
+    }
+
+    const handleClear = () => {
+        dispatch({ type: "CLEAR" });
     };
 
-    const handleClear = (e) => {
-        Inputs.asArray().forEach(input => input.reset());
-        setErrorMessage('');
-    };
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        dispatch({ type: name.toUpperCase(), value });
+    }
 
     const handleRemoveTag = (item) => {
-        const { tagItems } = Inputs;
-        const items = [...tagItems.getValue()];
+        const { tags } = state;
+        const items = [...tags];
         const index = items.indexOf(item);
         items.splice(index, 1);
-        tagItems.setValue(items);
+        dispatch({ type: 'TAGS', value: items });
     };
 
-    const handleAddTag = (e) => {
-        const { tagName, tagItems } = Inputs;
-        const { value } = tagName.props;
+    const handleAddTag = (tagName) => {
+        if (tagName.trim() === '') return;
 
-        if (value.trim() === '') return;
-
-        const items = [...tagItems.getValue()];
-        items.push(value);
-        tagItems.setValue(items);
-        tagName.setValue('');
+        const { tags } = state;
+        const items = [...tags];
+        items.push(tagName);
+        dispatch({ type: 'TAGS', value: items });
     };
 
-    const handleClose = (e) => {
-        e.preventDefault();
-        handleClear(e);
+    const handleRemoveFile = () => {
+        dispatch({ type: 'REMOVE_FILE' });
+    };
+
+    const handleFileChange = (event) => {
+        const { files } = event.target;
+        const file = files && files[0];
+
+        if (!file) return;
+
+        dispatch({ type: 'FILE', value: file });
+    };
+
+    const handleClose = (event) => {
+        event.preventDefault();
+        handleClear(event);
         navigator.goBack();
     }
 
-    const handleResponse = (event, response) => {
-        if (response instanceof Error) console.debug(response);
-        else if (response.errorMessage) setErrorMessage(response.errorMessage);
-        else if (response.errors instanceof Array) response.errors.forEach(showError);
-        else showError(response);
-    };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
-    const sendFormDate = async (e) => {
-        const { url, title, description, tagItems } = Inputs;
-
-        const formData = new FormData();
-        formData.append('resourceUrl', url.getValue());
-        formData.append('title', title.getValue());
-        formData.append('description', description.getValue());
-        formData.append('tags', tagItems.getValue());
-
-        e.target.data = formData;
-        const response = await onPost(e);
-
-        if (response) {
-            handleResponse(e, response);
-        } else {
-            navigator.goBack();
+        if (!isValid()) {
+            console.debug('# invalid input');
+            return;
         }
-    };
-
-    const sendUpload = async (e) => {
-        const { upload, title, description, tagItems } = Inputs;
-
-        const file = upload.getValue();
-        const result = await uploadImage(file);
-        const { url } = result.data.file;
-
-        const formData = new FormData();
-        formData.append('resourceUrl', url);
-        formData.append('title', title.getValue());
-        formData.append('description', description.getValue());
-        formData.append('tags', tagItems.getValue());
-
-        e.target.data = formData;
-        const response = await onPost(e);
-
-        if (response) {
-            handleResponse(e, response);
-        } else {
-            navigator.goBack();
-        }
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const isValid = Inputs.validateAll();
-
-        if (!isValid) return;
-
-        setIsSending(true);
-        Inputs.disableAll();
 
         try {
+            dispatch({ type: 'SENDING', value: true });
 
-            if (Inputs.upload.props.value) await sendUpload(e);
+            let url = await uploadFile(state);
 
-            else await sendFormDate(e);
+            const { title, description, tags } = state;
+            const data = new FormData();
 
-        } catch (ex) {
-            handleResponse(e, ex);
+            data.append('resourceUrl', url);
+            data.append('title', title);
+            data.append('description', description);
+            data.append('tags', tags);
+
+            await create(user, data, dispatch, postDispatch, navigator);
+
+        } catch (error) {
+            if (error instanceof UploadError) {
+                dispatch({ type: "ERROR", value: error.message });
+            }
+            console.error(error);
         }
-
-        setIsSending(false);
-        Inputs.enableAll();
     }
-
-    const handleRemoveFile = (e) => {
-        Inputs.upload.setValue(false);
-    };
-
-    const handleFileChange = (e) => {
-        const { files } = e.target;
-        const file = files && files[0];
-        Inputs.upload.setValue(file || false);
-
-        if (file) setUploadImageURL(window.URL.createObjectURL(file));
-    };
 
     return (
         <div className="post is-flex">
-            <form
-                onSubmit={handleSubmit}
-                className="post__content is-flex flex-column has-background-white box py-4 px-3">
+            <form className="post__content is-flex flex-column has-background-white box py-4 px-3"
+                noValidate
+                method="post"
+                onSubmit={handleSubmit}>
+
                 <Header onClose={handleClose} />
 
-                {errorMessage && <span className="error">{errorMessage}</span>}
+                <span className="error">{state.errorMessage}</span>
 
                 <Upload
-                    value={Inputs.upload.props.value}
-                    src={uploadImageURL}
+                    value={state.file}
+                    src={state.fileurl}
                     onRemove={handleRemoveFile}
                     onFileChange={handleFileChange} />
 
-                {!Inputs.upload.props.value && <URL {...Inputs.url.props} autoComplete="photo" />}
+                {!state.file &&
+                    <URL
+                        autoComplete="photo"
+                        disabled={state.isSending}
+                        value={state.url}
+                        errorMessage={state.urlErrorMessage}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        onFocus={handleFocus} />
+                }
 
-                <Title {...Inputs.title.props} />
-                <Description {...Inputs.description.props} />
-                <Tags values={Inputs.tagItems.props.value} onRemove={handleRemoveTag} />
-                <TagInput onAdd={handleAddTag} {...Inputs.tagName.props} />
-                <Control isSending={isSending} onClear={handleClear} />
+                <Title
+                    disabled={state.isSending}
+                    value={state.title}
+                    errorMessage={state.titleErrorMessage}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    onFocus={handleFocus} />
+
+                <Description
+                    disabled={state.isSending}
+                    value={state.description}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    onFocus={handleFocus} />
+
+                <Tags
+                    value={state.tags}
+                    onRemove={handleRemoveTag} />
+
+                <TagInput
+                    onAdd={handleAddTag}
+                    isDisabled={state.isSending || (state.tags && state.tags.length >= 5)} />
+
+                <Control
+                    isSending={state.isSending}
+                    isDisabled={!isValid()}
+                    onClear={handleClear} />
             </form>
         </div>
     );
 };
+
+const useState = () => {
+    const [state, dispatch] = useReducer(reducer, {
+        tags: ['tag'],
+        url: '',
+        title: '',
+        file: null,
+        fileurl: '',
+        description: '',
+        isSending: false,
+    });
+
+    const validateFile = (file, url) => {
+        let errorMessage = '';
+        if (file instanceof File) errorMessage = '';
+        else if (!url) errorMessage = 'Please enter a URL or upload a file';
+        dispatch({ type: "FILE_ERROR", value: errorMessage });
+    };
+
+    const validateTitle = (title) => {
+        let errorMessage = '';
+        if (!title) errorMessage = "Please enter a valid title";
+        else if (title.length < 5) errorMessage = "Title must have at least 5 letters";
+        dispatch({ type: "TITLE_ERROR", value: errorMessage });
+    };
+
+    const validate = (state, name) => {
+        name = name || '';
+
+        switch (name.toUpperCase()) {
+            case "FILE": {
+                validateFile(state.file, state.url);
+                break;
+            }
+            case "TITLE": {
+                validateTitle(state.title);
+                break;
+            }
+            default:
+                validateFile(state.file, state.url);
+                validateTitle(state.title);
+                break;
+        }
+    };
+
+    const isValid = () => {
+        const { file, url, title, titleErrorMessage } = state;
+
+        let hasURL = (url && url !== '');
+        let hasFile = (file !== null && file instanceof File);
+        let hasTitle = title !== '' && titleErrorMessage === '';
+
+        return (hasFile || hasURL) && hasTitle;
+    };
+
+    return [state, dispatch, validate, isValid];
+};
+
+const reducer = (state, action) => {
+    const { value } = action;
+
+    switch (action.type) {
+        case "FILE": {
+            const url = window.URL.createObjectURL(value);
+            return {
+                ...state,
+                file: value,
+                fileurl: url,
+                url: '',
+                urlErrorMessage: '',
+            }
+        }
+        case "REMOVE_FILE": {
+            return {
+                ...state,
+                file: null,
+                fileurl: '',
+                url: '',
+                urlErrorMessage: '',
+            }
+        }
+        case "RESOURCEURL": {
+            return {
+                ...state,
+                file: null,
+                fileurl: '',
+                url: value,
+                urlErrorMessage: '',
+            }
+        }
+        case "TITLE": {
+            return {
+                ...state,
+                title: value,
+                titleErrorMessage: '',
+            }
+        }
+        case "DESCRIPTION": {
+            return {
+                ...state,
+                description: value,
+            }
+        }
+        case "TAGS": {
+            return {
+                ...state,
+                tags: [...value],
+            }
+        }
+        case "SENDING": {
+            return {
+                ...state,
+                isSending: value,
+            }
+        }
+        case "CLEAR": {
+            return {
+                file: null,
+                fileurl: '',
+                url: '',
+                title: '',
+                description: '',
+                tags: ['tag'],
+                isSending: false,
+            }
+        }
+        case "URL_ERROR": {
+            return {
+                ...state,
+                urlErrorMessage: value,
+            }
+        }
+        case "TITLE_ERROR": {
+            return {
+                ...state,
+                titleErrorMessage: value,
+            }
+        }
+        case "ERROR": {
+            return {
+                ...state,
+                errorMessage: value,
+            }
+        }
+        default:
+            console.debug('invalid action', action);
+            return state;
+    }
+};
+
+function UploadError(message) {
+    this.message = message;
+}
+
+const uploadFile = async (state) => {
+    const { file } = state;
+    if (!file) return state.url;
+
+    try {
+        const result = await uploadImage(file);
+
+        if (!result.data || !result.data.file) {
+            throw new Error('Invalid response.');
+        }
+
+        return result.data.file.url;
+    } catch (ex) {
+        throw new UploadError('Failed to upload image');
+    }
+};
+
+const create = async (user, data, dispatch, postDispatch, navigator) => {
+    try {
+        const result = await createPost(user, data);
+        const post = result.data;
+        dispatch({ type: 'SENDING', value: false });
+        postDispatch({ type: "ADD_POST", post });
+        navigator.goBack();
+
+    } catch (error) {
+        if (error instanceof RequestError) {
+            const { errors, errorMessage } = error.data;
+            if (errors) {
+                function dispatchError(error) {
+                    const { key, errorMessage } = error;
+                    dispatch({ type: `${key.toUpperCase()}_ERROR`, value: errorMessage });
+                }
+
+                errors.forEach(dispatchError);
+
+            } else if (errorMessage) {
+                dispatch({ type: "ERROR", value: errorMessage });
+            }
+        } else {
+            console.error(error);
+        }
+        dispatch({ type: 'SENDING', value: false });
+    }
+}

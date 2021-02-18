@@ -450,23 +450,35 @@ body {
 .login__content .field,
 .post__content .field,
 .post__content .tag__control {
-  border: 2px solid var(--color-grey-light);
+  border: 2px solid var(--color-grey-lighter);
   border-radius: 5px;
+}
+
+.register__content .field .input::placeholder,
+.login__content .field .input::placeholder,
+.post__content .field .input::placeholder,
+.post__content .tag__control .tag__input::placeholder {
+  color: var(--color-grey);
+  font-size: calc(var(--size-1) * 1.5);
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .register__content .field .input,
 .login__content .field .input,
 .post__content .field .input,
-.post__content .tag__control .tag__input {
+.post__content .tag__input {
   border: 0;
 }
 
 .post__tags {
-  /* align-items: center; */
   align-items: flex-end;
   color: var(--color-link-light);
   justify-content: center;
   min-height: 32px;
+  column-gap: var(--size-1);
+  row-gap: var(--size-1);
+  flex-wrap: wrap;
 }
 
 .post__tags .tag__item {
@@ -542,6 +554,12 @@ body {
 .post__content .upload-image {
   max-width: 150px;
   max-height: 150px;
+}
+
+.post__content .tag__control .btn {
+  width: var(--size-6);
+  font-weight: bold;
+  border-radius: 0;
 }
 
 .comment {

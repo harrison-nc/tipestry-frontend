@@ -10,28 +10,36 @@ export default function SocialLinks({ post, className }) {
     const [user] = useUser();
     const inc = (value) => Number(value) + 1;
 
+    const handleLike = () => {
+        dispatch({
+            user: user,
+            type: "UP_VOTE",
+            votes: inc(upVotes)
+        });
+    }
+
+    const handleDislike = () => {
+        dispatch({
+            user: user,
+            type: "DOWN_VOTE",
+            votes: inc(downVotes)
+        });
+    }
+
     return (
         <div className={className} >
             <Button
                 name="Like"
                 value={upVotes}
-                onClick={(e) => dispatch({
-                    user: user,
-                    type: "UP_VOTE",
-                    votes: inc(upVotes)
-                })} />
+                onClick={handleLike} />
 
             <Button
                 name="Dislike"
                 value={downVotes}
-                onClick={e => dispatch({
-                    user: user,
-                    type: "DOWN_VOTE",
-                    votes: inc(downVotes)
-                })} />
+                onClick={handleDislike} />
 
-            <div>
-                <Link className="btn comment py-5 px-5" to={commentLink}>
+            <div className="comment__container is-flex">
+                <Link className="btn py-5 px-5" to={commentLink}>
                     Comment
                 </Link>
                 {comments && <span>{comments.length}</span>}
@@ -46,10 +54,10 @@ export default function SocialLinks({ post, className }) {
 
 export const Button = ({ onClick, name, value }) => {
     return (
-        <div>
-            <Link to="/" className="btn action py-5 px-5" onClick={onClick}>
+        <div className="btn__control is-flex">
+            <button className="btn action" onClick={onClick}>
                 {name}
-            </Link>
+            </button>
             <span>{value}</span>
         </div>
     );

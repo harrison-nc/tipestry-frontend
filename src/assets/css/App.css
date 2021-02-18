@@ -346,17 +346,31 @@ body {
   column-gap: var(--size-normal);
 }
 
-.card .footer .btn.comment,
-.card .footer .btn.action,
-.social .link {
-  color: var(--color-grey);
-  text-decoration: none;
+.social {
+  column-gap: var(--size-1);
 }
 
-.card .footer .btn.comment:hover,
-.card .footer .btn.action:hover,
-.social .link:hover {
+.social .btn__control {
+  column-gap: var(--size-1);
+}
+
+.social .comment__container {
+  align-items: center;
+  column-gap: var(--size-1);
+}
+
+.social .btn {
+  color: var(--color-grey);
+}
+
+.social .btn:hover {
   color: var(--color-black);
+}
+
+.social .btn:visited,
+.social .btn:active,
+.social .btn:link {
+  text-decoration: none;
 }
 
 .box {
@@ -571,16 +585,28 @@ body {
   column-gap: var(--size-medium);
 }
 
-.comment .control.btn:disabled:hover {
-  background-color: var(--color-primary);
-  cursor: not-allowed;
-  border: 1px solid red;
+.btn {
+  cursor: pointer;
 }
 
-.btn {
+.btn.is-primary,
+.btn.is-white,
+.btn.is-link,
+.btn.is-danger,
+.btn.is-info,
+.btn.is-warning,
+.btn.is-success {
+  border-radius: 3px;
+}
+
+.btn.is-primary:not(.is-outlined),
+.btn.is-white:not(.is-outlined),
+.btn.is-link:not(.is-outlined),
+.btn.is-danger:not(.is-outlined),
+.btn.is-info:not(.is-outlined),
+.btn.is-warning:not(.is-outlined),
+.btn.is-success:not(.is-outlined) {
   border: 0;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 .error {

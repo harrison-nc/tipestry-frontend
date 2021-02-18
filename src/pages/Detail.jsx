@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import SocialLinks from '../components/card/SocialLink';
+import SocialLinks from '../components/card/SocialLinks';
 import Comment from '../components/Comment';
 import { formatDate } from '../util/date-util';
 import Banner from '../components/Banner';
@@ -81,7 +81,7 @@ export default function Detail() {
                                     <p className="comment-text">{comment.text}</p>
                                     <div className="action">
                                         <p className="links">
-                                            <a href="/">like</a>
+                                            <button href="/">like</button>
                                             <span>
                                                 {Math.abs(
                                                     (Number(comment.upVotes) || 0)
@@ -89,7 +89,7 @@ export default function Detail() {
                                                     (Number(comment.downVotes) || 0)
                                                 )}
                                             </span>
-                                            <a href="/">dislike</a>
+                                            <button href="/">dislike</button>
                                         </p>
                                         <p className="date-created has-text-grey">
                                             {formatDate(comment.createdAt)}

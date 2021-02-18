@@ -427,27 +427,23 @@
 
 .is-white.is-outlined {
   border: 1px solid var(--color-black);
-  border-radius: 5px;
   background-color: unset;
 }
 
 .is-primary.is-outlined {
   border: 1px solid var(--color-primary);
-  border-radius: 5px;
   background-color: var(--color-white);
   color: var(--color-primary);
 }
 
 .is-danger.is-outlined {
   border: 1px solid var(--color-danger);
-  border-radius: 5px;
   background-color: var(--color-white);
   color: var(--color-danger);
 }
 
 .is-link.is-outlined {
   border: 1px solid var(--color-link);
-  border-radius: 5px;
   background-color: var(--color-white);
   color: var(--color-link);
 }
@@ -464,7 +460,7 @@
   border-radius: 10px;
 }
 
-.has-shodow {
+.has-shadow {
   box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.2);
 }
 

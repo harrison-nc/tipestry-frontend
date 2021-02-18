@@ -2,6 +2,7 @@ require('../startup');
 const { schema: commentSchema } = require('./comment');
 const mongoose = require('mongoose');
 const Joi = require('joi');
+const { parseJoiError } = require('../error');
 
 const ObjectId = mongoose.Types.ObjectId;
 const Schema = mongoose.Schema;
@@ -52,33 +53,6 @@ const schema = new Schema({
     comments: [commentSchema],
 });
 
-function createPost(post, user) {
-    const { title, resourceUrl, description, tags } = post;
-
-    const dbPost = {
-        title,
-        resourceUrl,
-        description
-    };
-
-    if (user) {
-        const { _id, name, email } = user;
-        dbPost.user = {
-            _id,
-            name,
-            email,
-        };
-    }
-
-    else dbPost.user = {};
-
-    if (tags) dbPost.tags = tags;
-
-    else dbPost.tags = [];
-
-    return new Post(dbPost).save();
-}
-
 schema.statics.newPost = createPost;
 
 schema.methods.addComment = async function (comment) {
@@ -97,8 +71,6 @@ schema.methods.addComment = async function (comment) {
     return this.save();
 }
 
-const Post = mongoose.model('posts', schema);
-
 const inputSchema = Joi.object({
     title: Joi.string().min(5).required(),
     resourceUrl: Joi.string().required(),
@@ -112,7 +84,33 @@ function validatePost(input) {
     return inputSchema.validate(input, { abortEarly: false });
 }
 
-module.exports = {
-    Post,
-    validate: validatePost
-};
+function createPost(post, user) {
+    const { error } = validatePost(post);
+
+    if (error) {
+        let result = parseJoiError(error);
+        throw new PostError('Invalid post', result);
+    }
+
+    if (user) {
+        const { _id, name, email } = user;
+        post.user = {
+            _id,
+            name,
+            email,
+        };
+    } else {
+        post.user = {};
+    }
+
+    return new Post(post).save();
+}
+
+function PostError(message, data) {
+    this.message = message;
+    this.data = data;
+}
+
+const Post = mongoose.model('posts', schema);
+
+module.exports = { Post, PostError };

@@ -1,23 +1,7 @@
-const { Post, validate } = require('../util/model/post');
-const { connect, close } = require('../util/database');
+const { Post, PostError } = require('../util/model/post');
+const { withConnection } = require('../util/database');
 const Response = require('../util/response');
-const { parseJoiError } = require('../util/error');
 const verifyToken = require('../util/verifyToken');
-
-const addPost = async (post, user) => {
-    const { error } = validate(post);
-
-    if (error) return new Error(parseJoiError(error));
-
-    try {
-        await connect();
-    }
-    catch (ex) {
-        throw new Error('Unable to connect to database');
-    }
-
-    return Post.newPost(post, user);
-};
 
 exports.handler = async function (event) {
     if (event.httpMethod !== 'POST') {
@@ -27,22 +11,53 @@ exports.handler = async function (event) {
     const bodyURLParams = new URLSearchParams(event.body);
     const body = Object.fromEntries(bodyURLParams);
 
-    if (body.tags) body.tags = body.tags.split(',');
-    else body.tags = []
-
-
-    let user;
-
     try {
-        user = verifyToken(event.headers['x-auth-token']);
+        const token = event.headers['x-auth-token'];
+        const result = await withUser(token, (user) => {
+            return withConnection(() => {
+                const tags = parseTags(body.tags);
+                const { resourceUrl, title, description } = body;
+                const post = { title, resourceUrl, description, tags };
+                return Post.newPost(post, user);
+            });
+        });
+
+        return Response.of(result);
+
+    } catch (error) {
+        if (error instanceof PostError) {
+            return Response.ofError(error.data);
+        }
+        else if (error instanceof TokenError) {
+            return Response.ofError(error.message);
+        } else {
+            console.debug(error);
+            return Response.ofError('Failed create post', { status: 500 });
+        }
     }
-    catch (ex) {
-        return Response.ofError(ex);
+}
+
+function TokenError(message) {
+    this.message = message;
+}
+
+const withUser = (token, callback) => {
+    try {
+        let user = verifyToken(token);
+        return callback(user);
+    }
+    catch (error) {
+        console.debug(error);
+        throw new TokenError('Invalid token');
+    }
+};
+
+const parseTags = (tags) => {
+    tags = tags || [];
+
+    if (typeof tags === 'string') {
+        tags = tags.split(',');
     }
 
-    const result = await addPost(body, user);
-
-    close();
-
-    return Response.of(result);
+    return tags;
 }

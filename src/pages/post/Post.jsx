@@ -77,9 +77,9 @@ export default function Post({ isModal }) {
             return;
         }
 
-        try {
-            dispatch({ type: 'SENDING', value: true });
+        dispatch({ type: 'SENDING', value: true });
 
+        try {
             let url = await uploadFile(state);
 
             const { title, description, tags } = state;
@@ -220,6 +220,8 @@ const useState = () => {
 const reducer = (state, action) => {
     const { value } = action;
 
+    delete state.errorMessage;
+
     switch (action.type) {
         case "FILE": {
             const url = window.URL.createObjectURL(value);
@@ -351,10 +353,13 @@ const create = async (user, data, dispatch, postDispatch, navigator) => {
 
             } else if (errorMessage) {
                 dispatch({ type: "ERROR", value: errorMessage });
+            } else {
+                console.error(error);
             }
         } else {
             console.error(error);
         }
+
         dispatch({ type: 'SENDING', value: false });
     }
 }

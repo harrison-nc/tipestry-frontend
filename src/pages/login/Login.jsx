@@ -4,6 +4,7 @@ import { Control } from "./Control";
 import { useNavigator } from '../../hooks/useNavigator';
 import { Email, Password } from '../../components/Input';
 import { isEmail } from '../../util/validators';
+import { LoginError } from '../../data/user';
 
 export default function Login({ isModal, onLogin }) {
     const navigator = useNavigator(isModal);
@@ -41,28 +42,18 @@ export default function Login({ isModal, onLogin }) {
         }
 
         dispatch({ type: 'SENDING', value: true });
-        const { email, password } = state;
-        const result = await onLogin({ email, password });
-        dispatch({ type: 'SENDING', value: false });
 
-        if (!result) {
+        try {
+            const { email, password } = state;
+
+            await onLogin({ email, password });
+
+            dispatch({ type: 'SENDING', value: false });
             navigator.goBack();
-            return;
-        }
 
-        const { errors, errorMessage } = result;
-
-        if (errors) {
-            errors.forEach((error) => {
-                const { key, errorMessage } = error;
-                dispatch({
-                    type: `${key.toUpperCase()}_ERROR`, value: errorMessage
-                });
-            });
-        } else if (errorMessage) {
-            dispatch({
-                type: "ERROR", value: errorMessage
-            });
+        } catch (error) {
+            dispatch({ type: 'SENDING', value: false });
+            parseError(error, dispatch);
         }
     }
 
@@ -161,6 +152,8 @@ const useLoginState = () => {
 const reducer = (state, action) => {
     const { value } = action;
 
+    delete state.errorMessage;
+
     switch (action.type) {
         case "EMAIL": {
             return {
@@ -210,5 +203,27 @@ const reducer = (state, action) => {
         default:
             console.debug('invalid action', action);
             return state;
+    }
+};
+
+const parseError = (error, dispatch) => {
+    if (error instanceof LoginError) {
+        const { errors, errorMessage } = error.data;
+
+        if (errors) {
+            function dispatchError(error) {
+                const { key, errorMessage } = error;
+                const type = key.toUpperCase();
+                dispatch({ type: `${type}_ERROR`, value: errorMessage });
+            }
+            errors.forEach(dispatchError);
+
+        } else if (errorMessage) {
+            dispatch({ type: "ERROR", value: errorMessage });
+        } else {
+            console.error(error);
+        }
+    } else {
+        console.error(error);
     }
 };

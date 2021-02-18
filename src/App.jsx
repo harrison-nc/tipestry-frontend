@@ -28,11 +28,6 @@ export default function App() {
 
     const handleLogin = async (user) => {
         const result = await loginUser(user);
-
-        if (result.errors || result.errorMessage) {
-            return result;
-        }
-
         userDispatch({ type: "LOGIN", user: result.data });
     };
 

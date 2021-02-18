@@ -26,19 +26,28 @@ export async function registerUser({ name, email, password }) {
 }
 
 export const loginUser = async (user) => {
-    try {
-        const response = await fetch(loginUserFunction, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(user)
-        });
+    const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    };
 
-        return response.json();
+    const response = await fetch(loginUserFunction, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(user)
+    });
 
-    } catch (ex) {
-        throw ex;
+    if (!response.ok) {
+        const data = await response.json();
+        throw new LoginError('Login failed', data);
     }
+
+    return response.json();
 };
+
+export class LoginError extends Error {
+    constructor(message, data) {
+        super(message);
+        this.data = data;
+    }
+}

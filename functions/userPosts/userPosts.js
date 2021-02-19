@@ -12,11 +12,7 @@ module.exports.handler = async (event) => {
     try {
         const body = JSON.parse(event.body);
         if (!body.userId) return Response.ofError('User id is required');
-
         const posts = await withConnection(() => findPost(body.userId));
-
-        console.debug('# posts...', posts);
-
         return Response.of(posts);
 
     } catch (error) {
@@ -34,7 +30,6 @@ module.exports.handler = async (event) => {
 };
 
 const findPost = (userId) => {
-    console.debug('# userId', userId);
     // todo: sort by date created and return the last 10 posts
     return Post.find({ "user._id": userId }).limit(10);
 };

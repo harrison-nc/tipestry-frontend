@@ -33,11 +33,9 @@ const withConnection = async (callback) => {
                     reject(error);
                 }
             }).then(async (value) => {
-                console.debug('callback finished...', value);
                 await close();
                 return value;
             }).catch(async (error) => {
-                console.debug('# callback failed...', error);
                 await close();
                 throw error;
             });

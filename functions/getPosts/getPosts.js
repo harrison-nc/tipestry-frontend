@@ -1,24 +1,32 @@
 const { Post } = require('../util/model/post');
-const { connect, close } = require('../util/database');
+const { withConnection } = require('../util/database');
 const Response = require('../util/response');
 
-const findPostMatchingQuery = async (query) => {
+exports.handler = async function (event) {
+    if (event.httpMethod !== 'GET') {
+        return Response.ofError(`Request method ${event.httpMethod} not supported!`);
+    }
+
+    const queryParams = event.queryStringParameters;
+
+    if (Object.values(queryParams).length > 0 && queryParams.q) {
+        const query = queryParams.q;
+        const result = await withConnection(() => findPosts(query));
+        return Response.of(result);
+    } else {
+        const result = await withConnection(() => getPost());
+        return Response.of(result);
+    }
+}
+
+const findPostMatchingQuery = (query) => {
     const regex = new RegExp(query, 'i');
-    const post = await Post
-        .find({ title: { $regex: regex } })
-        .limit(10);
-    return post;
+    const filter = { title: { $regex: regex } };
+    return Post.find(filter).limit(10);
 }
 
 const findPosts = async (query) => {
     if (!query || query.trim() === '') return [];
-
-    try {
-        await connect();
-    }
-    catch (ex) {
-        throw new Error('Unable to connect to database');
-    }
 
     try {
         const terms = query.split(' ');
@@ -32,50 +40,16 @@ const findPosts = async (query) => {
         const limit10 = sortedPosts.slice(0, 11);
 
         return limit10;
-    }
-    catch (ex) {
+
+    } catch (ex) {
         throw new Error("Unable to retrieve data from database");
     }
 };
 
-const getPost = async () => {
+const getPost = () => {
     try {
-        await connect();
-    }
-    catch (ex) {
-        throw new Error("Unable connect to database");
-    }
-
-    try {
-        const data = await Post.find();
-        return data;
-    }
-    catch (ex) {
+        return Post.find();
+    } catch (ex) {
         throw new Error("Unable to fetch data from database");
     }
 };
-
-exports.handler = async function (event) {
-    if (event.httpMethod !== 'GET') {
-        return Response.ofError(`Request method ${event.httpMethod} not supported!`);
-    }
-
-    const queryParams = event.queryStringParameters;
-
-    if (Object.values(queryParams).length > 0 && queryParams.q) {
-        const query = queryParams.q;
-
-        const result = await findPosts(query);
-
-        close();
-
-        return Response.of(result);
-    }
-    else {
-        const result = await getPost();
-
-        close();
-
-        return Response.of(result);
-    }
-}

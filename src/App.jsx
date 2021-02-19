@@ -15,41 +15,41 @@ import Detail from './pages/Detail';
 import { Modals } from './modal/Modals';
 import { usePosts, PostData, PostDispatch } from './hooks/usePosts.js';
 import { defaultTags } from './data/post';
-import { UserData, useUser } from './hooks/useUser';
-import { loginUser } from './data/user';
+import { UserData, UserDispatch, useUser } from './hooks/useUser';
 
 export default function App() {
     const location = useLocation();
     const [posts, dispatch] = usePosts();
-    const [user, userDispatch] = useUser();
+    const [user, userDispatch, login] = useUser();
     const [toptags] = useState(defaultTags);
 
     const background = location.state && location.state.background;
 
     const handleLogin = async (user) => {
-        const result = await loginUser(user);
-        userDispatch({ type: "LOGIN", user: result.data });
+        await login(user);
     };
 
     return (
         <PostData.Provider value={posts}>
             <PostDispatch.Provider value={dispatch}>
                 <UserData.Provider value={user}>
-                    <Navbar />
-                    <main className="main is-flex flex-column pt-3 px-4">
-                        <Switch location={background || location}>
-                            <Route exact path="/" children={<Home toptags={toptags} />} />
-                            <Route path="/register" children={<Register />} />
-                            <Route path="/login" children={<Login onLogin={handleLogin} />} />
-                            <Route path="/post" children={<Post />} />
-                            <Route path="/search" children={<Search />} />
-                            <Route path="/detail/:postId/:title" children={<Detail />} />
-                            <Route children={<NotFound />} />
-                        </Switch>
-                        {background &&
-                            <Modals toptags={toptags} onLogin={handleLogin} />
-                        }
-                    </main>
+                    <UserDispatch.Provider value={userDispatch}>
+                        <Navbar />
+                        <main className="main is-flex flex-column pt-3 px-4">
+                            <Switch location={background || location}>
+                                <Route exact path="/" children={<Home toptags={toptags} />} />
+                                <Route path="/register" children={<Register />} />
+                                <Route path="/login" children={<Login onLogin={handleLogin} />} />
+                                <Route path="/post" children={<Post />} />
+                                <Route path="/search" children={<Search />} />
+                                <Route path="/detail/:postId/:title" children={<Detail />} />
+                                <Route children={<NotFound />} />
+                            </Switch>
+                            {background &&
+                                <Modals toptags={toptags} onLogin={handleLogin} />
+                            }
+                        </main>
+                    </UserDispatch.Provider>
                 </UserData.Provider>
             </PostDispatch.Provider>
         </PostData.Provider>

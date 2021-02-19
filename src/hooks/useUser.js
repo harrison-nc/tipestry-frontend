@@ -1,9 +1,22 @@
 import React, { useReducer } from "react";
+import { loginUser } from "../data/user";
 
 export const UserData = React.createContext({});
+export const UserDispatch = React.createContext(null);
 
 export const useUser = () => {
-    return useReducer(userReducer, {});
+    const [state, dispatch] = useReducer(userReducer, {});
+
+    const login = async (user) => {
+        const result = await loginUser(user);
+        dispatch({ type: "LOGIN", user: result.data });
+    };
+
+    const logout = () => {
+        dispatch({ type: "LOGOUT" });
+    };
+
+    return [state, dispatch, login, logout];
 };
 
 const userReducer = (state, action) => {
@@ -26,7 +39,7 @@ const userReducer = (state, action) => {
         }
         case "LOGOUT": {
             return {
-                name: "guest",
+                name: "",
                 loggedIn: false,
             }
         }

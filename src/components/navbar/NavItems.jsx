@@ -2,12 +2,18 @@ import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { NavItem } from './NavItem';
 import { User } from './User';
-import { UserData } from '../../hooks/useUser';
+import { UserData, UserDispatch } from '../../hooks/useUser';
 import { useNavbarLinks } from '../../hooks/useNavbarLinks';
 
 export const NavItems = () => {
     const links = useNavbarLinks();
     const user = useContext(UserData);
+    const userDispatch = useContext(UserDispatch);
+
+    const handleLogout = (event) => {
+        event.preventDefault();
+        userDispatch({ type: "LOGOUT" })
+    };
 
     return (
         <nav className="nav__items is-flex">
@@ -15,13 +21,14 @@ export const NavItems = () => {
                 <>
                     <User user={user} />
                     <Line />
+                    <NavItem link={links.post} keep={true}>Post</NavItem>
+                    <LogoutButton className="nav__item" onClick={handleLogout} />
                 </>
             }
 
-            <NavItem link={links.post} keep={true}>Post</NavItem>
-
             {(!user || !user.loggedIn) &&
                 <>
+                    <NavItem link={links.post} keep={true}>Post</NavItem>
                     <NavItem link={links.login}>Login</NavItem>
                     <NavItem link={links.register} rounded={true}>Join Us</NavItem>
                 </>
@@ -29,13 +36,13 @@ export const NavItems = () => {
 
             <div className="is-flex">
                 <button className="nav__btn btn px-5 is-outlined is-white">en</button>
-                <RoundMenu />
+                <RoundMenu loggedIn={user.loggedIn} onLogout={handleLogout} />
             </div>
         </nav>
     );
 };
 
-const RoundMenu = () => {
+const RoundMenu = ({ loggedIn, onLogout }) => {
     const links = useNavbarLinks();
     const [style, setStyle] = useState({ display: 'none' });
     const root = document.querySelector('body');
@@ -59,9 +66,15 @@ const RoundMenu = () => {
             <p className="menu__item"></p>
             <p className="menu__item"></p>
             <div className="popup-container" style={style}>
-                <div className="popup-menu box has-background-white">
-                    <Link className="popup__item" to={links.login}>Login</Link>
-                    <Link className="popup__item" to={links.register}>Join Us</Link>
+                <div className="popup-menu has-background-white">
+                    {loggedIn ?
+                        <LogoutButton className="popup__item btn" onClick={onLogout} />
+                        :
+                        <>
+                            <Link className="popup__item" to={links.login}>Login</Link>
+                            <Link className="popup__item" to={links.register}>Join Us</Link>
+                        </>
+                    }
                 </div>
             </div>
         </div>
@@ -71,4 +84,12 @@ const RoundMenu = () => {
 const Line = () => {
     const style = { maxWidth: '2px', width: "1px", maxHeight: '100%' };
     return (<span className="has-background-grey" style={style}></span>);
+};
+
+const LogoutButton = ({ className, onClick }) => {
+    return (
+        <button className={`has-text-white btn ${className}`} onClick={onClick}>
+            logout
+        </button>
+    );
 };

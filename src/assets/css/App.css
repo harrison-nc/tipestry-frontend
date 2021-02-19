@@ -68,7 +68,7 @@ body {
 }
 
 .nav .nav__items {
-  column-gap: var(--size-medium);
+  column-gap: var(--size-1);
 }
 
 .nav .nav__items .round-menu {
@@ -104,6 +104,11 @@ body {
 .nav .nav__btn {
   border-width: 1px;
   border-color: rgba(0, 0, 0, 0.3);
+}
+
+.nav .nav__item.btn:not(.nav__btn) {
+  background-color: unset;
+  border: 0;
 }
 
 .nav .nav__btn:hover {
@@ -938,6 +943,15 @@ body {
 
   .popup-menu .popup__item:hover {
     background-color: rgba(0, 0, 0, 0.03);
+  }
+
+  .popup-menu .popup__item.btn {
+    border: 0;
+  }
+
+  .popup-menu .popup__item.btn:hover {
+    border: 0;
+    border-radius: 0;
   }
 
   .detail .banner__container {

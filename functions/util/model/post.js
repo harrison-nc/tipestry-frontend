@@ -13,11 +13,11 @@ const schema = new Schema({
             name: {
                 type: String,
                 trim: true,
-                default: 'annonymous'
+                default: 'anony'
             },
             email: {
                 type: String,
-                default: 'annonymous@mail.com',
+                default: 'user@anony.com',
                 trim: true,
             },
             avatarUrl: {

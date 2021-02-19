@@ -1,7 +1,7 @@
 const { Post, PostError } = require('../util/model/post');
 const { withConnection } = require('../util/database');
 const Response = require('../util/response');
-const verifyToken = require('../util/verifyToken');
+const { verify: verifyToken, TokenError, UnauthorizedError } = require('../util/verifyToken');
 
 exports.handler = async function (event) {
     if (event.httpMethod !== 'POST') {
@@ -30,15 +30,15 @@ exports.handler = async function (event) {
         }
         else if (error instanceof TokenError) {
             return Response.ofError(error.message);
-        } else {
+        }
+        else if (error instanceof UnauthorizedError) {
+            return Response.ofError("Please provide a valid token", { status: 401 });
+        }
+        else {
             console.debug(error);
             return Response.ofError('Failed create post', { status: 500 });
         }
     }
-}
-
-function TokenError(message) {
-    this.message = message;
 }
 
 const withUser = (token, callback) => {

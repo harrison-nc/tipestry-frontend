@@ -3,7 +3,7 @@ const { validator: validate } = require('../util/model/comment');
 const { connect, close } = require('../util/database');
 const { parseJoiError } = require('../util/error');
 const Response = require('../util/response');
-const verifyToken = require('../util/verifyToken');
+const { verify: verifyToken } = require('../util/verifyToken');
 
 const addComment = async (postId, comment) => {
     try {

@@ -1,18 +1,28 @@
 const jwt = require('jsonwebtoken');
 
 const secretKey = process.env.JWT_SECRET;
-
 if (!secretKey) throw new Error('JWT Key not provided');
 
-module.exports = function (token) {
-    if (!token) return {};
+exports.verify = (token, required = false) => {
+    if (!token) {
+        if (required) {
+            throw new UnauthorizedError('Illegal access');
+        }
+
+        return {};
+    }
 
     try {
-        const decoded = jwt.verify(token, secretKey);
-        return decoded;
+        return jwt.verify(token, secretKey);
     }
     catch (ex) {
         console.debug(ex);
-        throw new Error('Invalid token');
+        throw new TokenError('Invalid token');
     }
 }
+
+class UnauthorizedError extends Error { }
+class TokenError extends Error { }
+
+exports.TokenError = TokenError;
+exports.UnauthorizedError = UnauthorizedError;

@@ -1,14 +1,14 @@
+require('../startup');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const mongoose = require('mongoose');
+const { verify: verifyToken } = require('../verifyToken');
 
 const secretKey = process.env.JWT_SECRET;
-
 if (!secretKey) throw new Error('JWT Key not provided');
 
 const Schema = mongoose.Schema;
-
 const schema = new Schema({
     name: {
         type: String,
@@ -67,13 +67,11 @@ async function login(email, password) {
 }
 
 function generateAuthToken() {
-    const payload = {
+    return jwt.sign({
         _id: this._id,
         name: this.name,
         email: this.email,
-    };
-    const token = jwt.sign(payload, secretKey);
-    return token;
+    }, secretKey);
 }
 
 schema.methods.verifyPassword = verifyPassword;
@@ -83,12 +81,19 @@ schema.statics.login = login;
 schema.statics.newUser = createUser;
 schema.statics.findByEmail = findByEmail;
 schema.statics.validateModel = (user) => modelSchema.validate(user, { abortEarly: false });
+schema.statics.verifyToken = (token) => tokenSchema.validate(verifyToken(token));
 
 const modelSchema = Joi.object({
     email: Joi.string().required().email(),
     password: Joi.string().min(5).required(),
     name: Joi.string().min(4).max(15).required(),
 }).label('user').required();
+
+const tokenSchema = Joi.object({
+    _id: Joi.objectId().required(),
+    name: Joi.string().required(),
+    email: Joi.string().required().email(),
+}).label('token-user')
 
 const User = mongoose.model('users', schema);
 module.exports = User;

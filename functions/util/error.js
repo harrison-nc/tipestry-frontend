@@ -9,3 +9,7 @@ exports.parseJoiError = (error) => {
 
     return { errors };
 };
+
+exports.httpMethodNotSupported = (method) => {
+    return `Request method ${method} not supported!`;
+};

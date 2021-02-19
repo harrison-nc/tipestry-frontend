@@ -10,6 +10,7 @@ REACT_APP_POST_API = "/.netlify/functions/getPosts"
 REACT_APP_REGISTER_USER_API = "/.netlify/functions/registerUser"
 REACT_APP_UPLOAD_API = "/.netlify/functions/uploadImage"
 REACT_APP_UP_VOTE_API = "/.netlify/functions/upVote"
+REACT_APP_USER_POST_API = "/.netlify/functions/userPosts"
 
 [dev]
 autoLaunch = false

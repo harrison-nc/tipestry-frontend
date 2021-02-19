@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { formatDate, formatDateString } from '../../util/date-util';
 
 export default function Avatar(props) {
@@ -11,12 +12,15 @@ export default function Avatar(props) {
     if (!user) user = { name: 'no user', avatarUrl: '' };
 
     const { name, avatarUrl } = user;
+    const ucLink = { pathname: '/uc', state: { userId: user._id } };
 
     return (
         <div className="avatar">
             <img alt="user" src={avatarUrl} />
             <div>
-                <p><span className="has-text-link">@{name}</span></p>
+                <Link to={ucLink}>
+                    <span className="has-text-link">@{name}</span>
+                </Link>
                 <p>
                     <abbr className="date has-text-grey"
                         title={formatDateString(createdAt)}>

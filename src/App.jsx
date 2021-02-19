@@ -16,6 +16,7 @@ import { Modals } from './modal/Modals';
 import { usePosts, PostData, PostDispatch } from './hooks/usePosts.js';
 import { defaultTags } from './data/post';
 import { UserData, UserDispatch, useUser } from './hooks/useUser';
+import UserContent from './pages/UserContent';
 
 export default function App() {
     const location = useLocation();
@@ -43,6 +44,7 @@ export default function App() {
                                 <Route path="/post" children={<Post />} />
                                 <Route path="/search" children={<Search />} />
                                 <Route path="/detail/:postId/:title" children={<Detail />} />
+                                <Route path="/uc" component={UserContent} />
                                 <Route children={<NotFound />} />
                             </Switch>
                             {background &&

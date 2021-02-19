@@ -1,4 +1,4 @@
-import { registerUserFunction, loginUserFunction } from "../startup/startup";
+import { registerUserFunction, loginUserFunction, userPostFunction } from "../startup/startup";
 
 export async function registerUser(data) {
     const encoded = new URLSearchParams(data).toString();
@@ -42,6 +42,25 @@ export const loginUser = async (user) => {
     return response.json();
 };
 
+export const getPosts = async (userId) => {
+    const headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    };
+
+    const response = await fetch(userPostFunction, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ userId })
+    })
+
+    if (!response.ok) {
+        throw new PostError('Failed to get user posts');
+    }
+
+    return response.json();
+};
+
 export class LoginError extends Error {
     constructor(message, data) {
         super(message);
@@ -55,3 +74,5 @@ export class RegisterError extends Error {
         this.data = data;
     }
 }
+
+export class PostError extends Error { }

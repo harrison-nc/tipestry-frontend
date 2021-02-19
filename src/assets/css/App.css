@@ -830,6 +830,26 @@ body {
   justify-content: center;
 }
 
+.user-content {
+  row-gap: var(--size-3);
+}
+
+.user-content .menu {
+  align-items: center;
+  column-gap: var(--size-3);
+}
+
+.user-content .posts {
+  justify-content: center;
+  row-gap: var(--size-1);
+}
+
+.user-content .posts .cards {
+  justify-self: stretch;
+  width: 100%;
+  max-width: 600px;
+}
+
 @media screen and (max-width: 900px) {
   .home {
     display: flex;

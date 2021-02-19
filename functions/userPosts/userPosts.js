@@ -1,4 +1,3 @@
-const User = require('../util/model/user');
 const { Post } = require('../util/model/post');
 const { httpMethodNotSupported } = require('../util/error');
 const { TokenError, UnauthorizedError } = require('../util/verifyToken');

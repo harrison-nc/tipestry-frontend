@@ -7,7 +7,7 @@ export const Likes = ({ post }) => {
     const dispatch = usePost(postId)[1];
     const [user] = useUser();
 
-    const votes = Math.abs((Number(downVotes) || 0) - (Number(upVotes) || 0));
+    const votes = (Number(upVotes) || 0) - (Number(downVotes) || 0);
     const inc = (value) => (Number(value) || 0) + 1;
 
     const like = (event) => {

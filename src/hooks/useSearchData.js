@@ -6,14 +6,19 @@ export const useSearchData = (posts) => {
     const query = useQuery();
     const matchRef = useRef();
     const [match, setMatch] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
 
     useEffect(() => {
         matchRef.current = match;
     }, [match])
 
     useEffect(() => {
+        if (!query) return;
+
         async function findPost() {
+            setIsSearching(true);
             const match = await findPostsMatchingQuery(query);
+            setIsSearching(false);
             setMatch(match);
         }
 
@@ -26,11 +31,14 @@ export const useSearchData = (posts) => {
         if (!(posts instanceof Array)) return;
 
         const update = posts.filter(a => matchRef.current.find(b => b._id === a._id));
-        setMatch(value => [...value, ...update]);
+        setMatch(value => {
+            value = value.filter(v => !update.find(uv => uv._id === v._id));
+            return [...value, ...update];
+        });
 
     }, [posts]);
 
-    return [match, setMatch];
+    return [match, isSearching];
 };
 
 const findPostsMatchingQuery = async (query) => {

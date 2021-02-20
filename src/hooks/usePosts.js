@@ -51,7 +51,7 @@ export const useTopTags = () => {
     return useState(defaultTags)[0];
 }
 
-const postsReducer = (state, action) => {
+export const postsReducer = (state, action) => {
     switch (action.type) {
         case 'INIT': {
             const posts = action.posts || [];

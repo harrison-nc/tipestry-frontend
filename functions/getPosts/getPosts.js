@@ -42,6 +42,7 @@ const findPosts = async (query) => {
         return limit10;
 
     } catch (ex) {
+        console.debug(ex);
         throw new Error("Unable to retrieve data from database");
     }
 };

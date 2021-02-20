@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react';
-import { addComment, addVotes } from '../data/post';
+import { addComment, addVotes, defaultTags } from '../data/post';
 import { downVoteFunction, getPostFunction, upVoteFunction } from '../startup/startup';
 
 export const PostData = React.createContext([]);
@@ -46,6 +46,10 @@ export const usePost = (postId) => {
 
     return [post, (action) => postReducer(post, action, postId, dispatch)];
 };
+
+export const useTopTags = () => {
+    return useState(defaultTags)[0];
+}
 
 const postsReducer = (state, action) => {
     switch (action.type) {

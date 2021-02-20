@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ListViewContext } from "../../App";
 import Card from "./Card";
 import ListView from "./list/ListView";
 
-const Cards = ({ posts, listView }) => {
+const Cards = ({ posts }) => {
+    const listView = useContext(ListViewContext);
+
     return (
         <div className="cards is-flex flex-column">
             {posts && listView ?

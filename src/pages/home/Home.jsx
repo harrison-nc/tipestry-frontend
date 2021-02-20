@@ -6,13 +6,14 @@ import { Sidebar } from './Sidebar';
 import { Search } from './Search';
 import { useFilteringAction, useSortingAction } from '../../util/post-util';
 import { PostData } from '../../hooks/usePosts';
+import { ListViewDispatchContext } from '../../App';
 
-export default function Home({ toptags }) {
+export default function Home() {
     const posts = useContext(PostData);
     const [filteredPosts, setFilterPosts] = useState(posts);
-    const [listView, setListView] = useState(true);
     const [filter, selectFilter] = useFilteringAction();
     const [sort, selectSort] = useSortingAction();
+    const setListView = useContext(ListViewDispatchContext);
 
     useEffect(() => {
         const filteredPosts = filter ? filter.filter(posts) : posts;
@@ -43,9 +44,9 @@ export default function Home({ toptags }) {
                     sort={sort && sort.name}
                     onViewChange={handleViewChange}
                     onChange={handleSortingAndFiltering} />
-                <Content posts={filteredPosts} listView={listView} />
+                <Content posts={filteredPosts} />
             </section>
-            <Sidebar toptags={toptags} />
+            <Sidebar />
         </div>
     );
 }

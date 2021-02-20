@@ -2,18 +2,13 @@ import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { NavItem } from './NavItem';
 import { User } from './User';
-import { UserData, UserDispatch } from '../../hooks/useUser';
+import { useLogout, UserData } from '../../hooks/useUser';
 import { useNavbarLinks } from '../../hooks/useNavbarLinks';
 
 export const NavItems = () => {
     const links = useNavbarLinks();
     const user = useContext(UserData);
-    const userDispatch = useContext(UserDispatch);
-
-    const handleLogout = (event) => {
-        event.preventDefault();
-        userDispatch({ type: "LOGOUT" })
-    };
+    const logout = useLogout();
 
     return (
         <nav className="nav__items is-flex">
@@ -22,7 +17,7 @@ export const NavItems = () => {
                     <User user={user} />
                     <Line />
                     <NavItem link={links.post} keep={true}>Post</NavItem>
-                    <LogoutButton className="nav__item" onClick={handleLogout} />
+                    <LogoutButton className="nav__item" onClick={logout} />
                 </>
             }
 
@@ -36,7 +31,7 @@ export const NavItems = () => {
 
             <div className="is-flex">
                 <button className="nav__btn btn px-5 is-outlined is-white">en</button>
-                <RoundMenu loggedIn={user.loggedIn} onLogout={handleLogout} />
+                <RoundMenu loggedIn={user.loggedIn} onLogout={logout} />
             </div>
         </nav>
     );

@@ -5,10 +5,12 @@ import { useNavigator } from '../../hooks/useNavigator';
 import { Email, Password } from '../../components/Input';
 import { isEmail } from '../../util/validators';
 import { LoginError } from '../../data/user';
+import { useLogin } from '../../hooks/useUser';
 
-export default function Login({ isModal, onLogin }) {
+export default function Login({ isModal }) {
+    const login = useLogin();
     const navigator = useNavigator(isModal);
-    const [state, dispatch, validateState, isValid] = useLoginState();
+    const [state, dispatch, validateState, isValid] = useValue();
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -46,7 +48,7 @@ export default function Login({ isModal, onLogin }) {
         try {
             const { email, password } = state;
 
-            await onLogin({ email, password });
+            await login({ email, password });
 
             dispatch({ type: 'SENDING', value: false });
             navigator.goBack();
@@ -97,7 +99,7 @@ export default function Login({ isModal, onLogin }) {
     );
 }
 
-const useLoginState = () => {
+const useValue = () => {
     const [state, dispatch] = useReducer(reducer, {
         email: '',
         password: '',

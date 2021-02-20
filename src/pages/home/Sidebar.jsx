@@ -2,9 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Banner from '../../components/Banner';
 import { useNavigator } from '../../hooks/useNavigator';
+import { useTopTags } from '../../hooks/usePosts';
 
-export const Sidebar = (props) => {
-    const { toptags } = props;
+export const Sidebar = () => {
+    const toptags = useTopTags();
 
     return (
         <div className="home__right">
@@ -14,7 +15,9 @@ export const Sidebar = (props) => {
                         <p className="mb-5 title">Top Hashtags</p>
                         <div className="has-background-white box is-flex flex-column">
                             <p className="py-4 px-3 is-flex flex-wrap">
-                                {toptags.map((tag, id) => <a className="tag" href="/" key={id}>#{tag}</a>)}
+                                {toptags && toptags.map((tag, id) =>
+                                    <a className="tag" href="/" key={id}>#{tag}</a>
+                                )}
                             </p>
                             <Banner className="banner__container" />
                         </div>
@@ -49,7 +52,7 @@ export const FollowLink = ({ children }) => {
     return (<p><Link className="link" to="/" onClick={handleClick}>{children}</Link></p>);
 }
 
-export const BannerModal = ({ toptags }) => {
+export const BannerModal = () => {
     const navigator = useNavigator();
 
     function handleClose(event) {
@@ -62,7 +65,7 @@ export const BannerModal = ({ toptags }) => {
                 <h1 className="title">Side Bar</h1>
             </div>
             <div className="content is-flex flex-column px-2">
-                <Sidebar isModal={true} toptags={toptags} />
+                <Sidebar isModal={true} />
                 <div className="control is-flex">
                     <button className="btn" onClick={handleClose}>Close</button>
                 </div>

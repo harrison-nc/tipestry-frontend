@@ -1,22 +1,32 @@
-import React, { useReducer } from "react";
+import React, { useContext, useReducer } from "react";
 import { loginUser } from "../data/user";
 
 export const UserData = React.createContext({});
 export const UserDispatch = React.createContext(null);
 
 export const useUser = () => {
-    const [state, dispatch] = useReducer(userReducer, {});
+    return useReducer(userReducer, {});
+};
+
+export const useLogin = () => {
+    const dispatch = useContext(UserDispatch);
 
     const login = async (user) => {
         const result = await loginUser(user);
         dispatch({ type: "LOGIN", user: result.data });
     };
 
+    return login;
+};
+
+export const useLogout = () => {
+    const dispatch = useContext(UserDispatch);
+
     const logout = () => {
         dispatch({ type: "LOGOUT" });
     };
 
-    return [state, dispatch, login, logout];
+    return logout;
 };
 
 const userReducer = (state, action) => {

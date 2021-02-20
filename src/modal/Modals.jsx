@@ -7,32 +7,13 @@ import Comment from '../components/Comment';
 import { Switch, Route } from 'react-router-dom';
 import { BannerModal } from '../pages/home/Sidebar';
 
-export const Modals = ({ onLogin, toptags }) => {
+export const Modals = () => {
     return (
         <Switch>
-            <Route path="/register">
-                <Modal>
-                    <Register isModal={true} />
-                </Modal>
-            </Route>
-
-            <Route path="/login">
-                <Modal>
-                    <Login isModal={true} onLogin={onLogin} />
-                </Modal>
-            </Route>
-
-            <Route path="/post">
-                <Modal>
-                    <Post isModal={true} />
-                </Modal>
-            </Route>
-
-            <Route path="/banner">
-                <Modal>
-                    <BannerModal toptags={toptags} />
-                </Modal>
-            </Route>
+            <Route path="/register" children={<Modal component={Register} />} />
+            <Route path="/login" children={<Modal component={Login} />} />
+            <Route path="/post" children={<Modal component={Post} />} />
+            <Route path="/banner" children={<Modal component={BannerModal} />} />
 
             <Route path="/comment/:postId">
                 <Modal>

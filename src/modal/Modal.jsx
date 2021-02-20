@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 export default function Modal(props) {
-    const { id, children, className } = props;
+    const { id, children, className, component } = props;
     const addClassName = className ? className : '';
 
     useEffect(() => {
@@ -13,7 +13,8 @@ export default function Modal(props) {
 
     return createPortal(
         <div id={id} className={"modal " + addClassName}>
-            {children}
+            {children && children}
+            {!children && component({ isModal: true })}
         </div>
         , document.getElementById('modal-root')
     );

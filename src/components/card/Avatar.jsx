@@ -12,7 +12,7 @@ export default function Avatar(props) {
     if (!user) user = { name: 'no user', avatarUrl: '' };
 
     const { name, avatarUrl } = user;
-    const ucLink = { pathname: '/uc', state: { userId: user._id } };
+    const ucLink = { pathname: '/uc', state: { user: user } };
 
     return (
         <div className="avatar">

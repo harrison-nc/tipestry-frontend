@@ -10,7 +10,7 @@ export const Details = ({ post }) => {
     const navigator = useNavigator();
     const style = { cursor: "pointer" };
 
-    const ucLink = { pathname: '/uc', state: { userId: user._id } };
+    const ucLink = { pathname: '/uc', state: { user: user } };
 
     const handleClick = (e) => post && navigator.gotoPostDetail(postId, title);
 

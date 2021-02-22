@@ -4,25 +4,15 @@ import { Link, Route, Switch, useLocation, useRouteMatch } from 'react-router-do
 import { getPosts } from '../data/user';
 import { useNavigator } from '../hooks/useNavigator';
 
-export default function UserContent(props) {
-    const location = useLocation();
-    const userId = location.state && location.state.userId;
+export default function UserContent() {
     const { path, url } = useRouteMatch();
-    const posts = useUserPost(userId);
-
-    const createLink = (path) => {
-        return { pathname: `${url}/${path}`, state: { userId } };
-    };
+    const location = useLocation();
+    const user = location.state && location.state.user;
+    const posts = useUserPost(user);
 
     return (
         <div className="user-content is-flex flex-column px-2">
-            <div className="header"></div>
-
-            <div className="menu is-flex has-background-link px-3">
-                <Link className="has-text-white" to={createLink('posts')}>Posts</Link>
-                <Link className="has-text-white" to={createLink('comments')}>Comments</Link>
-            </div>
-
+            <Header user={user} url={url} />
             <Switch>
                 <Route exact path={path} component={LandingPage} />
                 <Route path={`${path}/posts`} children={<Posts posts={posts} />} />
@@ -32,11 +22,40 @@ export default function UserContent(props) {
     );
 }
 
+const Header = ({ user, url }) => {
+    return (
+        <div className="header is-flex flex-column">
+            <div className="top is-flex py-4 px-4">
+                <div className="userd is-flex flex-column">
+                    <span>{user.name}</span>
+                    <span className="email">{user.email}</span>
+                </div>
+                <img className="avatar" src={user.avatarUrl} alt="avatar" />
+            </div>
+            <Menu target={url} user={user} />
+        </div>
+    );
+};
+
 const LandingPage = () => {
+    const waiting = useRef();
+
+    useEffect(() => {
+        if (waiting.current) {
+            const id = setInterval(() => {
+                let text = waiting.current.innerHTML;
+                text = text === '....' ? "" : (text + ".");
+                waiting.current.innerHTML = text;
+
+            }, 350);
+            return () => clearInterval(id);
+        }
+    });
+
     return (
         <div className="landing">
             <h1>Getting user data.</h1>
-            <p>Please wait...</p>
+            <p>Please wait<span ref={waiting}></span></p>
         </div>
     );
 };
@@ -55,7 +74,59 @@ const Comments = ({ posts }) => {
     );
 };
 
-function useUserPost(userId) {
+const Menu = ({ target, user }) => {
+    const links = useMenuLinks();
+    const [selected, setSelected] = useState(0);
+
+    const handleSelect = id => {
+        setSelected(id);
+    };
+
+    return (
+        <div className="menu is-flex has-background-link px-3">
+            {links.map((link, id) =>
+                <MenuItem
+                    id={id}
+                    key={id}
+                    text={link.text}
+                    path={link.path}
+                    target={target}
+                    user={user}
+                    selected={selected}
+                    onClick={handleSelect}
+                />)
+            }
+        </div>
+    );
+};
+
+const MenuItem = ({ id, text, path, target, user, selected, onClick }) => {
+    const link = { pathname: `${target}/${path}`, state: { user } }
+
+    return (
+        <Link
+            id={id}
+            to={link}
+            onClick={(e) => onClick(id)}
+            className={"has-text-white menu__item" + (selected === id ? " selected" : "")}>
+            <span className="text">{text}</span>
+            <span className="border"></span>
+        </Link>
+    );
+};
+
+function useMenuLinks() {
+    const createLink = (text, path = text) => ({ text, path });
+
+    const links = [
+        createLink('posts'),
+        createLink('comments')
+    ];
+
+    return useState(links)[0];
+};
+
+function useUserPost(user) {
     const [posts, setPosts] = useState([]);
     const navigator = useNavigator();
     const navRef = useRef();
@@ -68,14 +139,14 @@ function useUserPost(userId) {
         async function fetchPost() {
             try {
 
-                if (!userId)
+                if (!user || !user._id)
                     throw new Error('User id required');
 
-                const posts = await getPosts(userId);
+                const posts = await getPosts(user._id);
                 setPosts(posts.data);
 
                 if (navRef.current) {
-                    navRef.current.gotoUserPosts(userId);
+                    navRef.current.gotoUserPosts(user);
                 }
 
             } catch (error) {
@@ -86,7 +157,7 @@ function useUserPost(userId) {
 
         fetchPost();
 
-    }, [userId]);
+    }, [user]);
 
     return posts;
 }

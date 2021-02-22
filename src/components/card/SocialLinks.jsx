@@ -38,7 +38,7 @@ export default function SocialLinks({ post, className }) {
                 value={downVotes}
                 onClick={handleDislike} />
 
-            <div className="comment__container is-flex">
+            <div className="comment__container rows">
                 <Link className="btn py-5 px-5" to={commentLink}>
                     Comment
                 </Link>
@@ -54,7 +54,7 @@ export default function SocialLinks({ post, className }) {
 
 export const Button = ({ onClick, name, value }) => {
     return (
-        <div className="btn__control is-flex">
+        <div className="btn__control rows">
             <button className="btn action" onClick={onClick}>
                 {name}
             </button>

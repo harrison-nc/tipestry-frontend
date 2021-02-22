@@ -26,8 +26,8 @@ export function createDialog(attrs) {
     return (props) => {
         return (
             <Modal id={id} {...rest} {...props}>
-                <div className={type + " box is-flex flex-column has-background-white py-3 px-3"}>
-                    <p className="is-flex subtitle">
+                <div className={type + " box columns has-background-white py-3 px-3"}>
+                    <p className="rows subtitle">
                         {text}
                     </p>
                     <a className="modal-close close" alt="close modal" href="#app">Close</a>

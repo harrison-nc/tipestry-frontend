@@ -60,9 +60,9 @@ export default function Login({ isModal }) {
     }
 
     return (
-        <div className="login is-flex">
+        <div className="login rows">
             <form
-                className="login__content is-flex flex-column has-background-white box py-4 px-3"
+                className="login__content columns has-background-white box py-4 px-3"
                 method="post"
                 onSubmit={handleSubmit}
                 noValidate>

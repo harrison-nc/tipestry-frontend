@@ -3,7 +3,7 @@ import FancyButton from '../../components/FancyButton';
 
 export const Control = ({ onClear, isSending, isDisabled }) => {
     return (
-        <div className="register__control is-flex mt-3">
+        <div className="register__control rows mt-3">
             <input
                 className="btn cancel is-white is-outlined is-bold"
                 type="button"

@@ -11,7 +11,7 @@ export default function UserContent() {
     const posts = useUserPost(user);
 
     return (
-        <div className="user-content is-flex flex-column px-2">
+        <div className="user-content columns px-2">
             <Header user={user} url={url} />
             <Switch>
                 <Route exact path={path} component={LandingPage} />
@@ -24,9 +24,9 @@ export default function UserContent() {
 
 const Header = ({ user, url }) => {
     return (
-        <div className="header is-flex flex-column">
-            <div className="top is-flex py-4 px-4">
-                <div className="userd is-flex flex-column">
+        <div className="header columns">
+            <div className="top rows py-4 px-4">
+                <div className="userd columns">
                     <span>{user.name}</span>
                     <span className="email">{user.email}</span>
                 </div>
@@ -62,7 +62,7 @@ const LandingPage = () => {
 
 const Posts = ({ posts }) => {
     return (
-        <div className="posts is-flex">
+        <div className="posts rows">
             <Cards posts={posts} />
         </div>
     );
@@ -83,7 +83,7 @@ const Menu = ({ target, user }) => {
     };
 
     return (
-        <div className="menu is-flex has-background-link px-3">
+        <div className="menu rows has-background-link px-3">
             {links.map((link, id) =>
                 <MenuItem
                     id={id}

@@ -7,7 +7,7 @@ const Cards = ({ posts }) => {
     const listView = useContext(ListViewContext);
 
     return (
-        <div className="cards is-flex flex-column">
+        <div className="cards columns">
             {posts && listView ?
                 posts.map((post, id) => <ListView key={id} post={post} />)
                 :

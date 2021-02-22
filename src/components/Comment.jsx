@@ -52,7 +52,7 @@ export default function Comment(props) {
                 onBlur={handleBlur}
                 onChange={handleChange} />
 
-            <div className="control is-flex">
+            <div className="control rows">
                 <button className="btn py-4 px-3 is-white is-outlined" onClick={handleCancel}>
                     Cancel
                 </button>

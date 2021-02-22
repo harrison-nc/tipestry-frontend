@@ -9,12 +9,12 @@ export default function Search() {
     const [state, isSearching] = useSearchData(posts);
 
     return (
-        <div className="search is-flex px-3 pb-1">
+        <div className="search rows px-3 pb-1">
             <div className="search__left sidebar">
                 <div className="search__content"></div>
             </div>
 
-            <div className="search__content is-flex flex-column">
+            <div className="search__content columns">
                 {isSearching ?
                     <div>
                         <h1 className="title">Searching</h1>

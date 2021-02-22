@@ -15,10 +15,10 @@ export const Details = ({ post }) => {
     const handleClick = (e) => post && navigator.gotoPostDetail(postId, title);
 
     return (
-        <div className="card__details is-flex flex-column">
+        <div className="card__details columns">
             <h2 className="title" style={style} onClick={handleClick}>{title}</h2>
 
-            <div className="content is-flex">
+            <div className="content rows">
                 <Link to={ucLink}>
                     <span className="has-text-link">@{user && user.name}</span>
                 </Link>
@@ -32,7 +32,7 @@ export const Details = ({ post }) => {
                 </ul>
             </div>
 
-            <div className="action is-flex">
+            <div className="action rows">
                 <Link to={commentLink}>comment</Link>
                 <Link to="">share</Link>
             </div>

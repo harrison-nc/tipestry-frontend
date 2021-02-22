@@ -11,7 +11,7 @@ export const NavItems = () => {
     const logout = useLogout();
 
     return (
-        <nav className="nav__items is-flex">
+        <nav className="nav__items rows">
             {user && user.loggedIn &&
                 <>
                     <User user={user} />
@@ -29,7 +29,7 @@ export const NavItems = () => {
                 </>
             }
 
-            <div className="is-flex">
+            <div className="rows">
                 <button className="nav__btn btn px-5 is-outlined is-white">en</button>
                 <RoundMenu loggedIn={user.loggedIn} onLogout={logout} />
             </div>

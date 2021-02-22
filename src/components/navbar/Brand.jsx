@@ -4,7 +4,7 @@ import { NavItem } from "./NavItem";
 
 export const Brand = ({ children }) => {
     return (
-        <div className="nav__brand is-flex">
+        <div className="nav__brand rows">
             <LineMenu />
             <span className="title">
                 <NavItem link="/">{children}</NavItem>

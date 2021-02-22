@@ -24,7 +24,7 @@ export default function Detail() {
     }, [location.state, postId, posts]);
 
     if (!currentPost) return (
-        <div className="detail detail__empty is-flex">
+        <div className="detail detail__empty rows">
             <div className="detail__content">
                 <span>No was post selected</span>
             </div>
@@ -38,12 +38,12 @@ export default function Detail() {
     const { name } = user;
 
     return (
-        <div className="detail is-flex pb-1">
-            <div className="is-flex flex-column detail__content">
-                <div className="resource box has-background-white is-flex flex-column">
-                    <header className="is-flex flex-column px-4 py-4">
+        <div className="detail rows pb-1">
+            <div className="columns detail__content">
+                <div className="resource box has-background-white columns">
+                    <header className="columns px-4 py-4">
                         <h1 className="title is-bold">{title}</h1>
-                        <p className="is-flex profile has-text-grey">
+                        <p className="rows profile has-text-grey">
                             <span>posted by</span>
                             <span className="user has-text-link-dark">@{name}</span>
                             <span className="time">{formatDate(createAt)}</span>
@@ -52,10 +52,10 @@ export default function Detail() {
                     <img alt="resource" src={resourceUrl} />
                 </div>
 
-                <div className="detail__container is-flex">
-                    <div className="tags-social-comment is-flex flex-column">
-                        <div className="tag__container box has-background-white is-flex flex-column px-4 py-4">
-                            <div className="tags is-flex">
+                <div className="detail__container rows">
+                    <div className="tags-social-comment columns">
+                        <div className="tag__container box has-background-white columns px-4 py-4">
+                            <div className="tags rows">
                                 {tags && tags.map((tag, key) =>
                                     <span key={key} className="tag has-text-link-dark">
                                         #{tag}
@@ -65,11 +65,11 @@ export default function Detail() {
                         </div>
 
                         <SocialLinks
-                            className="social box is-flex has-background-white px-4"
+                            className="social box rows has-background-white px-4"
                             post={currentPost} />
 
                         <Comment
-                            className="comment box is-flex flex-column has-background-white py-3 px-2" />
+                            className="comment box columns has-background-white py-3 px-2" />
 
                         <Banner className="detail__banner__container" />
 

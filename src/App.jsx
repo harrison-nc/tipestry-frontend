@@ -27,7 +27,7 @@ export default function App() {
     return (
         <Providers>
             <Navbar />
-            <main className="main is-flex flex-column pt-3 px-4">
+            <main className="main columns pt-3 px-4">
                 <Switch location={background || location}>
                     <Route exact path="/" component={Home} />
                     <Route path="/register" component={Register} />

@@ -18,7 +18,7 @@ export const Modals = () => {
             <Route path="/comment/:postId">
                 <Modal>
                     <Comment
-                        className="comment box is-flex flex-column has-background-white py-3 px-2"
+                        className="comment box columns has-background-white py-3 px-2"
                         id="comment"
                         isModal={true} />
                 </Modal>

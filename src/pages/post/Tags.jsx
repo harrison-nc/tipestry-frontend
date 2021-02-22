@@ -4,7 +4,7 @@ export const Tags = (props) => {
     const { value, onRemove } = props;
 
     return (
-        <ul className="post__tags is-flex">
+        <ul className="post__tags rows">
             {value.map((item, i) =>
                 <li key={i} className="tag__item">
                     <span className="tag__item__hash">#</span>
@@ -30,7 +30,7 @@ export const TagInput = (props) => {
     }
 
     return (
-        <div className="tag__control is-flex mt-3">
+        <div className="tag__control rows mt-3">
             <input
                 className="tag__input input flex-grow py-4 px-4"
                 type="text"

@@ -10,11 +10,11 @@ export const Sidebar = () => {
     return (
         <div className="home__right">
             <div className="home__right__content is-sticky">
-                <div className="sidebar is-flex flex-column">
+                <div className="sidebar columns">
                     <div>
                         <p className="mb-5 title">Top Hashtags</p>
-                        <div className="has-background-white box is-flex flex-column">
-                            <p className="py-4 px-3 is-flex flex-wrap">
+                        <div className="has-background-white box columns">
+                            <p className="py-4 px-3 rows flex-wrap">
                                 {toptags && toptags.map((tag, id) =>
                                     <a className="tag" href="/" key={id}>#{tag}</a>
                                 )}
@@ -23,14 +23,14 @@ export const Sidebar = () => {
                         </div>
                     </div>
 
-                    <div className="policy box has-background-white py-3 px-3 is-flex flex-column">
+                    <div className="policy box has-background-white py-3 px-3 columns">
                         <p>
                             <strong className="emphasis">© 2021 <em>Tipestry</em></strong> Faq Contact About Contests Privacy Policy
                         Tipestry Go White Paper Tipestry for Chrome Terms and Condition
                         </p>
                         <div>
                             <p>Follow Us on Social Media</p>
-                            <div className="social pt-5 is-flex">
+                            <div className="social pt-5 rows">
                                 <FollowLink>Facebook</FollowLink>
                                 <FollowLink>Twiter</FollowLink>
                                 <FollowLink>Youtube</FollowLink>
@@ -60,13 +60,13 @@ export const BannerModal = () => {
     }
 
     return (
-        <div className="home__modal is-flex flex-column has-background-white">
-            <div className="header is-flex px-3">
+        <div className="home__modal columns has-background-white">
+            <div className="header rows px-3">
                 <h1 className="title">Side Bar</h1>
             </div>
-            <div className="content is-flex flex-column px-2">
+            <div className="content columns px-2">
                 <Sidebar isModal={true} />
-                <div className="control is-flex">
+                <div className="control rows">
                     <button className="btn" onClick={handleClose}>Close</button>
                 </div>
             </div>

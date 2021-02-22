@@ -62,9 +62,9 @@ export default function Register({ isModal }) {
     };
 
     return (
-        <div className="register is-flex">
+        <div className="register rows">
             <form
-                className="is-flex flex-column register__content has-background-white box py-4 px-3"
+                className="columns register__content has-background-white box py-4 px-3"
                 method="post"
                 onSubmit={handleSubmit}
                 noValidate>

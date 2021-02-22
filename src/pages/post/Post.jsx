@@ -101,8 +101,8 @@ export default function Post({ isModal }) {
     }
 
     return (
-        <div className="post is-flex">
-            <form className="post__content is-flex flex-column has-background-white box py-4 px-3"
+        <div className="post rows">
+            <form className="post__content columns has-background-white box py-4 px-3"
                 noValidate
                 method="post"
                 onSubmit={handleSubmit}>

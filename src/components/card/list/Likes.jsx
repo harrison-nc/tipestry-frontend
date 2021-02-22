@@ -29,7 +29,7 @@ export const Likes = ({ post }) => {
     }
 
     return (
-        <div className="likes is-flex flex-column">
+        <div className="likes columns">
             <a href="/" onClick={like}>Like</a>
             <span>{votes}</span>
             <a href="/" onClick={disLike}>dislike</a>

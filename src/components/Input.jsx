@@ -7,7 +7,7 @@ export const InputContainer = (props) => {
 
     return (
         <div className="input-container control" {...rest}>
-            <fieldset className="is-flex flex-column field py-5 px-5">
+            <fieldset className="columns field py-5 px-5">
                 <span className={errorClasses}>{errorMessage}</span>
                 <legend className="legend">{label}</legend>
                 {children}

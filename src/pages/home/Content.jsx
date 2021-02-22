@@ -2,7 +2,7 @@ import React from 'react';
 import Cards from '../../components/card/Cards';
 
 export default function Content({ posts }) {
-    const className = "home__content is-flex flex-column flex-grow is-content-centered";
+    const className = "home__content columns flex-grow is-content-centered";
 
     return (
         <>

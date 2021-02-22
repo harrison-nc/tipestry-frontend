@@ -35,9 +35,9 @@ export default function Home() {
     };
 
     return (
-        <div className="home is-flex">
+        <div className="home rows">
             <Suggestions className="home__left" />
-            <section className="home__content is-flex flex-column flex-grow">
+            <section className="home__content columns flex-grow">
                 <Search />
                 <Action
                     filter={filter && filter.name}

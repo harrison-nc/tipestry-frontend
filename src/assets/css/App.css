@@ -807,25 +807,6 @@ body {
   row-gap: var(--size-1);
 }
 
-.detail__container .comments {
-  display: flex;
-  flex-direction: column;
-  row-gap: var(--size-1);
-}
-
-.detail__container .comments .action {
-  align-items: center;
-  column-gap: var(--size-1);
-  display: flex;
-  justify-content: flex-start;
-}
-
-.detail__container .comments .links {
-  display: flex;
-  column-gap: var(--size-1);
-  flex-grow: 1;
-}
-
 .detail__empty {
   justify-content: center;
 }
@@ -840,15 +821,19 @@ body {
   height: var(--size-5);
 }
 
+.user-content .menu .menu__item.btn {
+  background: unset;
+  border: 0;
+  padding: 0;
+}
+
 .user-content .posts {
-  justify-content: center;
   row-gap: var(--size-1);
 }
 
 .user-content .posts .cards {
   justify-self: stretch;
   width: 100%;
-  max-width: 600px;
 }
 
 .user-content > .header {
@@ -914,6 +899,47 @@ body {
   align-self: flex-end;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
+}
+
+.user-content .main {
+  column-gap: var(--size-2);
+}
+
+.user-content .posts,
+.user-content .comments,
+.user-content .landing {
+  flex-grow: 3;
+}
+
+.user-content-banner {
+  max-width: 300px;
+}
+
+.comments {
+  row-gap: var(--size-2);
+}
+
+.comments .comment {
+  row-gap: var(--size-1);
+}
+
+.comments .comment .actions {
+  justify-content: flex-start;
+}
+
+.comments .comment .actions,
+.comments .comment .actions .links {
+  column-gap: var(--size-1);
+  flex-grow: 1;
+}
+
+.empty {
+  align-self: center;
+  justify-self: center;
+}
+
+.user-content .posts .empty {
+  align-self: flex-start;
 }
 
 @media screen and (max-width: 900px) {

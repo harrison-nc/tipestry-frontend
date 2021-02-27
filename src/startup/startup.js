@@ -7,6 +7,7 @@ export const loginUserFunction = `${process.env.REACT_APP_LOGIN_USER_API}`;
 export const uploadFunction = `${process.env.REACT_APP_UPLOAD_API}`;
 export const registerUserFunction = `${process.env.REACT_APP_REGISTER_USER_API}`;
 export const userPostFunction = `${process.env.REACT_APP_USER_POST_API}`;
+export const userCommentFunction = `${process.env.REACT_APP_USER_COMMENT_API}`;
 
 console.debug('get  post    api', getPostFunction);
 console.debug('up   vote    api', upVoteFunction);
@@ -16,7 +17,8 @@ console.debug('add  post    api', addPostFunction);
 console.debug('upload       api', uploadFunction);
 console.debug('register     api', registerUserFunction);
 console.debug('login        api', loginUserFunction);
-console.debug('user post        api', userPostFunction);
+console.debug('user post           api', userPostFunction);
+console.debug('user comment        api', userCommentFunction);
 
 if (!getPostFunction) {
     throw new Error('Post API URL not provided');
@@ -43,5 +45,8 @@ if (!loginUserFunction) {
     throw new Error('Login User API URL not provided');
 }
 if (!userPostFunction) {
-    throw new Error('Login User API URL not provided');
+    throw new Error('User Post API URL not provided');
+}
+if (!userCommentFunction) {
+    throw new Error('User Comment API URL not provided');
 }

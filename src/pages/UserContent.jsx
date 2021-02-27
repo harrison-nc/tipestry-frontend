@@ -1,28 +1,54 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { getComments, getPosts } from '../data/user';
+import { Card } from '../components/Comment';
 import Cards from '../components/card/Cards';
-import { Link, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
-import { getPosts } from '../data/user';
-import { useNavigator } from '../hooks/useNavigator';
+import Banner from '../components/Banner';
+import Empty from '../components/Empty';
 
 export default function UserContent() {
-    const { path, url } = useRouteMatch();
-    const location = useLocation();
-    const user = location.state && location.state.user;
-    const posts = useUserPost(user);
+    const user = useLocationStateUser();
+    const [posts, setPosts] = useState([]);
+    const [loaded, setLoaded] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [selectedPageIndex, setSelectedPageIndex] = useState(0);
+    const pages = usePages(posts, comments);
+
+    useEffect(() => {
+        async function fetchContent() {
+            try {
+                const [posts, comments] = await getUserContent(user._id);
+                setPosts(posts);
+                setComments(comments);
+                setLoaded(true);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        fetchContent();
+    }, [user]);
+
+    const handlePageChange = (id) => setSelectedPageIndex(Number(id) || 0);
+    const selectedPage = () => pages[selectedPageIndex || 0].render();
 
     return (
         <div className="user-content columns px-2">
-            <Header user={user} url={url} />
-            <Switch>
-                <Route exact path={path} component={LandingPage} />
-                <Route path={`${path}/posts`} children={<Posts posts={posts} />} />
-                <Route path={`${path}/comments`} children={<Comments />} />
-            </Switch>
+            <Header
+                user={user}
+                links={pages}
+                selected={selectedPageIndex}
+                onPageChange={handlePageChange} />
+
+            <div className="main rows">
+                {loaded ? selectedPage() : <LandingPage />}
+                <Banner className="user-content-banner" />
+            </div>
         </div>
     );
 }
 
-const Header = ({ user, url }) => {
+const Header = ({ user, links, onPageChange, selected }) => {
     return (
         <div className="header columns">
             <div className="top rows py-4 px-4">
@@ -32,7 +58,56 @@ const Header = ({ user, url }) => {
                 </div>
                 <img className="avatar" src={user.avatarUrl} alt="avatar" />
             </div>
-            <Menu target={url} user={user} />
+            <Menu links={links} onClick={onPageChange} selected={selected} />
+        </div>
+    );
+};
+
+const Menu = ({ links, onClick, selected }) => {
+    return (
+        <div className="menu rows has-background-link px-3">
+            {links.map((link, id) =>
+                <MenuItem
+                    key={id}
+                    id={id}
+                    text={link.name}
+                    selected={selected}
+                    onClick={onClick} />)
+            }
+        </div>
+    );
+};
+
+const MenuItem = ({ id, text, selected, onClick }) => {
+    return (
+        <button
+            id={id}
+            onClick={(e) => onClick(id)}
+            className={"btn has-text-white menu__item" + (selected === id ? " selected" : "")}>
+            <span className="text">{text}</span>
+            <span className="border"></span>
+        </button>
+    );
+};
+
+const Posts = ({ posts }) => {
+    return (
+        <div className="posts rows">
+            {posts && posts.length > 0
+                ? <Cards posts={posts} />
+                : <Empty />
+            }
+        </div>
+    );
+};
+
+const Comments = ({ comments }) => {
+    return (
+        <div className="comments columns">
+            {comments && comments.length > 0
+                ? comments.map((comment, key) => <Card key={key} comment={comment.value} />)
+                : <Empty />
+            }
         </div>
     );
 };
@@ -54,110 +129,75 @@ const LandingPage = () => {
 
     return (
         <div className="landing">
-            <h1>Getting user data.</h1>
+            <h1>Getting user content!</h1>
             <p>Please wait<span ref={waiting}></span></p>
         </div>
     );
 };
 
-const Posts = ({ posts }) => {
-    return (
-        <div className="posts rows">
-            <Cards posts={posts} />
-        </div>
-    );
-};
-
-const Comments = ({ posts }) => {
-    return (
-        <div>Comments by user</div>
-    );
-};
-
-const Menu = ({ target, user }) => {
-    const links = useMenuLinks();
-    const [selected, setSelected] = useState(0);
-
-    const handleSelect = id => {
-        setSelected(id);
-    };
-
-    return (
-        <div className="menu rows has-background-link px-3">
-            {links.map((link, id) =>
-                <MenuItem
-                    id={id}
-                    key={id}
-                    text={link.text}
-                    path={link.path}
-                    target={target}
-                    user={user}
-                    selected={selected}
-                    onClick={handleSelect}
-                />)
-            }
-        </div>
-    );
-};
-
-const MenuItem = ({ id, text, path, target, user, selected, onClick }) => {
-    const link = { pathname: `${target}/${path}`, state: { user } }
-
-    return (
-        <Link
-            id={id}
-            to={link}
-            onClick={(e) => onClick(id)}
-            className={"has-text-white menu__item" + (selected === id ? " selected" : "")}>
-            <span className="text">{text}</span>
-            <span className="border"></span>
-        </Link>
-    );
-};
-
-function useMenuLinks() {
-    const createLink = (text, path = text) => ({ text, path });
-
-    const links = [
-        createLink('posts'),
-        createLink('comments')
-    ];
-
-    return useState(links)[0];
-};
-
-function useUserPost(user) {
-    const [posts, setPosts] = useState([]);
-    const navigator = useNavigator();
-    const navRef = useRef();
-
-    useEffect(() => {
-        navRef.current = navigator;
-    });
-
-    useEffect(() => {
-        async function fetchPost() {
-            try {
-
-                if (!user || !user._id)
-                    throw new Error('User id required');
-
-                const posts = await getPosts(user._id);
-                setPosts(posts.data);
-
-                if (navRef.current) {
-                    navRef.current.gotoUserPosts(user);
-                }
-
-            } catch (error) {
-                console.error(error);
-                setPosts([]);
+const usePages = (posts, comments) => {
+    return [
+        {
+            name: "posts",
+            render() {
+                return <Posts posts={posts} />
+            },
+        },
+        {
+            name: "comments",
+            render() {
+                return <Comments comments={comments} />
             }
         }
+    ]
+}
 
-        fetchPost();
+function useLocationStateUser() {
+    const [user, setUser] = useState({});
+    const location = useLocation();
+    const userRef = useRef();
 
+    useEffect(() => {
+        userRef.current = user;
     }, [user]);
 
-    return posts;
+    useEffect(() => {
+        const user = location.state && location.state.user;
+        const { current } = userRef;
+
+        if (current && current._id === user._id) {
+            return;
+        }
+
+        setUser(user);
+    }, [location]);
+
+    return user;
+}
+
+const getUserContent = async (userId) => {
+    try {
+        const posts = await new Promise(async (resolve, reject) => {
+            try {
+                const content = await getPosts(userId);
+                resolve(content.data);
+            } catch (error) {
+                reject(error);
+            }
+        });
+        const comments = await new Promise(async (resolve, reject) => {
+            try {
+                const content = await getComments(userId);
+                resolve(content.data);
+            } catch (error) {
+                reject(error);
+            }
+        });
+        return [posts, comments];
+
+    } catch (error) {
+        console.error(error);
+    }
+
+    return [[], []];
 }

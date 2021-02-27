@@ -1,4 +1,4 @@
-import { registerUserFunction, loginUserFunction, userPostFunction } from "../startup/startup";
+import { registerUserFunction, loginUserFunction, userPostFunction, userCommentFunction } from "../startup/startup";
 
 export async function registerUser(data) {
     const encoded = new URLSearchParams(data).toString();
@@ -43,12 +43,23 @@ export const loginUser = async (user) => {
 };
 
 export const getPosts = async (userId) => {
+    return getUserContent(userPostFunction, userId);
+};
+
+export const getComments = async (userId) => {
+    return getUserContent(userCommentFunction, userId);
+};
+
+export const getUserContent = async (endPoint, userId) => {
+    if (!userId) throw new Error('userId is required');
+    if (!endPoint) throw new Error('API endpoint is required');
+
     const headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
     };
 
-    const response = await fetch(userPostFunction, {
+    const response = await fetch(endPoint, {
         method: 'POST',
         headers,
         body: JSON.stringify({ userId })

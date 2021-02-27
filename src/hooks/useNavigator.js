@@ -1,9 +1,9 @@
+import { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 export const useNavigator = (isModal) => {
     const history = useHistory();
-    const location = useLocation();
-    const background = location.state && location.state.background;
+    const background = useBackground();
 
     const goBack = async (e) => {
         if (isModal && background)
@@ -28,11 +28,17 @@ export const useNavigator = (isModal) => {
         history.push('/');
     };
 
-    return {
+    return useState({
         goBack,
         navigateTo,
         gotoPostDetail,
         gotoUserPosts,
         gotoHome,
-    };
+    })[0];
+};
+
+const useBackground = () => {
+    const location = useLocation();
+    const background = location.state && location.state.background;
+    return background;
 };

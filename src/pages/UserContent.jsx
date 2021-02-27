@@ -15,6 +15,8 @@ export default function UserContent() {
     const pages = usePages(posts, comments);
 
     useEffect(() => {
+        if (!user || !user._id) return;
+
         async function fetchContent() {
             try {
                 const [posts, comments] = await getUserContent(user._id);

@@ -2,7 +2,6 @@
 functions = "functions/"
 publish = "build/"
 [build.environment]
-DATABASE_URL = "mongodb://localhost/tipestry"
 REACT_APP_ADD_COMMENT_API = "/.netlify/functions/addComment"
 REACT_APP_ADD_POST_API = "/.netlify/functions/addPost"
 REACT_APP_DOWN_VOTE_API = "/.netlify/functions/downVote"

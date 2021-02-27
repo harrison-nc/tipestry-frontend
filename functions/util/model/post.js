@@ -60,10 +60,9 @@ schema.methods.addComment = async function (comment) {
 
     if (!user) user = {};
 
-    const { name, email } = user;
-    const _id = new ObjectId();
+    const { _id, name, email } = user;
     const newComment = {
-        _id, text, user: { name, email }
+        text, user: { _id, name, email }
     };
 
     this.comments.push(newComment);

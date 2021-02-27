@@ -52,4 +52,5 @@ module.exports = {
     connect,
     close,
     withConnection,
+    ObjectId: mongoose.Types.ObjectId,
 };

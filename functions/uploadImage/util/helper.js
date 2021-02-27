@@ -18,7 +18,6 @@ const parseResponse = (response) => {
     const data = response.data;
 
     if (!data.success) {
-        printResponse(response);
         throw new Error('Request failed');
     }
 
@@ -44,10 +43,6 @@ const parseResult = (result) => {
 const error = (data, key) => {
     console.error(data);
     throw new Error(`Unsupported API Response object: "${key}" property not provided`);
-};
-
-const printResponse = (response) => {
-    console.log(response);
 };
 
 exports.getImageData = getImageData;

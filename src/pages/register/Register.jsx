@@ -37,7 +37,7 @@ export default function Register({ isModal }) {
         e.preventDefault();
 
         if (!isValid()) {
-            return console.debug('# invalid input');
+            return;
         }
 
         dispatch({ type: 'SENDING', value: true });
@@ -274,7 +274,6 @@ const reducer = (state, action) => {
             }
         }
         default:
-            console.debug('invalid action', action);
             return state;
     }
 };

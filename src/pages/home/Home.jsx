@@ -26,7 +26,7 @@ export default function Home() {
         const { name, value } = e.target;
         if (name === 'filter') selectFilter(value);
         else if (name === 'sort') selectSort(value);
-        else console.log('invalid action', name, value);
+        else console.error('invalid action', name);
     };
 
     const handleViewChange = (e) => {

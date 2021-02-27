@@ -36,7 +36,6 @@ const userReducer = (state, action) => {
             const { name, email, token } = user || {};
 
             if (!user || !name || !email || !token) {
-                console.debug('Invalid user', action);
                 return state;
             }
 
@@ -54,7 +53,6 @@ const userReducer = (state, action) => {
             }
         }
         default:
-            console.debug('Invalid command', action);
             return state;
     }
 };

@@ -73,7 +73,6 @@ export default function Post({ isModal }) {
         event.preventDefault();
 
         if (!isValid()) {
-            console.debug('# invalid input');
             return;
         }
 
@@ -306,7 +305,6 @@ const reducer = (state, action) => {
             }
         }
         default:
-            console.debug('invalid action', action);
             return state;
     }
 };

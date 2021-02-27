@@ -63,7 +63,6 @@ export const postVotes = async (event, upCallback, downCallback) => {
 
 export const addVotes = async (user, post, votes, endPoint) => {
     if (!post || !post._id) {
-        console.debug('# post', post);
         throw new Error('Invalid post');
     }
 

@@ -19,11 +19,11 @@ export const usePosts = () => {
                 }
                 else {
                     dispatch({ type: "INIT_FAILURE" });
-                    console.debug('Failed to get posts', await response.text());
+                    console.error('Failed to get posts', await response.text());
                 }
 
             } catch (ex) {
-                console.debug(ex.message, ex);
+                console.error(ex);
             }
         }
 
@@ -64,14 +64,12 @@ export const postsReducer = (state, action) => {
             const { post } = action;
 
             if (!post || !post._id) {
-                console.debug('new post is invalid', post);
                 return state;
             }
 
             const selectedPost = state.find(p => p._id === post._id)
 
             if (!selectedPost) {
-                console.debug('post not found', post, selectedPost);
                 return state;
             }
 
@@ -108,7 +106,6 @@ const postReducer = async (state, action, postId, dispatch) => {
             return handleVote(state, action, downVoteFunction, dispatch);
         }
         default: {
-            console.debug(`Invalid post command: ${action}`);
             return state;
         }
     }
@@ -118,7 +115,6 @@ const handleComment = async (state, action, postId, dispatch) => {
     const { comment, user } = action;
 
     if (!comment) {
-        console.debug('comment is required:', action);
         return state;
     }
 
@@ -141,7 +137,6 @@ const handleVote = async (state, action, url, dispatch) => {
     const { votes, user } = action;
 
     if (!votes) {
-        console.debug('vote is required', action);
         return state;
     }
 
@@ -164,7 +159,6 @@ const handleVote = async (state, action, url, dispatch) => {
 
 const verify = (result) => {
     if (result.errors || result.errorMessage) {
-        console.debug('Failed to add post:', result);
         throw new Error();
     }
 }

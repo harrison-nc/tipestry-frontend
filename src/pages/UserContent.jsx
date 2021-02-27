@@ -20,8 +20,8 @@ export default function UserContent() {
         async function fetchContent() {
             try {
                 const [posts, comments] = await getUserContent(user._id);
-                setPosts(posts);
-                setComments(comments);
+                // setPosts(posts);
+                // setComments(comments);
                 setLoaded(true);
             } catch (error) {
                 console.error(error);

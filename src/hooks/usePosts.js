@@ -156,9 +156,9 @@ const handleVote = async (state, action, url, dispatch) => {
     return upVoteFunction;
 }
 
-
 const verify = (result) => {
     if (result.errors || result.errorMessage) {
-        throw new Error();
+        console.error(result);
+        throw new Error(result);
     }
 }

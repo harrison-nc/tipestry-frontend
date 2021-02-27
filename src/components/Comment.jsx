@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigator } from '../hooks/useNavigator';
 import { usePost } from '../hooks/usePosts';
 import { UserData } from '../hooks/useUser';
+import { formatDate } from '../util/date-util';
 
 export default function Comment(props) {
     const { isModal, ...rest } = props;
@@ -64,3 +65,29 @@ export default function Comment(props) {
         </div>
     );
 }
+
+export function Card({ comment }) {
+    return (
+        <div
+            className="comment columns has-background-white box px-3 py-4">
+            <p className="user has-text-link">@{comment.user.name}</p>
+            <p className="comment-text">{comment.text}</p>
+            <div className="actions rows">
+                <p className="links rows">
+                    <button href="/">like</button>
+                    <span>
+                        {Math.abs(
+                            (Number(comment.upVotes) || 0)
+                            -
+                            (Number(comment.downVotes) || 0)
+                        )}
+                    </span>
+                    <button href="/">dislike</button>
+                </p>
+                <p className="date-created has-text-grey">
+                    {formatDate(comment.createdAt)}
+                </p>
+            </div>
+        </div>
+    );
+};

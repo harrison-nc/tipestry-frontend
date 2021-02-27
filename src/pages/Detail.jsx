@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import SocialLinks from '../components/card/SocialLinks';
-import Comment from '../components/Comment';
+import Comment, { Card } from '../components/Comment';
 import { formatDate } from '../util/date-util';
 import Banner from '../components/Banner';
 import { PostData } from '../hooks/usePosts';
@@ -74,29 +74,11 @@ export default function Detail() {
                         <Banner className="detail__banner__container" />
 
                         {currentPost && currentPost.comments &&
-                            currentPost.comments.map((comment, i) => (
-                                <div key={i}
-                                    className="comments has-background-white box px-3 py-4">
-                                    <p className="user has-text-link">@{comment.user.name}</p>
-                                    <p className="comment-text">{comment.text}</p>
-                                    <div className="action">
-                                        <p className="links">
-                                            <button href="/">like</button>
-                                            <span>
-                                                {Math.abs(
-                                                    (Number(comment.upVotes) || 0)
-                                                    -
-                                                    (Number(comment.downVotes) || 0)
-                                                )}
-                                            </span>
-                                            <button href="/">dislike</button>
-                                        </p>
-                                        <p className="date-created has-text-grey">
-                                            {formatDate(comment.createdAt)}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))
+                            <div className="comments">
+                                {currentPost.comments.map((comment, i) => (
+                                    <Card key={i} comment={comment} />
+                                ))}
+                            </div>
                         }
                     </div>
                     <Banner className="banner__container" />

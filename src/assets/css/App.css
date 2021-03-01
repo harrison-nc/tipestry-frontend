@@ -295,7 +295,7 @@ body {
 }
 
 .cards {
-  row-gap: inherit;
+  row-gap: var(--size-1);
 }
 
 .card {
@@ -1133,6 +1133,10 @@ body {
   .home .filter {
     height: unset;
     column-gap: var(--size-1);
+  }
+
+  .home__search {
+    height: var(--size-6);
   }
 }
 

@@ -22,16 +22,14 @@ export const Search = () => {
 
     return (
         <div className="home__search has-background-white py-4 px-3 box">
-            <div className="home__search__control">
-                <label htmlFor="query">Search</label>
-                <input className="input flex-grow"
-                    name="query"
-                    type="text"
-                    value={query}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder="Enter a URL or a Search" />
-            </div>
+            <label className="label" htmlFor="query">Search</label>
+            <input id="query" className="input flex-grow"
+                name="query"
+                type="text"
+                value={query}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="Enter a URL or a Search" />
             <button className="home__search__btn py-5 px-5"
                 onClick={handleSearch}>
                 Load

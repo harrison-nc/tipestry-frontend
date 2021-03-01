@@ -11,7 +11,7 @@ export const Control = ({ onClear, isSending, isDisabled }) => {
                 className="btn is-primary py-4 px-3 is-bold"
                 text="Post"
                 type="submit"
-                disabled={isSending || isDisabled}
+                isDisabled={isDisabled}
                 isSending={isSending} />
         </div>
     );

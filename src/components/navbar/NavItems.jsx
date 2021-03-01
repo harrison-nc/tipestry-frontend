@@ -4,6 +4,7 @@ import { NavItem } from './NavItem';
 import { User } from './User';
 import { useLogout, UserData } from '../../hooks/useUser';
 import { useNavbarLinks } from '../../hooks/useNavbarLinks';
+import pencilIcon from '../../assets/icons/pencil-white.svg';
 
 export const NavItems = () => {
     const links = useNavbarLinks();
@@ -16,21 +17,21 @@ export const NavItems = () => {
                 <>
                     <User user={user} />
                     <Line />
-                    <NavItem link={links.post} keep={true}>Post</NavItem>
+                    <PostButton link={links.post} />
                     <LogoutButton className="nav__item" onClick={logout} />
                 </>
             }
 
             {(!user || !user.loggedIn) &&
                 <>
-                    <NavItem link={links.post} keep={true}>Post</NavItem>
+                    <PostButton link={links.post} />
                     <NavItem link={links.login}>Login</NavItem>
                     <NavItem link={links.register} rounded={true}>Join Us</NavItem>
                 </>
             }
 
             <div className="rows">
-                <button className="nav__btn btn px-5 is-outlined is-white">en</button>
+                <button className="nav__btn lang btn px-5 is-outlined is-white">en</button>
                 <RoundMenu loggedIn={user.loggedIn} onLogout={logout} />
             </div>
         </nav>
@@ -88,3 +89,11 @@ const LogoutButton = ({ className, onClick }) => {
         </button>
     );
 };
+
+const PostButton = ({ link }) => {
+    return (
+        <NavItem link={link} keep={true}>
+            <img src={pencilIcon} alt="pencil icon" style={{ height: "25px", color: "white" }} />
+        </NavItem>
+    );
+}

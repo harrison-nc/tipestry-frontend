@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import searchIcon from "../../assets/icons/search-icon.svg";
 
 export const Search = () => {
     const history = useHistory();
@@ -22,7 +23,9 @@ export const Search = () => {
 
     return (
         <div className="home__search has-background-white py-4 px-3 box">
-            <label className="label" htmlFor="query">Search</label>
+            <label className="label" htmlFor="query">
+                <img src={searchIcon} alt="Search icon" style={{ height: "20px" }} />
+            </label>
             <input id="query" className="input flex-grow"
                 name="query"
                 type="text"
@@ -32,7 +35,10 @@ export const Search = () => {
                 placeholder="Enter a URL or a Search" />
             <button className="home__search__btn py-5 px-5"
                 onClick={handleSearch}>
-                Load
+                <span className="text">Load</span>
+                <span className="icon">
+                    <img src={searchIcon} alt="search icon" />
+                </span>
             </button>
         </div>
     );

@@ -3,7 +3,7 @@ import Cards from '../../components/card/Cards';
 
 export default function Content({ posts }) {
     return (
-        <div className="home__content columns flex-grow">
+        <div className="columns flex-grow">
             <Cards posts={posts} />
         </div>
     );

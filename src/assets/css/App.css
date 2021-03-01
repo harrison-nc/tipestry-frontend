@@ -246,6 +246,10 @@ body {
   border-radius: 5px;
 }
 
+.home__search__btn .icon {
+  display: none;
+}
+
 .home .filter__container .filter {
   border-radius: 5px 5px 0 0;
 }
@@ -269,8 +273,25 @@ body {
 
 .filter__control {
   display: flex;
-  column-gap: var(--size-medium);
+  column-gap: var(--size-1);
   align-items: center;
+}
+
+.filter__control .list,
+.filter__control .detail {
+  background: unset;
+  border: unset;
+}
+
+.filter__control .icon,
+.filter__control .select {
+  height: 20px;
+}
+
+.filter__control .label {
+  text-transform: uppercase;
+  font-size: 12px;
+  font-family: "Courier New", Courier, monospace;
 }
 
 .cards {
@@ -1105,23 +1126,51 @@ body {
   }
 
   .filter__container .filter {
-    align-items: flex-start;
-    justify-content: flex-start;
     flex-wrap: wrap;
   }
 
   .home__search,
   .home .filter {
     height: unset;
+    column-gap: var(--size-1);
   }
 }
 
-@media screen and (max-width: 300px) {
+@media screen and (max-width: 320px) {
   .home__search .label {
     display: none;
   }
 
   .home__search .input {
     height: 30px;
+  }
+
+  .nav .lang {
+    display: none;
+  }
+
+  .nav .nav__items .round-menu {
+    width: unset;
+    padding-right: var(--size-2);
+  }
+
+  .home__search__btn .text {
+    display: none;
+  }
+
+  .home__search__btn {
+    border: 1px solid var(--color-black);
+  }
+
+  .home__search__btn:hover {
+    border-radius: 0;
+  }
+
+  .home__search__btn .icon {
+    display: inline-block;
+  }
+
+  .home__search__btn .icon img {
+    height: 20px;
   }
 }

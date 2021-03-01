@@ -37,6 +37,7 @@ export default function Login({ isModal }) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        validateState(state);
 
         if (!isValid()) {
             return;
@@ -60,9 +61,7 @@ export default function Login({ isModal }) {
 
     return (
         <div className="login rows">
-            <form
-                className="login__content columns has-background-white box py-4 px-3"
-                method="post"
+            <form className="login__content columns has-background-white box py-4 px-3"
                 onSubmit={handleSubmit}
                 noValidate>
                 <Header onClose={handleClose} />

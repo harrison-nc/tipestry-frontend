@@ -71,6 +71,7 @@ export default function Post({ isModal }) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        validateState(state);
 
         if (!isValid()) {
             return;
@@ -103,7 +104,6 @@ export default function Post({ isModal }) {
         <div className="post rows">
             <form className="post__content columns has-background-white box py-4 px-3"
                 noValidate
-                method="post"
                 onSubmit={handleSubmit}>
 
                 <Header onClose={handleClose} />

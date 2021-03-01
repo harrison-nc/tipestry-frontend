@@ -4,7 +4,7 @@ export const Header = ({ onClose }) => {
             <p className="title has-text-link">
                 Add post
             </p>
-            <button className="close btn" onClick={onClose}>X</button>
+            <button className="close btn" type="button" onClick={onClose}>X</button>
         </div>
     );
 };

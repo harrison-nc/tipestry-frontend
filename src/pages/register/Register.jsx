@@ -35,6 +35,7 @@ export default function Register({ isModal }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        validateState(state);
 
         if (!isValid()) {
             return;
@@ -63,9 +64,7 @@ export default function Register({ isModal }) {
 
     return (
         <div className="register rows">
-            <form
-                className="columns register__content has-background-white box py-4 px-3"
-                method="post"
+            <form className="columns register__content has-background-white box py-4 px-3"
                 onSubmit={handleSubmit}
                 noValidate>
 

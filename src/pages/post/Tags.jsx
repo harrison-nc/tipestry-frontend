@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export const Tags = (props) => {
     const { value, onRemove } = props;
@@ -16,22 +16,39 @@ export const Tags = (props) => {
     );
 };
 
-export const TagInput = (props) => {
-    const { onAdd, isDisabled } = props;
+export const TagInput = ({ onAdd, isDisabled }) => {
+    const ref = useRef();
     const [value, setValue] = useState('');
+
+    useEffect(() => {
+        if (!ref.current) return;
+
+        function handleEnterPress(event) {
+            if (event.code === 'Enter') {
+                event.preventDefault();
+                onAdd(event.target.value);
+                setValue('');
+            }
+        }
+
+        const eventType = 'keydown';
+        const element = ref.current;
+        element.addEventListener(eventType, handleEnterPress);
+        return () => element.removeEventListener(eventType, handleEnterPress);
+    }, [onAdd]);
 
     function handleChange(event) {
         setValue(event.target.value);
     }
 
-    function handleAdd(event) {
+    function handleAdd(value) {
         onAdd(value);
         setValue('');
     }
 
     return (
         <div className="tag__control rows mt-3">
-            <input
+            <input ref={ref}
                 className="tag__input input flex-grow py-4 px-4"
                 type="text"
                 name="tagName"
@@ -44,7 +61,7 @@ export const TagInput = (props) => {
                 disabled={isDisabled}
                 className="btn is-primary"
                 type="button"
-                onClick={handleAdd}>+</button>
+                onClick={() => handleAdd(value)}>+</button>
         </div>
     );
 };
